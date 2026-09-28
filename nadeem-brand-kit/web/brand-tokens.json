@@ -1,0 +1,17 @@
+{
+  "brand": {
+    "ar": "نديم",
+    "en": "Nadeem"
+  },
+  "colors": {
+    "green": "#124A43",
+    "sand": "#D9BB86",
+    "ivory": "#F7F3EA",
+    "ink": "#24322E"
+  },
+  "proposedFonts": {
+    "ar": "IBM Plex Sans Arabic",
+    "en": "Inter"
+  },
+  "version": "1.1"
+}

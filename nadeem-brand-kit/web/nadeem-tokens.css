@@ -1,0 +1,17 @@
+/* Nadeem brand colors. UI fonts must be loaded separately. */
+:root {
+  --nadeem-green: #124a43;
+  --nadeem-sand: #d9bb86;
+  --nadeem-ivory: #f7f3ea;
+  --nadeem-ink: #24322e;
+  --nadeem-white: #ffffff;
+  --color-page: var(--nadeem-ivory);
+  --color-surface: var(--nadeem-white);
+  --color-text: var(--nadeem-ink);
+  --color-primary: var(--nadeem-green);
+  --color-on-primary: var(--nadeem-ivory);
+  --radius-control: 0.75rem;
+  --radius-card: 1rem;
+}
+html[lang="ar"] body { font-family: "IBM Plex Sans Arabic", sans-serif; line-height: 1.7; }
+html[lang="en"] body { font-family: "Inter", sans-serif; line-height: 1.5; }

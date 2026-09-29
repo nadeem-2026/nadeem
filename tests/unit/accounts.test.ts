@@ -1,7 +1,18 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFile } from "node:fs/promises";
 import { createDatabase } from "../helpers/database";
 import { callbackDestination, registrationRole, passwordValid, emailValue } from "../../src/lib/auth/validation";
+
+test("hosted verification script exercises access rules and rolls fixtures back", async (t) => {
+  const db = await createDatabase();
+  t.after(() => db.close());
+  await db.exec(await readFile(new URL("../integration/hosted-accounts.sql", import.meta.url), "utf8"));
+  assert.equal((await db.query<{ count: number }>("select count(*)::int as count from auth.users")).rows[0].count, 0);
+  assert.equal((await db.query<{ count: number }>("select count(*)::int as count from public.audit_logs")).rows[0].count, 0);
+  const functions = await db.query<{ name: string; definer: boolean }>("select proname as name, prosecdef as definer from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and proname in ('save_guide_profile','review_guide_profile') order by proname");
+  assert.deepEqual(functions.rows, [{ name: "review_guide_profile", definer: false }, { name: "save_guide_profile", definer: false }]);
+});
 
 test("registration validation and recovery redirect allowlist", () => {
   assert.equal(registrationRole("admin"), null);

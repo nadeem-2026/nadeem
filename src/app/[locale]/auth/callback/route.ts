@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { authClient } from "@/lib/auth/server";
 import { getAuthConfig } from "@/lib/auth/config";
-import { callbackDestination } from "@/lib/auth/validation";
+import { resolveAuthCallback } from "@/lib/auth/callback";
 import { isLocale } from "@/lib/i18n";
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ locale: string }> }) {
@@ -9,11 +9,13 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   if (!isLocale(locale)) return new NextResponse(null, { status: 404 });
   const config = getAuthConfig();
   const client = await authClient();
-  const code = request.nextUrl.searchParams.get("code");
   const origin = config?.siteUrl ?? request.nextUrl.origin;
-  if (client && code) {
-    const { error } = await client.auth.exchangeCodeForSession(code);
-    if (!error) return NextResponse.redirect(new URL(callbackDestination(locale, request.nextUrl.searchParams.get("next")), origin));
-  }
-  return NextResponse.redirect(new URL(`/${locale}/login?notice=expired`, origin));
+  const destination = await resolveAuthCallback(client?.auth ?? null, locale, request.nextUrl.searchParams);
+  const response = NextResponse.redirect(new URL(destination, origin));
+  response.headers.set("Cache-Control", "private, no-store, max-age=0");
+  response.headers.set("Referrer-Policy", "no-referrer");
+  return response;
 }
+
+// Link scanners probing with HEAD must not consume a one-time recovery token.
+export function HEAD() { return new NextResponse(null, { status: 204, headers: { "Cache-Control": "no-store" } }); }

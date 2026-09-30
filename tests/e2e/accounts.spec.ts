@@ -39,3 +39,22 @@ test("invalid recovery callback cannot redirect to a third-party site", async ({
   expect(target.pathname).toBe("/en/login");
   expect(target.searchParams.get("notice")).toBe("expired");
 });
+
+for (const locale of ["ar", "en"] as const) {
+  test(`${locale}: recovery callback reaches browser bridge; missing credentials show retry form`, async ({ page, request }) => {
+    const response = await request.get(`/${locale}/auth/callback?next=/${locale}/update-password`, { maxRedirects: 0 });
+    const target = new URL(response.headers().location);
+    expect(target.pathname).toBe(`/${locale}/auth/recovery`);
+    expect(target.hash).toBe("");
+    expect(response.headers()["referrer-policy"]).toBe("strict-origin-when-cross-origin");
+    await page.goto(`/${locale}/auth/callback?next=/${locale}/update-password#type=recovery`);
+    await expect(page).toHaveURL(new RegExp(`/${locale}/forgot-password\\?notice=expired$`));
+    await expect(page.locator("p[role='alert']")).toBeVisible();
+  });
+}
+
+test("HEAD probes do not consume recovery credentials", async ({ request }) => {
+  const response = await request.head("/ar/auth/callback?code=scanner-probe");
+  expect(response.status()).toBe(204);
+  expect(response.headers()["cache-control"]).toContain("no-store");
+});

@@ -6,6 +6,7 @@ import { authClient, requireAccount } from "./server";
 import { getAuthConfig } from "./config";
 import { emailValue, passwordValid, registrationRole, shortText } from "./validation";
 import { isLocale, type Locale } from "../i18n";
+import { recoveryRequestClient } from "./recovery";
 
 export type FormState = { error?: "invalid" | "failed" | "unavailable"; success?: "checkEmail" | "recoverySent" | "saved" | "submitted" | "reviewed" };
 export type AuthIntent = "login" | "signup" | "forgot" | "update";
@@ -20,13 +21,14 @@ export async function authenticate(locale: Locale, intent: AuthIntent, _previous
     if (!user || !passwordValid(form.get("password"))) return { error: "invalid" };
     const { error } = await client.auth.updateUser({ password: form.get("password") as string });
     if (error) return { error: "failed" };
-    redirect(`/${locale}/account`);
+    await client.auth.signOut({ scope: "local" });
+    redirect(`/${locale}/login`);
   }
   const email = emailValue(form.get("email"));
   if (!email) return { error: "invalid" };
   if (intent === "forgot") {
     const callback = `${config.siteUrl}/${locale}/auth/callback?next=/${locale}/update-password`;
-    const { error } = await client.auth.resetPasswordForEmail(email, { redirectTo: callback });
+    const { error } = await recoveryRequestClient(config.url, config.key).auth.resetPasswordForEmail(email, { redirectTo: callback });
     return error ? { error: "failed" } : { success: "recoverySent" };
   }
   const password = form.get("password");

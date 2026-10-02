@@ -1,10 +1,5 @@
-import { createClient } from "@supabase/supabase-js";
+import { getSupabaseAdmin } from "@/lib/auth/admin";
 import nodemailer from "nodemailer";
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-
-const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || "smtp.gmail.com",
@@ -30,7 +25,7 @@ export async function sendNotification({
   email?: string;
 }) {
   // 1. In-App Notification (Database)
-  const { error } = await supabase.from("notifications").insert({
+  const { error } = await getSupabaseAdmin().from("notifications").insert({
     user_id: userId,
     title,
     body,

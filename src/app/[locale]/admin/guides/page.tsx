@@ -3,8 +3,8 @@ import { getSupabaseAdmin } from "@/lib/auth/admin";
 import type { Locale } from "@/lib/i18n";
 import { GuidesTable } from "@/components/admin/guides-table";
 
-export default async function AdminGuidesPage({ params }: { params: Promise<{ locale: Locale }> }) {
-  const { locale } = await params;
+export default async function AdminGuidesPage({ params }: { params: Promise<{ locale: string }> }) {
+  const locale = (await params).locale as Locale;
   await requireAccount(locale);
 
   const adminClient = getSupabaseAdmin();

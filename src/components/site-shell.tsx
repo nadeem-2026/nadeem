@@ -4,6 +4,7 @@ import { getMessages } from "@/content/messages";
 import type { Locale } from "@/lib/i18n";
 import { LanguageSwitch } from "./language-switch";
 import { authMessages } from "@/content/auth";
+import { NotificationsBell } from "./notifications-bell";
 
 export function SiteHeader({ locale }: { locale: Locale }) {
   const m = getMessages(locale);
@@ -13,12 +14,16 @@ export function SiteHeader({ locale }: { locale: Locale }) {
       <div className="container header-inner">
         <Link href={`/${locale}`} aria-label={m.name} className="brand-link"><Brand name={m.name} /></Link>
         <nav aria-label={locale === "ar" ? "التنقل الرئيسي" : "Main navigation"}>
+          <Link href={`/${locale}/guides`}>{m.nav.guides}</Link>
           <a href={`/${locale}#about`}>{m.nav.about}</a>
           <a href={`/${locale}#how-it-works`}>{m.nav.how}</a>
           <a href={`/${locale}#platform-status`}>{m.nav.status}</a>
           <Link href={`/${locale}/account`}>{authMessages(locale).account}</Link>
         </nav>
-        <LanguageSwitch locale={locale} />
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <NotificationsBell locale={locale} />
+          <LanguageSwitch locale={locale} />
+        </div>
       </div>
     </header>
     <aside className="foundation-notice" aria-label={m.notice}><div className="container notice-inner">

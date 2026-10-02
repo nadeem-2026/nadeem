@@ -10,13 +10,17 @@ const ar = {
   recoverySent: "إذا كان الحساب موجودًا ومتاحًا للاستعادة، فستصلك رسالة تحتوي رابطًا لتغيير كلمة المرور.",
   saved: "حُفظت التغييرات.", submitted: "أُرسل الملف للمراجعة.", reviewed: "سُجل قرار المراجعة.",
   suspended: "هذا الحساب موقوف. تواصل مع إدارة المنصة.", sessionExpired: "الرابط غير صالح أو منتهي. اطلب رابطًا جديدًا.",
-  account: "حسابي", logout: "تسجيل الخروج", development: "حسابات بيئة التطوير", developmentNote: "الحجز والدفع غير متاحين بعد. إرسال البريد للإنتاج لم يُجهز بعد.",
-  profile: "ملف المرشد الأولي", city: "المدينة أو منطقة الخدمة", bio: "نبذة عنك", save: "حفظ المسودة", send: "إرسال للمراجعة",
+  account: "حسابي", logout: "تسجيل الخروج", development: "حسابات بيئة التطوير", developmentNote: "الحجز والدفع غير متاحين بعد.",
+  profile: "ملف المرشد الأولي", city: "المدينة الأساسية", bio: "نبذة عنك", save: "حفظ المسودة", send: "إرسال للمراجعة",
+  languages: "اللغات (مفصولة بفاصلة)", service_areas: "مناطق الخدمة (مفصولة بفاصلة)", hourly_rate: "السعر بالساعة", max_participants: "الحد الأقصى للمشاركين", inclusions: "ما تشمله الخدمة (مفصولة بفاصلة)",
   draft: "مسودة", pending_review: "بانتظار المراجعة", approved: "معتمد", rejected: "مرفوض", guideSuspended: "معلّق", status: "حالة الملف",
   reason: "سبب القرار", locked: "الملف قيد المراجعة أو مغلق للتعديل. قرار اعتماد المنصة مستقل عن قبول مزود الدفع.",
   reviewTitle: "مراجعة ملفات المرشدين", approve: "اعتماد الملف", reject: "رفض الملف", suspend: "تعليق الملف", empty: "لا توجد ملفات للمراجعة.",
   reviewNote: "الاعتماد يدوي. لا توجد قائمة مستندات إلزامية معتمدة بعد؛ يجب حسم معايير الاعتماد قبل استخدام ملفات حقيقية. لا يمنح الاعتماد أهلية صرف لدى مزود دفع.",
   noBookings: "ستظهر وظائف الحجز في المرحلة الخاصة بها.",
+  availability: "أوقات التوفر الأسبوعية", day0: "الأحد", day1: "الإثنين", day2: "الثلاثاء", day3: "الأربعاء", day4: "الخميس", day5: "الجمعة", day6: "السبت",
+  startTime: "من", endTime: "إلى", available: "متاح", unavailableDay: "غير متاح", updateAvailability: "تحديث الأوقات",
+  exceptions: "الاستثناءات (أيام العطل والتعديلات)", addException: "إضافة استثناء", exceptionDate: "التاريخ", isAvailable: "متاح؟", noExceptions: "لا توجد استثناءات مضافة.", delete: "حذف",
 };
 type AuthMessages = typeof ar;
 const en: AuthMessages = {
@@ -29,12 +33,16 @@ const en: AuthMessages = {
   recoverySent: "If the account exists and can be recovered, an email with a password reset link will arrive.",
   saved: "Changes saved.", submitted: "Profile submitted for review.", reviewed: "Review decision recorded.",
   suspended: "This account is suspended. Contact the platform administrator.", sessionExpired: "This link is invalid or expired. Request a new link.",
-  account: "My account", logout: "Sign out", development: "Development accounts", developmentNote: "Bookings and payments are not available yet. Production email delivery is not configured.",
-  profile: "Initial guide profile", city: "City or service area", bio: "About you", save: "Save draft", send: "Submit for review",
+  account: "My account", logout: "Sign out", development: "Development accounts", developmentNote: "Bookings and payments are not available yet.",
+  profile: "Initial guide profile", city: "Primary city", bio: "About you", save: "Save draft", send: "Submit for review",
+  languages: "Languages (comma separated)", service_areas: "Service areas (comma separated)", hourly_rate: "Hourly rate", max_participants: "Max participants", inclusions: "Inclusions (comma separated)",
   draft: "Draft", pending_review: "Pending review", approved: "Approved", rejected: "Rejected", guideSuspended: "Suspended", status: "Profile status",
   reason: "Decision reason", locked: "This profile is under review or locked for editing. Platform approval is separate from payment-provider acceptance.",
   reviewTitle: "Review guide profiles", approve: "Approve profile", reject: "Reject profile", suspend: "Suspend profile", empty: "No profiles to review.",
   reviewNote: "Approval is manual. Required documents have not been decided; define approval criteria before reviewing real guides. Approval does not establish payout eligibility with a payment provider.",
   noBookings: "Booking features will arrive in their development phase.",
+  availability: "Weekly Availability", day0: "Sunday", day1: "Monday", day2: "Tuesday", day3: "Wednesday", day4: "Thursday", day5: "Friday", day6: "Saturday",
+  startTime: "From", endTime: "To", available: "Available", unavailableDay: "Unavailable", updateAvailability: "Update Availability",
+  exceptions: "Exceptions (Days Off & Custom Hours)", addException: "Add Exception", exceptionDate: "Date", isAvailable: "Available?", noExceptions: "No exceptions added.", delete: "Delete",
 };
 export function authMessages(locale: Locale): AuthMessages { return locale === "ar" ? ar : en; }

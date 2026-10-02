@@ -65,9 +65,19 @@ export async function saveGuide(locale: Locale, _previous: FormState, form: Form
   const name = shortText(form.get("name"), 120);
   const city = shortText(form.get("city"), 120);
   const bio = shortText(form.get("bio"), 2000);
+  const languages = form.get("languages")?.toString().split(",").map(s => shortText(s.trim(), 50)).filter(Boolean) || [];
+  const service_areas = form.get("service_areas")?.toString().split(",").map(s => shortText(s.trim(), 50)).filter(Boolean) || [];
+  const hourly_rate = parseFloat(form.get("hourly_rate")?.toString() || "0") || 0;
+  const max_participants = parseInt(form.get("max_participants")?.toString() || "1", 10) || 1;
+  const inclusions = form.get("inclusions")?.toString().split(",").map(s => shortText(s.trim(), 100)).filter(Boolean) || [];
   const submit = form.get("intent") === "submit";
   if (!name || !city || !bio) return { error: "invalid" };
-  const { error } = await client.rpc("save_guide_profile", { p_name: name, p_city: city, p_bio: bio, p_submit: submit });
+  const { error } = await client.rpc("save_guide_profile", { 
+    p_name: name, p_city: city, p_bio: bio, 
+    p_languages: languages, p_service_areas: service_areas, 
+    p_hourly_rate: hourly_rate, p_max_participants: max_participants, 
+    p_inclusions: inclusions, p_submit: submit 
+  });
   if (error) return { error: "failed" };
   revalidatePath(`/${locale}/account`);
   return { success: submit ? "submitted" : "saved" };
@@ -85,4 +95,77 @@ export async function reviewGuide(locale: Locale, _previous: FormState, form: Fo
   if (error) return { error: "failed" };
   revalidatePath(`/${locale}/admin/guides`);
   return { success: "reviewed" };
+}
+
+export async function saveAvailability(locale: Locale, _previous: FormState, form: FormData): Promise<FormState> {
+  if (!isLocale(locale)) return { error: "invalid" };
+  const { client, profile } = await requireAccount(locale);
+  if (profile.role !== "guide") return { error: "failed" };
+  
+  const days = [0, 1, 2, 3, 4, 5, 6];
+  const inserts = [];
+  for (const day of days) {
+    if (form.get(`day_${day}_active`)) {
+      const start_time = form.get(`day_${day}_start`)?.toString() || "09:00";
+      const end_time = form.get(`day_${day}_end`)?.toString() || "17:00";
+      if (start_time >= end_time) return { error: "invalid" };
+      inserts.push({ guide_id: profile.id, day_of_week: day, start_time: `${start_time}:00`, end_time: `${end_time}:00` });
+    }
+  }
+
+  const { error: deleteError } = await client.from("guide_availability_weekly").delete().eq("guide_id", profile.id);
+  if (deleteError) return { error: "failed" };
+  
+  if (inserts.length > 0) {
+    const { error: insertError } = await client.from("guide_availability_weekly").insert(inserts);
+    if (insertError) return { error: "failed" };
+  }
+
+  revalidatePath(`/${locale}/account`);
+  return { success: "saved" };
+}
+
+export async function addException(locale: Locale, _previous: FormState, form: FormData): Promise<FormState> {
+  if (!isLocale(locale)) return { error: "invalid" };
+  const { client, profile } = await requireAccount(locale);
+  if (profile.role !== "guide") return { error: "failed" };
+  
+  const exception_date = form.get("exception_date")?.toString();
+  const is_available = form.get("is_available") === "on";
+  let start_time = form.get("start_time")?.toString();
+  let end_time = form.get("end_time")?.toString();
+
+  if (!exception_date) return { error: "invalid" };
+  
+  if (is_available) {
+    if (!start_time || !end_time) return { error: "invalid" };
+    start_time = `${start_time}:00`;
+    end_time = `${end_time}:00`;
+    if (start_time >= end_time) return { error: "invalid" };
+  } else {
+    start_time = undefined;
+    end_time = undefined;
+  }
+
+  const { error } = await client.from("guide_availability_exceptions").upsert({
+    guide_id: profile.id,
+    exception_date,
+    is_available,
+    start_time,
+    end_time
+  }, { onConflict: "guide_id, exception_date" });
+
+  if (error) return { error: "failed" };
+  
+  revalidatePath(`/${locale}/account`);
+  return { success: "saved" };
+}
+
+export async function deleteException(locale: Locale, id: string) {
+  if (!isLocale(locale)) return;
+  const { client, profile } = await requireAccount(locale);
+  if (profile.role === "guide") {
+    await client.from("guide_availability_exceptions").delete().eq("id", id).eq("guide_id", profile.id);
+    revalidatePath(`/${locale}/account`);
+  }
 }

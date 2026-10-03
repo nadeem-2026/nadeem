@@ -7,47 +7,58 @@ const ar = {
   nav: { about: "عن نديم", how: "كيف تعمل المنصة", status: "حالة المنصة", guides: "المرشدين السياحيين" },
   otherLanguage: "English",
   languageLabel: "View in English",
-  notice: "نسخة تطوير",
-  noticeDetail: "الحجز والدفع غير متاحين بعد",
-  eyebrow: "نديم · المملكة العربية السعودية",
-  title: "منصة حجز",
-  titleAccent: "المرشدين السياحيين",
-  intro: "تجمع نديم السائح بالمرشد المحلي، من اختيار المرشد والموعد إلى تفاصيل الجولة. نبني تجربة واضحة للتعرّف على المملكة برفقة أهلها.",
-  primaryAction: "تعرّف على خطوات الحجز",
-  secondaryAction: "عن المشروع",
-  visualCaption: "السائح والمرشد، في تجربة واحدة",
-  visualFootnote: "هوية نديم",
-  detailLabels: ["الوجهة", "لغة التجربة", "توقيت المواعيد"],
-  detailValues: ["المملكة العربية السعودية", "العربية والإنجليزية", "توقيت السعودية"],
-  howEyebrow: "من الاختيار إلى الجولة",
-  howTitle: "خطوات واضحة، من البداية",
-  howDescription: "هذه دورة الحجز المعتمدة للمشروع. ستتاح وظائفها تدريجيًا في المراحل القادمة.",
-  steps: [
-    { title: "اختر المرشد والموعد", text: "تعرّف على المرشدين المعتمدين، ثم اختر الموعد والمدة وعدد المشاركين ضمن التوفر والسعة." },
-    { title: "أرسل طلب الحجز", text: "يراجع المرشد طلبك. قبول الطلب يحجز الموعد مؤقتًا، ولا يعني تأكيد الحجز." },
-    { title: "ادفع بعد القبول", text: "يتأكد الحجز بعد نجاح الدفع والتحقق منه. يظهر المبلغ وعملة الخصم قبل موافقتك." },
-    { title: "ابدأ جولتك", text: "تواصل مع مرشدك بعد التأكيد، ثم ابدأ الجولة برمز التحقق، وشارك تقييمك بعد اكتمالها." },
+  notice: "نسخة تجريبية",
+  noticeDetail: "الحجز والدفع قيد التفعيل في المرحلة القادمة",
+  
+  // Hero
+  heroTitle: "اكتشف السعودية برفقة أهلها",
+  heroSearchWhere: "إلى أين؟ (مثل: الرياض، العلا)",
+  heroSearchWhen: "متى؟ (اختياري)",
+  heroSearchBtn: "استكشف المرشدين",
+  
+  // Destinations
+  destinationsTitle: "وجهات تستحق الاستكشاف",
+  destinations: [
+    { id: "riyadh", name: "الرياض", image: "https://images.unsplash.com/photo-1588667677943-4cc2c366ff45?q=80&w=600&auto=format&fit=crop" },
+    { id: "jeddah", name: "جدة", image: "https://images.unsplash.com/photo-1629853965555-460cc950d853?q=80&w=600&auto=format&fit=crop" },
+    { id: "alula", name: "العلا", image: "https://images.unsplash.com/photo-1620211153835-f09d43d3b749?q=80&w=600&auto=format&fit=crop" },
+    { id: "abha", name: "أبها", image: "https://images.unsplash.com/photo-1601227092120-1e5f8f307a51?q=80&w=600&auto=format&fit=crop" }
   ],
-  aboutEyebrow: "عن نديم",
-  aboutTitle: "تجربة محلية، بتفاصيل مفهومة",
-  aboutText: "نديم مشروع منصة ويب متجاوبة تربط السياح بالمرشدين المحليين في السعودية. يجمع الحجز موعد الجولة وتفاصيلها والتواصل المرتبط بها في مكان واحد.",
-  scope: ["واجهة عربية وإنجليزية", "سعر أساسه الريال السعودي", "مواعيد بتوقيت الرياض"],
-  guidesTitle: "دليل المرشدين",
-  guidesText: "لم يُفتح دليل المرشدين بعد. سيعرض المرشدين بعد اعتماد ملفاتهم وإتاحة خدمة البحث.",
-  guidesBadge: "في مرحلة لاحقة",
-  statusEyebrow: "تقدم المشروع",
-  statusTitle: "ما المتاح في هذه النسخة؟",
-  statusText: "يمكنك استعراض الواجهة وتبديل اللغة الآن. هذه نسخة تطوير محلية، ولا تستقبل طلبات حجز أو مدفوعات.",
-  ready: "متاح الآن",
-  later: "قيد التطوير لاحقًا",
-  pending: "بانتظار حسم الإعدادات",
-  statuses: [
-    { title: "الواجهة والهوية واللغتان", text: "هوية نديم، اتجاها القراءة، وتجربة متجاوبة للجوال والكمبيوتر.", state: "ready" as const },
-    { title: "الحسابات والمرشدون والحجز", text: "أُضيفت الحسابات ومراجعة المرشدين للتطوير. وظائف الحجز ستأتي في مرحلة لاحقة.", state: "later" as const },
-    { title: "الدفع والخدمات الخارجية", text: "المزودون غير مفعّلين. تحويل الدولار ومصدر سعر الصرف ما زالا معلقين.", state: "pending" as const },
+  
+  // Guides
+  topGuidesTitle: "تعرّف على مرشدينا المعتمدين",
+  viewGuideBtn: "عرض المرشد",
+  guideHourly: "ريال / ساعة",
+  guideTour: "ريال / جولة",
+  verified: "معتمد",
+  
+  // Interests
+  interestsTitle: "تجارب تناسب اهتماماتك",
+  interests: [
+    { title: "تراث وثقافة", icon: "🏛️" },
+    { title: "طبيعة ومغامرة", icon: "⛰️" },
+    { title: "تجارب محلية", icon: "☕" }
   ],
+  
+  // How it works
+  howTitle: "كيف تحجز جولتك؟",
+  howSteps: [
+    { title: "ابحث عن مرشدك", text: "اختر المرشد الأنسب لرحلتك بناءً على المدينة، التقييمات، واللغات." },
+    { title: "أرسل طلب الحجز", text: "حدد الموعد وأرسل الطلب ليقوم المرشد بمراجعته وقبوله." },
+    { title: "ادفع بأمان وابدأ رحلتك", text: "بعد قبول المرشد، ادفع قيمة الجولة بأمان واستمتع بتجربتك." }
+  ],
+  
+  // Trust
+  trustTitle: "لماذا نديم؟",
+  trustFeatures: [
+    { title: "مرشدون موثوقون", text: "نراجع حسابات كافة المرشدين للتحقق من التراخيص الرسمية." },
+    { title: "دفع آمن ومضمون", text: "نحفظ حقوقك المالية حتى تكتمل جولتك بنجاح." },
+    { title: "تجربة ضيافة حقيقية", text: "تعرّف على السعودية بعيون أهلها من خلال تجارب محلية أصيلة." }
+  ],
+
   footer: "منصة حجز المرشدين السياحيين",
-  footerNote: "نسخة تطوير · لا تتوفر خدمات الحجز حاليًا",
+  footerNote: "نسخة تجريبية · نديم 2026",
+  footerLinks: { terms: "الشروط والأحكام", privacy: "سياسة الخصوصية", contact: "تواصل معنا" },
   backHome: "العودة للرئيسية",
   notFoundTitle: "الصفحة غير موجودة",
   notFoundText: "قد يكون الرابط غير صحيح، أو أن هذه الصفحة لم تُتح بعد.",
@@ -55,11 +66,12 @@ const ar = {
   errorTitle: "تعذّر عرض الصفحة",
   errorText: "حاول تحميل الصفحة مرة أخرى.",
   retry: "إعادة المحاولة",
+  
+  // General
+  emptyStateGuides: "لا يوجد مرشدين متاحين حالياً في هذا البحث",
 };
 
-type Messages = Omit<typeof ar, "statuses"> & {
-  statuses: { title: string; text: string; state: "ready" | "later" | "pending" }[];
-};
+export type Messages = typeof ar;
 
 const en: Messages = {
   name: "Nadeem",
@@ -68,47 +80,52 @@ const en: Messages = {
   nav: { about: "About Nadeem", how: "How it works", status: "Platform status", guides: "Tour Guides" },
   otherLanguage: "العربية",
   languageLabel: "عرض باللغة العربية",
-  notice: "Development preview",
-  noticeDetail: "Bookings and payments are not available yet",
-  eyebrow: "NADEEM · SAUDI ARABIA",
-  title: "A platform for booking",
-  titleAccent: "local tour guides",
-  intro: "Nadeem brings travelers and local guides together, from choosing a guide and a time to arranging the details of a tour. A clear way to discover Saudi Arabia with its people.",
-  primaryAction: "Explore the booking steps",
-  secondaryAction: "About the project",
-  visualCaption: "Travelers and guides, one shared experience",
-  visualFootnote: "The Nadeem identity",
-  detailLabels: ["Destination", "Languages", "Schedule"],
-  detailValues: ["Saudi Arabia", "Arabic & English", "Saudi Arabia time"],
-  howEyebrow: "FROM CHOOSING TO EXPLORING",
-  howTitle: "Clear steps from the start",
-  howDescription: "This is the agreed booking journey. Its features will become available in future development phases.",
-  steps: [
-    { title: "Choose a guide and time", text: "Explore approved guides, then choose a time, duration, and group size within their availability and capacity." },
-    { title: "Send a booking request", text: "Your guide reviews the request. Acceptance temporarily holds the time; it does not confirm the booking." },
-    { title: "Pay after acceptance", text: "A successful, verified payment confirms the booking. The amount and charge currency are shown before you agree." },
-    { title: "Begin your tour", text: "Chat with your guide after confirmation, start the tour with a verification code, and leave a review once it is complete." },
+  notice: "Preview Version",
+  noticeDetail: "Bookings and payments will be activated soon",
+  
+  heroTitle: "Discover Saudi with its locals",
+  heroSearchWhere: "Where to? (e.g., Riyadh, AlUla)",
+  heroSearchWhen: "When? (Optional)",
+  heroSearchBtn: "Explore Guides",
+  
+  destinationsTitle: "Destinations worth exploring",
+  destinations: [
+    { id: "riyadh", name: "Riyadh", image: "https://images.unsplash.com/photo-1588667677943-4cc2c366ff45?q=80&w=600&auto=format&fit=crop" },
+    { id: "jeddah", name: "Jeddah", image: "https://images.unsplash.com/photo-1629853965555-460cc950d853?q=80&w=600&auto=format&fit=crop" },
+    { id: "alula", name: "AlUla", image: "https://images.unsplash.com/photo-1620211153835-f09d43d3b749?q=80&w=600&auto=format&fit=crop" },
+    { id: "abha", name: "Abha", image: "https://images.unsplash.com/photo-1601227092120-1e5f8f307a51?q=80&w=600&auto=format&fit=crop" }
   ],
-  aboutEyebrow: "ABOUT NADEEM",
-  aboutTitle: "Local experiences, clear details",
-  aboutText: "Nadeem is a responsive web platform project connecting travelers with local guides in Saudi Arabia. Each booking brings the tour schedule, details, and related conversation together.",
-  scope: ["Arabic and English interfaces", "Base prices in Saudi riyals", "Schedules in Riyadh time"],
-  guidesTitle: "The guide directory",
-  guidesText: "The guide directory is not open yet. Guides will appear after profile approval and the launch of search.",
-  guidesBadge: "A future phase",
-  statusEyebrow: "PROJECT PROGRESS",
-  statusTitle: "What is available in this preview?",
-  statusText: "Explore the interface and try accounts after configuring the connection. This development preview does not accept bookings or payments.",
-  ready: "Available now",
-  later: "Future development",
-  pending: "Decisions pending",
-  statuses: [
-    { title: "Interface, identity, and languages", text: "The Nadeem identity, both reading directions, and a responsive experience on mobile and desktop.", state: "ready" },
-    { title: "Accounts, guides, and bookings", text: "Development accounts and guide reviews are implemented. Booking features will arrive in a later phase.", state: "later" },
-    { title: "Payments and external services", text: "Providers are not activated. Dollar conversion and the exchange-rate source remain undecided.", state: "pending" },
+  
+  topGuidesTitle: "Meet our verified guides",
+  viewGuideBtn: "View Guide",
+  guideHourly: "SAR / hour",
+  guideTour: "SAR / tour",
+  verified: "Verified",
+  
+  interestsTitle: "Experiences for your interests",
+  interests: [
+    { title: "Heritage & Culture", icon: "🏛️" },
+    { title: "Nature & Adventure", icon: "⛰️" },
+    { title: "Local Experiences", icon: "☕" }
   ],
+  
+  howTitle: "How to book your tour?",
+  howSteps: [
+    { title: "Find your guide", text: "Choose the perfect guide based on city, reviews, and languages." },
+    { title: "Send a booking request", text: "Select your time and send a request for the guide to review." },
+    { title: "Pay securely & enjoy", text: "After approval, securely pay for your tour and start exploring." }
+  ],
+  
+  trustTitle: "Why Nadeem?",
+  trustFeatures: [
+    { title: "Verified Guides", text: "We review all guides to ensure they hold official licenses." },
+    { title: "Secure Payments", text: "Your money is safe with us until your tour is successfully completed." },
+    { title: "Authentic Hospitality", text: "Discover Saudi Arabia through the eyes of its locals." }
+  ],
+
   footer: "A platform for booking local tour guides",
-  footerNote: "Development preview · Booking services are not available yet",
+  footerNote: "Preview Version · Nadeem 2026",
+  footerLinks: { terms: "Terms & Conditions", privacy: "Privacy Policy", contact: "Contact Us" },
   backHome: "Back to home",
   notFoundTitle: "Page not found",
   notFoundText: "The link may be incorrect, or this page may not be available yet.",
@@ -116,6 +133,8 @@ const en: Messages = {
   errorTitle: "This page could not be displayed",
   errorText: "Please try loading the page again.",
   retry: "Try again",
+  
+  emptyStateGuides: "No guides are currently available matching your search",
 };
 
 export function getMessages(locale: Locale): Messages {

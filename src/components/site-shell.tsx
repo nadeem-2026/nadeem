@@ -35,7 +35,15 @@ export function SiteHeader({ locale }: { locale: Locale }) {
 export function SiteFooter({ locale }: { locale: Locale }) {
   const m = getMessages(locale);
   return <footer className="site-footer"><div className="container footer-inner">
-    <div><Brand name={m.name} reverse /><p>{m.footer}</p></div>
+    <div>
+      <Brand name={m.name} reverse />
+      <p style={{ marginTop: "12px", marginBottom: "16px" }}>{m.footer}</p>
+      <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", fontSize: "0.85rem", opacity: 0.9 }}>
+        <Link href={`/${locale}/terms`} style={{ textDecoration: "underline" }}>{m.footerLinks.terms}</Link>
+        <Link href={`/${locale}/privacy`} style={{ textDecoration: "underline" }}>{m.footerLinks.privacy}</Link>
+        <a href="mailto:support@nadeem.local" style={{ textDecoration: "underline" }}>{m.footerLinks.contact}</a>
+      </div>
+    </div>
     <p className="footer-note">{m.footerNote}</p>
   </div></footer>;
 }

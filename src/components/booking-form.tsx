@@ -18,26 +18,39 @@ export function BookingForm({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  
+  // Step state: 1 = Details, 2 = Review
+  const [step, setStep] = useState<1 | 2>(1);
+
+  // Form states
   const [duration, setDuration] = useState(2);
   const [date, setDate] = useState("");
   const [time, setTime] = useState("10:00");
+  const [participants, setParticipants] = useState(1);
+  const [meetingPoint, setMeetingPoint] = useState("");
 
   const total = duration * hourlyRate;
+  const today = new Date().toISOString().split("T")[0];
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleNextStep = (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    
-    if (!date || !time) {
-      setError(m.invalidDate);
+    if (!date || !time || !meetingPoint) {
+      setError(m.invalidDate || "Please fill all required fields.");
       return;
     }
+    setError(null);
+    setStep(2);
+  };
 
-    const formData = new FormData(e.currentTarget);
-    // Construct valid ISO start_time
+  const handleSubmit = async () => {
+    setError(null);
     const startTimeStr = `${date}T${time}:00`;
+    const formData = new FormData();
     formData.set("start_time", startTimeStr);
     formData.set("guide_id", guideId);
+    formData.set("duration_hours", duration.toString());
+    formData.set("participants", participants.toString());
+    formData.set("meeting_point", meetingPoint);
 
     startTransition(async () => {
       const res = await createBooking(formData);
@@ -46,66 +59,103 @@ export function BookingForm({
         router.push(`/${locale}/account`);
       } else {
         setError(res.message || m.errorMessage);
+        setStep(1); // Go back on error
       }
     });
   };
 
-  // Prevent past dates
-  const today = new Date().toISOString().split("T")[0];
-
   return (
-    <form className="account-form" onSubmit={handleSubmit} style={{ maxWidth: "600px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-      {error && <div className="form-error">{error}</div>}
-      
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-        <label>
-          {m.dateLabel}
-          <input type="date" name="date" value={date} min={today} onChange={e => setDate(e.target.value)} required />
-        </label>
-        
-        <label>
-          {m.startTimeLabel}
-          <input type="time" name="time" value={time} onChange={e => setTime(e.target.value)} required />
-        </label>
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-        <label>
-          {m.durationLabel}
-          <input type="number" name="duration_hours" min="1" max="12" value={duration} onChange={e => setDuration(parseInt(e.target.value) || 1)} required />
-        </label>
-        
-        <label>
-          {m.participantsLabel}
-          <input type="number" name="participants" min="1" defaultValue="1" required />
-        </label>
-      </div>
-
-      <label>
-        {m.meetingPointLabel}
-        <input type="text" name="meeting_point" placeholder={m.meetingPointPlaceholder} required />
-      </label>
-
-      <div style={{ padding: "1.5rem", background: "var(--background-alt, #f5f5f5)", borderRadius: "8px", marginTop: "1rem" }}>
-        <h3 style={{ margin: "0 0 1rem 0" }}>{m.summaryTitle}</h3>
-        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
-          <span>{m.hourlyRate}</span>
-          <span>{hourlyRate}</span>
+    <div className="account-form" style={{ maxWidth: "600px", margin: "0 auto", padding: "2rem" }}>
+      {/* Steps indicator */}
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "2rem", borderBottom: "2px solid var(--border)", paddingBottom: "1rem" }}>
+        <div style={{ fontWeight: step === 1 ? "bold" : "normal", color: step === 1 ? "var(--nadeem-green)" : "var(--muted)" }}>
+          1. {m.touristDetails}
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.5rem" }}>
-          <span>{m.durationLabel}</span>
-          <span>{duration}</span>
-        </div>
-        <hr style={{ border: "0", borderTop: "1px solid var(--border-color, #ccc)", margin: "1rem 0" }} />
-        <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", fontSize: "1.2rem", color: "var(--primary, #0070f3)" }}>
-          <span>{m.totalPrice}</span>
-          <span>{total}</span>
+        <div style={{ fontWeight: step === 2 ? "bold" : "normal", color: step === 2 ? "var(--nadeem-green)" : "var(--muted)" }}>
+          2. {m.summaryTitle}
         </div>
       </div>
 
-      <button type="submit" className="button button-primary" disabled={isPending} style={{ padding: "1rem", fontSize: "1.1rem" }}>
-        {isPending ? "..." : m.submitRequest}
-      </button>
-    </form>
+      {error && <div className="form-error" style={{ marginBottom: "1rem" }}>{error}</div>}
+
+      {step === 1 && (
+        <form onSubmit={handleNextStep} style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+          
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+            <label>
+              {m.dateLabel}
+              <input type="date" value={date} min={today} onChange={e => setDate(e.target.value)} required />
+            </label>
+            <label>
+              {m.startTimeLabel}
+              <input type="time" value={time} onChange={e => setTime(e.target.value)} required />
+            </label>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+            <label>
+              {m.durationLabel}
+              <input type="number" min="1" max="12" value={duration} onChange={e => setDuration(parseInt(e.target.value) || 1)} required />
+            </label>
+            <label>
+              {m.participantsLabel}
+              <input type="number" min="1" value={participants} onChange={e => setParticipants(parseInt(e.target.value) || 1)} required />
+            </label>
+          </div>
+
+          <label>
+            {m.meetingPointLabel}
+            <input type="text" placeholder={m.meetingPointPlaceholder} value={meetingPoint} onChange={e => setMeetingPoint(e.target.value)} required />
+          </label>
+
+          <button type="submit" className="button button-primary" style={{ marginTop: "1rem", padding: "1rem", fontSize: "1.1rem" }}>
+            {locale === "ar" ? "التالي: مراجعة الطلب" : "Next: Review Request"}
+          </button>
+        </form>
+      )}
+
+      {step === 2 && (
+        <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+          <div style={{ background: "var(--nadeem-ivory)", padding: "1.5rem", borderRadius: "var(--radius-card)", border: "1px solid var(--border)" }}>
+            <h3 style={{ margin: "0 0 1rem", color: "var(--nadeem-green)" }}>{m.summaryTitle}</h3>
+            
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.8rem" }}>
+              <span style={{ color: "var(--muted)" }}>{m.dateLabel}</span>
+              <strong>{date} @ {time}</strong>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.8rem" }}>
+              <span style={{ color: "var(--muted)" }}>{m.meetingPointLabel}</span>
+              <strong>{meetingPoint}</strong>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.8rem" }}>
+              <span style={{ color: "var(--muted)" }}>{m.durationLabel}</span>
+              <strong>{duration} {m.hours}</strong>
+            </div>
+            
+            <hr style={{ border: "0", borderTop: "1px solid var(--border)", margin: "1rem 0" }} />
+            
+            <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", fontSize: "1.2rem", color: "var(--nadeem-ink)" }}>
+              <span>{m.totalPrice}</span>
+              <span>{total} ر.س</span>
+            </div>
+          </div>
+
+          <p style={{ fontSize: "0.9rem", color: "var(--muted)", lineHeight: 1.6, textAlign: "center" }}>
+            {locale === "ar" 
+              ? "بإرسالك لهذا الطلب، فإنك ترسل طلباً للمرشد لمراجعته. لن يتم خصم أي مبلغ حتى يقوم المرشد بقبول طلبك وتأكيد توفره."
+              : "By submitting this request, you are sending it to the guide for review. No amount will be charged until the guide accepts your request and confirms availability."}
+          </p>
+
+          <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
+            <button type="button" onClick={() => setStep(1)} className="button" style={{ flex: 1 }}>
+              {locale === "ar" ? "تعديل التفاصيل" : "Edit Details"}
+            </button>
+            <button onClick={handleSubmit} className="button button-primary" disabled={isPending} style={{ flex: 2 }}>
+              {isPending ? "..." : m.submitRequest}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

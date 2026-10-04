@@ -115,9 +115,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </div>
       </section>
 
-      <section id="platform-status" className="container section">
-        <h2>{m.nav.status}</h2><p>{m.noticeDetail}</p>
-      </section>
     </main>
   );
 }

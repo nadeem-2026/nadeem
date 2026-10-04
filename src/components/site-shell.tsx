@@ -19,7 +19,6 @@ export function SiteHeader({ locale, theme = "system" }: { locale: Locale; theme
           <Link href={`/${locale}/guides`}>{m.nav.guides}</Link>
           <a href={`/${locale}#about`}>{m.nav.about}</a>
           <a href={`/${locale}#how-it-works`}>{m.nav.how}</a>
-          <a href={`/${locale}#platform-status`}>{m.nav.status}</a>
           <Link href={`/${locale}/account`}>{authMessages(locale).account}</Link>
         </nav>
         <div className="header-controls">
@@ -56,7 +55,6 @@ export function SiteFooter({ locale }: { locale: Locale }) {
           <li><Link href={`/${locale}/terms`}>{m.footerLinks.terms}</Link></li>
           <li><Link href={`/${locale}/privacy`}>{m.footerLinks.privacy}</Link></li>
           <li><Link href={`/${locale}/photo-credits`}>{ar ? "مصادر الصور" : "Photo credits"}</Link></li>
-          <li><Link href={`/${locale}#platform-status`}>{m.nav.status}</Link></li>
         </ul>
       </div>
       <div className="footer-column">

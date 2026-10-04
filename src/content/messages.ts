@@ -4,11 +4,9 @@ const ar = {
   name: "نديم",
   description: "منصة حجز المرشدين السياحيين في المملكة العربية السعودية",
   skip: "انتقل إلى المحتوى",
-  nav: { about: "عن نديم", how: "كيف تعمل المنصة", status: "حالة المنصة", guides: "المرشدين السياحيين" },
+  nav: { about: "عن نديم", how: "كيف تعمل المنصة", guides: "المرشدين السياحيين" },
   otherLanguage: "English",
   languageLabel: "View in English",
-  notice: "",
-  noticeDetail: "",
   
   // Hero
   heroTitle: "اكتشف السعودية برفقة أهلها",
@@ -77,11 +75,9 @@ const en: Messages = {
   name: "Nadeem",
   description: "A platform for booking local tour guides in Saudi Arabia",
   skip: "Skip to content",
-  nav: { about: "About Nadeem", how: "How it works", status: "Platform status", guides: "Tour Guides" },
+  nav: { about: "About Nadeem", how: "How it works", guides: "Tour Guides" },
   otherLanguage: "العربية",
   languageLabel: "عرض باللغة العربية",
-  notice: "",
-  noticeDetail: "",
   
   heroTitle: "Discover Saudi with its locals",
   heroSearchWhere: "Where to? (e.g., Riyadh, AlUla)",

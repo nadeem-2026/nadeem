@@ -59,29 +59,39 @@ export default async function BookingDetail({ params }: { params: Promise<{ loca
         <Link href={`/${locale}/account`} style={{ display: "inline-block", marginBottom: "1rem", color: "var(--primary, #0070f3)", textDecoration: "none" }}>
           &larr; {locale === "ar" ? "العودة لحسابي" : "Back to Account"}
         </Link>
-        <h1>{bm.bookingReference}: {booking.id.split("-")[0]}</h1>
-        <p style={{ fontSize: "1.1rem" }}>
-          {locale === "ar" ? "حالة الحجز:" : "Status:"} <strong>{bm.status[booking.status as keyof typeof bm.status] || booking.status}</strong>
-        </p>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "1rem" }}>
+          <h1 style={{ margin: 0 }}>{bm.bookingReference}: {booking.id.split("-")[0]}</h1>
+          <span className={`badge badge-${booking.status}`} style={{ fontSize: "1rem", padding: "8px 16px" }}>
+            {bm.status[booking.status as keyof typeof bm.status] || booking.status}
+          </span>
+        </div>
       </header>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "2rem", marginBottom: "3rem" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "1.5rem", marginBottom: "4rem" }}>
         
-        {booking.is_demo && <section>
-          <h2>{dm.title}</h2><p>{dm.notice}</p>
-          {demoPayment && <><h3>{dm.summary}</h3><p>{dm.amount}: {demoPayment.amount} · {dm.fee}: {demoPayment.platform_fee} · {dm.guide}: {demoPayment.guide_amount}</p><p>{dm.results[demoPayment.outcome as keyof typeof dm.results]}</p>{demoPayment.outcome === "refunded" && <p>{dm.refundedNote}</p>}</>}
-          {isTourist && booking.status === "awaiting_payment" && <DemoPayment bookingId={id} locale={locale} />}
-          {isTourist && demoPayment?.outcome === "success" && booking.status === "confirmed" && <DemoPayment bookingId={id} locale={locale} refund />}
+        {booking.is_demo && <section style={{ padding: "1.5rem", background: "var(--color-surface)", border: "1px solid var(--border)", borderRadius: "var(--radius-card, 12px)", boxShadow: "0 4px 20px rgba(0,0,0,0.03)" }}>
+          <h2 style={{ fontSize: "1.2rem", marginBottom: "1rem" }}>{dm.title}</h2>
+          <p style={{ color: "var(--muted)" }}>{dm.notice}</p>
+          {demoPayment && <div style={{ background: "var(--background-alt)", padding: "1rem", borderRadius: "8px", marginTop: "1rem" }}>
+            <h3 style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>{dm.summary}</h3>
+            <p style={{ margin: "0 0 0.5rem 0", fontSize: "0.9rem" }}>{dm.amount}: {demoPayment.amount} · {dm.fee}: {demoPayment.platform_fee} · {dm.guide}: {demoPayment.guide_amount}</p>
+            <p style={{ margin: "0 0 0.5rem 0", fontSize: "0.9rem" }}>{dm.results[demoPayment.outcome as keyof typeof dm.results]}</p>
+            {demoPayment.outcome === "refunded" && <p style={{ margin: 0, fontSize: "0.9rem" }}>{dm.refundedNote}</p>}
+          </div>}
+          <div style={{ marginTop: "1.5rem" }}>
+            {isTourist && booking.status === "awaiting_payment" && <DemoPayment bookingId={id} locale={locale} />}
+            {isTourist && demoPayment?.outcome === "success" && booking.status === "confirmed" && <DemoPayment bookingId={id} locale={locale} refund />}
+          </div>
         </section>}
         {/* Tour Operations (Only active when confirmed or in_progress) */}
         {chatActive && (
-          <section style={{ padding: "1.5rem", background: "var(--background-alt, #f5f5f5)", borderRadius: "8px" }}>
-            <h2 style={{ marginBottom: "1rem" }}>{locale === "ar" ? "إدارة الجولة" : "Tour Operations"}</h2>
+          <section style={{ padding: "1.5rem", background: "var(--color-surface)", border: "1px solid var(--border)", borderRadius: "var(--radius-card, 12px)", boxShadow: "0 4px 20px rgba(0,0,0,0.03)" }}>
+            <h2 style={{ fontSize: "1.2rem", marginBottom: "1.5rem" }}>{locale === "ar" ? "إدارة الجولة" : "Tour Operations"}</h2>
             
             {isTourist && booking.status === "confirmed" && tourCode && (
-              <div style={{ padding: "1rem", background: "#e2e3e5", color: "#383d41", borderRadius: "8px", borderLeft: "4px solid #383d41", marginBottom: "1rem" }}>
-                <p style={{ margin: "0 0 0.5rem 0", fontWeight: "bold" }}>{bm.operations?.touristOtpNote}</p>
-                <div style={{ fontSize: "2rem", letterSpacing: "5px", fontFamily: "monospace", color: "#383d41" }}>
+              <div style={{ padding: "1.5rem", background: "var(--background-alt)", borderRadius: "8px", borderInlineStart: "4px solid var(--primary)", marginBottom: "1.5rem" }}>
+                <p style={{ margin: "0 0 1rem 0", fontWeight: "600" }}>{bm.operations?.touristOtpNote}</p>
+                <div style={{ fontSize: "2.5rem", letterSpacing: "8px", fontFamily: "monospace", color: "var(--text)" }}>
                   {tourCode}
                 </div>
               </div>
@@ -96,24 +106,31 @@ export default async function BookingDetail({ params }: { params: Promise<{ loca
             )}
             
             {booking.status === "in_progress" && isTourist && (
-              <div style={{ padding: "1rem", background: "#d4edda", color: "#155724", borderRadius: "8px" }}>
-                {bm.operations?.tourStarted || "Tour is in progress"}
+              <div style={{ padding: "1.5rem", background: "var(--background-alt)", borderRadius: "8px", borderInlineStart: "4px solid var(--primary)", marginBottom: "1.5rem" }}>
+                <strong style={{ display: "block", marginBottom: "0.5rem", color: "var(--primary)" }}>{bm.operations?.tourStarted || "Tour is in progress"}</strong>
+                <p style={{ margin: 0, color: "var(--text)" }}>
+                  {locale === "ar" ? "جولتك بدأت الآن، استمتع بوقتك!" : "Your tour has started, enjoy your time!"}
+                </p>
               </div>
             )}
 
             {isGuide && booking.status === "in_progress" && (
-              <LiveLocationTracker bookingId={booking.id} m={bm} />
+              <div style={{ marginTop: "2rem", borderTop: "1px solid var(--border)", paddingTop: "1.5rem" }}>
+                <LiveLocationTracker bookingId={booking.id} m={bm} />
+              </div>
             )}
 
             {isTourist && booking.status === "in_progress" && (
-              <LiveLocationViewer bookingId={booking.id} m={bm} />
+              <div style={{ marginTop: "2rem", borderTop: "1px solid var(--border)", paddingTop: "1.5rem" }}>
+                <LiveLocationViewer bookingId={booking.id} m={bm} />
+              </div>
             )}
           </section>
         )}
 
         {/* Feedback Section (Only for completed tours) */}
         {isTourist && booking.status === "completed" && (
-          <section>
+          <section style={{ padding: "1.5rem", background: "var(--color-surface)", border: "1px solid var(--border)", borderRadius: "var(--radius-card, 12px)", boxShadow: "0 4px 20px rgba(0,0,0,0.03)" }}>
             <TourFeedback 
               bookingId={booking.id} 
               m={bm} 
@@ -125,9 +142,11 @@ export default async function BookingDetail({ params }: { params: Promise<{ loca
         )}
 
         {/* Chat Section */}
-        <section>
-          <h2 style={{ marginBottom: "1rem" }}>{bm.operations?.chat || "Chat"}</h2>
-          <ChatRoom bookingId={booking.id} userId={user.id} m={bm} active={chatActive} />
+        <section style={{ padding: "1.5rem", background: "var(--color-surface)", border: "1px solid var(--border)", borderRadius: "var(--radius-card, 12px)", boxShadow: "0 4px 20px rgba(0,0,0,0.03)" }}>
+          <h2 style={{ fontSize: "1.2rem", marginBottom: "1.5rem" }}>{bm.operations?.chat || "Chat"}</h2>
+          <div style={{ background: "var(--background-alt)", borderRadius: "8px", overflow: "hidden", border: "1px solid var(--border)" }}>
+            <ChatRoom bookingId={booking.id} userId={user.id} m={bm} active={chatActive} />
+          </div>
         </section>
 
       </div>

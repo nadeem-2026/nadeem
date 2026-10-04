@@ -93,9 +93,13 @@ h3 { font-size: 1.08rem; line-height: 1.6; margin-bottom: 10px; }
 .empty-icon { display: block; font: 42px Arial, sans-serif; color: var(--color-primary); margin-bottom: 16px; }
 .empty-state h3 { margin-top: 16px; }
 .empty-state p { font-size: .92rem; color: var(--muted); margin-bottom: 0; line-height: 1.9; }
-.badge { display: inline-block; font-size: .75rem; padding: 4px 12px; border-radius: 6px; color: #24322e; background: #e9e7dc; font-weight: 500; }
-.badge-ready { color: #124a43; background: #e5eee7; }
-.badge-pending { color: #654a1d; background: #f1e5ce; }
+.badge { display: inline-block; font-size: .75rem; padding: 4px 12px; border-radius: 20px; font-weight: 500; }
+.badge-pending { color: light-dark(#856404, #f1e5ce); background: light-dark(#fff3cd, #4a3614); }
+.badge-awaiting_payment { color: light-dark(#0c3b5e, #cce4f7); background: light-dark(#e1f0fa, #082942); }
+.badge-confirmed { color: light-dark(#155724, #cde6e1); background: light-dark(#d4edda, #0d3832); }
+.badge-in_progress { color: light-dark(#155724, #cde6e1); background: light-dark(#d4edda, #0d3832); }
+.badge-completed { color: light-dark(#124a43, #cde6e1); background: light-dark(#e5eee7, #0d3832); }
+.badge-cancelled, .badge-declined, .badge-refunded { color: light-dark(#721c24, #f7d4d4); background: light-dark(#f8d7da, #5c1212); }
 .status-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
 .status-card { border-top: 1px solid #a7b5aa; padding-block-start: 24px; }
 .status-card .badge { margin-bottom: 16px; }

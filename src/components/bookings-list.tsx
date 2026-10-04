@@ -62,18 +62,12 @@ export function BookingsList({
         const otherPartyName = role === "guide" ? booking.tourist?.display_name : booking.guide?.display_name;
 
         return (
-          <div key={booking.id} style={{ border: "1px solid var(--border-color, #e5e5e5)", borderRadius: "8px", padding: "1.5rem" }}>
+          <div key={booking.id} style={{ background: "var(--color-surface)", border: "1px solid var(--border)", borderRadius: "var(--radius-card, 12px)", padding: "1.5rem", boxShadow: "0 4px 20px rgba(0,0,0,0.03)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1rem" }}>
               <h3 style={{ margin: 0 }}>
                 {role === "guide" ? (m.touristLabel || "Tourist:") : (m.guideLabel || "Guide:")} {otherPartyName}
               </h3>
-              <span style={{
-                padding: "0.25rem 0.75rem",
-                borderRadius: "20px",
-                fontSize: "0.85rem",
-                background: booking.status === "pending" ? "#fff3cd" : booking.status === "confirmed" ? "#d4edda" : "#f8d7da",
-                color: booking.status === "pending" ? "#856404" : booking.status === "confirmed" ? "#155724" : "#721c24"
-              }}>
+              <span className={`badge badge-${booking.status}`}>
                 {m.status?.[booking.status] || booking.status}
               </span>
             </div>

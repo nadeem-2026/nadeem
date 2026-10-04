@@ -53,7 +53,7 @@ test("accounts and guide reviews enforce roles, isolation and audited transition
     try {
       await assert.rejects(db.exec("select * from profiles"), /permission denied/);
       await assert.rejects(db.exec("select * from guide_profiles"), /permission denied/);
-      await assert.rejects(db.exec("select save_guide_profile('Name','City','Bio',true)"), /permission denied/);
+      await assert.rejects(db.exec("select save_guide_profile('Name','City','Bio',array['Arabic'],array['Riyadh'],100,4,array['Tour'],true)"), /permission denied/);
     } finally { await db.exec("reset role"); }
   });
   await t.test("guide reads only own profile and cannot directly mutate roles, status or audit", async () => {
@@ -71,20 +71,20 @@ test("accounts and guide reviews enforce roles, isolation and audited transition
   await t.test("traveler cannot become guide through the profile RPC", async () => {
     await asUser(tourist, async () => {
       assert.equal((await db.query("select * from guide_profiles")).rows.length, 0);
-      await assert.rejects(db.exec("select save_guide_profile('Name','City','Bio',true)"), /not_authorized/);
+      await assert.rejects(db.exec("select save_guide_profile('Name','City','Bio',array['Arabic'],array['Riyadh'],100,4,array['Tour'],true)"), /not_authorized/);
     });
   });
   await t.test("invalid submissions are rejected; submission locks profile edits", async () => {
     await db.query("update auth.users set email_confirmed_at=null where id=$1", [guide]);
     await asUser(guide, async () => {
-      await assert.rejects(db.exec("select save_guide_profile('Guide','Riyadh','Bio',true)"), /not_authorized/);
+      await assert.rejects(db.exec("select save_guide_profile('Guide','Riyadh','Bio',array['Arabic'],array['Riyadh'],100,4,array['Tour'],true)"), /not_authorized/);
     });
     await db.query("update auth.users set email_confirmed_at=now() where id=$1", [guide]);
     await asUser(guide, async () => {
-      await assert.rejects(db.exec("select save_guide_profile('', 'City','Bio',true)"), /invalid_profile/);
-      await db.exec("select save_guide_profile('Guide','Riyadh','A guide profile',false)");
-      await db.exec("select save_guide_profile('Guide','Riyadh','A guide profile',true)");
-      await assert.rejects(db.exec("select save_guide_profile('Change','City','Bio',false)"), /profile_locked/);
+      await assert.rejects(db.exec("select save_guide_profile('', 'City','Bio',array['Arabic'],array['Riyadh'],100,4,array['Tour'],true)"), /invalid_profile/);
+      await db.exec("select save_guide_profile('Guide','Riyadh','A guide profile',array['Arabic'],array['Riyadh'],100,4,array['Tour'],false)");
+      await db.exec("select save_guide_profile('Guide','Riyadh','A guide profile',array['Arabic'],array['Riyadh'],100,4,array['Tour'],true)");
+      await assert.rejects(db.exec("select save_guide_profile('Change','City','Bio',array['Arabic'],array['Riyadh'],100,4,array['Tour'],false)"), /profile_locked/);
     });
   });
   await t.test("admin review requires a reason and valid state, and is audited exactly once", async () => {
@@ -99,11 +99,11 @@ test("accounts and guide reviews enforce roles, isolation and audited transition
     });
   });
   await t.test("rejected guide can revise and resubmit; approval stays private", async () => {
-    await asUser(guide, () => db.exec("select save_guide_profile('Guide','Riyadh','Revised biography',true)"));
+    await asUser(guide, () => db.exec("select save_guide_profile('Guide','Riyadh','Revised biography',array['Arabic'],array['Riyadh'],100,4,array['Tour'],true)"));
     await asUser(admin, () => db.query("select review_guide_profile($1,'approved','Development review')", [guide]));
     await asUser(tourist, async () => assert.equal((await db.query("select * from guide_profiles")).rows.length, 0));
     await asUser(guide, async () => {
-      await assert.rejects(db.exec("select save_guide_profile('Changed','City','Bio',true)"), /profile_locked/);
+      await assert.rejects(db.exec("select save_guide_profile('Changed','City','Bio',array['Arabic'],array['Riyadh'],100,4,array['Tour'],true)"), /profile_locked/);
     });
   });
   await t.test("suspension and reinstatement are separate audited admin decisions", async () => {
@@ -116,7 +116,7 @@ test("accounts and guide reviews enforce roles, isolation and audited transition
   await t.test("suspended accounts cannot edit, and suspended admins lose privileges immediately", async () => {
     await db.query("update profiles set account_status='suspended' where id in ($1,$2)", [other, admin]);
     await asUser(other, async () => {
-      await assert.rejects(db.exec("select save_guide_profile('Name','City','Bio',true)"), /not_authorized/);
+      await assert.rejects(db.exec("select save_guide_profile('Name','City','Bio',array['Arabic'],array['Riyadh'],100,4,array['Tour'],true)"), /not_authorized/);
       assert.equal((await db.query("select * from guide_profiles")).rows.length, 0);
     });
     await asUser(admin, async () => {

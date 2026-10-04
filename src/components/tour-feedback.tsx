@@ -1,5 +1,7 @@
 "use client";
 
+import type { BookingMessages, Review, Complaint } from "@/lib/bookings/types";
+
 import { useState } from "react";
 import { submitReview, submitComplaint } from "@/lib/bookings/actions";
 import type { Locale } from "@/lib/i18n";
@@ -15,18 +17,18 @@ const StarIconSolid = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export function TourFeedback({ bookingId, m, locale, existingReview, existingComplaint }: { 
-  bookingId: string; 
-  m: any; 
+export function TourFeedback({ bookingId, m, locale, existingReview, existingComplaint }: {
+  bookingId: string;
+  m: BookingMessages;
   locale: Locale;
-  existingReview?: any;
-  existingComplaint?: any;
+  existingReview?: Review | null;
+  existingComplaint?: Complaint | null;
 }) {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [comment, setComment] = useState("");
   const [complaintReason, setComplaintReason] = useState("");
-  
+
   const [mode, setMode] = useState<"review" | "complaint" | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -102,13 +104,13 @@ export function TourFeedback({ bookingId, m, locale, existingReview, existingCom
   if (!mode) {
     return (
       <div className="flex flex-col sm:flex-row gap-4 mt-6">
-        <button 
+        <button
           onClick={() => setMode("review")}
           className="flex-1 bg-white border-2 border-primary/20 hover:border-primary text-primary px-4 py-3 rounded-xl font-medium transition-colors"
         >
           ⭐ {m.leave_review || "Leave a Review"}
         </button>
-        <button 
+        <button
           onClick={() => setMode("complaint")}
           className="flex-1 bg-white border-2 border-red-200 hover:border-red-500 text-red-600 px-4 py-3 rounded-xl font-medium transition-colors"
         >

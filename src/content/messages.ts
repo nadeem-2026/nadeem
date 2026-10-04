@@ -19,10 +19,10 @@ const ar = {
   // Destinations
   destinationsTitle: "وجهات تستحق الاستكشاف",
   destinations: [
-    { id: "riyadh", name: "الرياض", image: "https://images.unsplash.com/photo-1588667677943-4cc2c366ff45?q=80&w=600&auto=format&fit=crop" },
-    { id: "jeddah", name: "جدة", image: "https://images.unsplash.com/photo-1629853965555-460cc950d853?q=80&w=600&auto=format&fit=crop" },
-    { id: "alula", name: "العلا", image: "https://images.unsplash.com/photo-1620211153835-f09d43d3b749?q=80&w=600&auto=format&fit=crop" },
-    { id: "abha", name: "أبها", image: "https://images.unsplash.com/photo-1601227092120-1e5f8f307a51?q=80&w=600&auto=format&fit=crop" }
+    { id: "riyadh", name: "الرياض", image: "/brand/nadeem-symbol-reverse.svg" },
+    { id: "jeddah", name: "جدة", image: "/brand/nadeem-symbol-reverse.svg" },
+    { id: "alula", name: "العلا", image: "/brand/nadeem-symbol-reverse.svg" },
+    { id: "abha", name: "أبها", image: "/brand/nadeem-symbol-reverse.svg" }
   ],
   
   // Guides
@@ -51,8 +51,8 @@ const ar = {
   // Trust
   trustTitle: "لماذا نديم؟",
   trustFeatures: [
-    { title: "مرشدون موثوقون", text: "نراجع حسابات كافة المرشدين للتحقق من التراخيص الرسمية." },
-    { title: "دفع آمن ومضمون", text: "نحفظ حقوقك المالية حتى تكتمل جولتك بنجاح." },
+    { title: "مرشدون موثوقون", text: "تظهر ملفات المرشدين بعد مراجعتها واعتمادها في المنصة." },
+    { title: "الدفع قيد التجهيز", text: "الدفع غير متاح حاليًا، ولا يتم إنشاء عمليات خصم." },
     { title: "تجربة ضيافة حقيقية", text: "تعرّف على السعودية بعيون أهلها من خلال تجارب محلية أصيلة." }
   ],
 
@@ -90,10 +90,10 @@ const en: Messages = {
   
   destinationsTitle: "Destinations worth exploring",
   destinations: [
-    { id: "riyadh", name: "Riyadh", image: "https://images.unsplash.com/photo-1588667677943-4cc2c366ff45?q=80&w=600&auto=format&fit=crop" },
-    { id: "jeddah", name: "Jeddah", image: "https://images.unsplash.com/photo-1629853965555-460cc950d853?q=80&w=600&auto=format&fit=crop" },
-    { id: "alula", name: "AlUla", image: "https://images.unsplash.com/photo-1620211153835-f09d43d3b749?q=80&w=600&auto=format&fit=crop" },
-    { id: "abha", name: "Abha", image: "https://images.unsplash.com/photo-1601227092120-1e5f8f307a51?q=80&w=600&auto=format&fit=crop" }
+    { id: "riyadh", name: "Riyadh", image: "/brand/nadeem-symbol-reverse.svg" },
+    { id: "jeddah", name: "Jeddah", image: "/brand/nadeem-symbol-reverse.svg" },
+    { id: "alula", name: "AlUla", image: "/brand/nadeem-symbol-reverse.svg" },
+    { id: "abha", name: "Abha", image: "/brand/nadeem-symbol-reverse.svg" }
   ],
   
   topGuidesTitle: "Meet our verified guides",
@@ -118,8 +118,8 @@ const en: Messages = {
   
   trustTitle: "Why Nadeem?",
   trustFeatures: [
-    { title: "Verified Guides", text: "We review all guides to ensure they hold official licenses." },
-    { title: "Secure Payments", text: "Your money is safe with us until your tour is successfully completed." },
+    { title: "Verified Guides", text: "Guide profiles appear after review and approval on the platform." },
+    { title: "Payments in preparation", text: "Payments are not available yet; no charges are created." },
     { title: "Authentic Hospitality", text: "Discover Saudi Arabia through the eyes of its locals." }
   ],
 

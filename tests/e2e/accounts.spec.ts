@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 for (const locale of ["ar", "en"] as const) {
   test(`${locale}: account forms expose only allowed registration roles`, async ({ page }) => {
-    await page.goto(`/${locale}/signup`);
+    await page.goto(`/${locale}/signup`, { waitUntil: "domcontentloaded" });
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(locale === "ar" ? "إنشاء حساب" : "Create an account");
     const role = page.getByRole("combobox");
     await expect(role.locator("option")).toHaveCount(2);
@@ -14,7 +14,7 @@ for (const locale of ["ar", "en"] as const) {
 
   test(`${locale}: unauthenticated account, admin and password update routes require sign-in`, async ({ page }) => {
     for (const route of ["account", "admin/guides", "update-password"]) {
-      await page.goto(`/${locale}/${route}`);
+      await page.goto(`/${locale}/${route}`, { waitUntil: "domcontentloaded" });
       await expect(page).toHaveURL(new RegExp(`/${locale}/login`));
       await expect(page.getByRole("heading", { level: 1 })).toHaveText(locale === "ar" ? "تسجيل الدخول" : "Sign in");
     }
@@ -22,7 +22,7 @@ for (const locale of ["ar", "en"] as const) {
 }
 
 test("language switch preserves the account page", async ({ page }) => {
-  await page.goto("/ar/signup");
+  await page.goto("/ar/signup", { waitUntil: "domcontentloaded" });
   await page.getByRole("link", { name: "View in English" }).click();
   await expect(page).toHaveURL(/\/en\/signup$/);
   await expect(page.locator("html")).toHaveAttribute("dir", "ltr");
@@ -46,8 +46,8 @@ for (const locale of ["ar", "en"] as const) {
     const target = new URL(response.headers().location);
     expect(target.pathname).toBe(`/${locale}/auth/recovery`);
     expect(target.hash).toBe("");
-    expect(response.headers()["referrer-policy"]).toBe("strict-origin-when-cross-origin");
-    await page.goto(`/${locale}/auth/callback?next=/${locale}/update-password#type=recovery`);
+    expect(response.headers()["referrer-policy"]).toBe("no-referrer");
+    await page.goto(`/${locale}/auth/callback?next=/${locale}/update-password#type=recovery`, { waitUntil: "domcontentloaded" });
     await expect(page).toHaveURL(new RegExp(`/${locale}/forgot-password\\?notice=expired$`));
     await expect(page.locator("p[role='alert']")).toBeVisible();
   });

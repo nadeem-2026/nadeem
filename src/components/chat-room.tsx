@@ -1,5 +1,7 @@
 "use client";
 
+import type { BookingMessages } from "@/lib/bookings/types";
+
 import { useEffect, useState, useRef } from "react";
 import { createBrowserClient } from "@/lib/auth/client";
 
@@ -11,10 +13,10 @@ export function ChatRoom({
 }: { 
   bookingId: string; 
   userId: string; 
-  m: any;
+  m: BookingMessages;
   active: boolean;
 }) {
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<{ id: string; sender_id: string; message: string }[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const supabase = createBrowserClient();
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -42,7 +44,10 @@ export function ChatRoom({
           filter: `booking_id=eq.${bookingId}`
         },
         (payload) => {
-          setMessages((prev) => [...prev, payload.new]);
+          const row = payload.new;
+          if (typeof row.id === "string" && typeof row.sender_id === "string" && typeof row.message === "string") {
+            setMessages(prev => prev.some(m => m.id === row.id) ? prev : [...prev, { id: row.id, sender_id: row.sender_id, message: row.message }]);
+          }
         }
       )
       .subscribe();

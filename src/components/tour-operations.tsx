@@ -1,10 +1,12 @@
 "use client";
 
+import type { BookingMessages } from "@/lib/bookings/types";
+
 import { useState } from "react";
 import { startTour, endTour } from "@/lib/bookings/actions";
 import type { Locale } from "@/lib/i18n";
 
-export function StartTourForm({ bookingId, m, locale }: { bookingId: string, m: any, locale: Locale }) {
+export function StartTourForm({ bookingId, m, locale }: { bookingId: string, m: BookingMessages, locale: Locale }) {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -39,7 +41,7 @@ export function StartTourForm({ bookingId, m, locale }: { bookingId: string, m: 
   );
 }
 
-export function EndTourForm({ bookingId, m, locale }: { bookingId: string, m: any, locale: Locale }) {
+export function EndTourForm({ bookingId, m, locale }: { bookingId: string, m: BookingMessages, locale: Locale }) {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {

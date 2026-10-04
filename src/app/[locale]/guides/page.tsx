@@ -1,8 +1,7 @@
-import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { isLocale, type Locale } from "@/lib/i18n";
-import { authClient } from "@/lib/auth/server";
+import { isLocale } from "@/lib/i18n";
+import { publicGuides } from "@/lib/guides/public";
 import { guidesMessages } from "@/content/guides";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -18,32 +17,17 @@ export default async function GuidesSearchPage({ params, searchParams }: { param
   const langQuery = typeof sp.lang === "string" ? sp.lang : "";
   const nameQuery = typeof sp.name === "string" ? sp.name : "";
 
-  const client = await authClient();
-  if (!client) throw new Error("Auth client unavailable");
-
-  // Query profiles that have an approved guide_profile
-  let query = client
-    .from("profiles")
-    .select("id, display_name, avatar_url, guide_profiles!inner(city, bio, hourly_rate, languages, service_areas)")
-    .eq("guide_profiles.status", "approved")
-    .eq("role", "guide");
-
-  if (cityQuery) {
-    query = query.or(`city.ilike.%${cityQuery}%,service_areas.cs.{${cityQuery}}`, { foreignTable: 'guide_profiles' });
-  }
-  
-  if (langQuery) {
-    query = query.contains("guide_profiles.languages", [langQuery]);
-  }
-
-  if (nameQuery) {
-    query = query.ilike("display_name", `%${nameQuery}%`);
-  }
-
-  const { data: guides, error } = await query;
-  if (error) {
-    console.error("Guides search error:", error);
-  }
+  const aliases: Record<string, string> = {
+    riyadh: "الرياض", jeddah: "جدة", alula: "العلا", abha: "أبها", dammam: "الدمام",
+    makkah: "مكة المكرمة", madinah: "المدينة المنورة", arabic: "العربية",
+    spanish: "español", french: "français",
+  };
+  const normalize = (value: string) => aliases[value.trim().toLowerCase()] ?? value.trim().toLowerCase();
+  const guides = (await publicGuides()).filter(guide =>
+    (!cityQuery || [guide.city, ...guide.service_areas].some(city => normalize(city).includes(normalize(cityQuery)))) &&
+    (!langQuery || guide.languages.some(language => normalize(language) === normalize(langQuery))) &&
+    (!nameQuery || guide.display_name.toLowerCase().includes(nameQuery.toLowerCase()))
+  );
 
   const cities = locale === "ar" ? ["الرياض", "جدة", "العلا", "أبها", "الدمام", "مكة المكرمة", "المدينة المنورة"] : ["Riyadh", "Jeddah", "AlUla", "Abha", "Dammam", "Makkah", "Madinah"];
   const languages = locale === "ar" ? ["العربية", "English", "Español", "Français"] : ["Arabic", "English", "Spanish", "French"];
@@ -96,12 +80,12 @@ export default async function GuidesSearchPage({ params, searchParams }: { param
           </div>
         ) : (
           <div className="guides-grid">
-            {guides.map((guide: any) => {
-              const gp = guide.guide_profiles[0] || guide.guide_profiles; // depending on relation type in postgrest
+            {guides.map((guide) => {
+              const gp = guide;
               return (
                 <a href={`/${locale}/guides/${guide.id}`} key={guide.id} className="guide-card">
                   <div className="guide-avatar-container">
-                    <Image src={guide.avatar_url || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop"} alt={guide.display_name} width={400} height={400} className="guide-avatar" />
+                    <Image src={"/brand/nadeem-symbol-reverse.svg"} alt={guide.display_name} width={400} height={400} className="guide-avatar" />
                     <span className="badge-verified">✓</span>
                   </div>
                   <div className="guide-info">

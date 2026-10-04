@@ -1,5 +1,8 @@
 "use client";
 
+import type { BookingMessages } from "@/lib/bookings/types";
+
+import type { RealtimeChannel } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { createBrowserClient as createClient } from "@/lib/auth/client";
 
@@ -9,10 +12,10 @@ const MapPinIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export function LiveLocationTracker({ bookingId, m }: { bookingId: string, m: any }) {
+export function LiveLocationTracker({ bookingId, m }: { bookingId: string, m: BookingMessages }) {
   const [isBroadcasting, setIsBroadcasting] = useState(false);
   const [error, setError] = useState("");
-  const [channel, setChannel] = useState<any>(null);
+  const [channel, setChannel] = useState<RealtimeChannel | null>(null);
 
   useEffect(() => {
     return () => {
@@ -101,7 +104,7 @@ export function LiveLocationTracker({ bookingId, m }: { bookingId: string, m: an
   );
 }
 
-export function LiveLocationViewer({ bookingId, m }: { bookingId: string, m: any }) {
+export function LiveLocationViewer({ bookingId, m }: { bookingId: string, m: BookingMessages }) {
   const [location, setLocation] = useState<{lat: number, lng: number} | null>(null);
   
   useEffect(() => {

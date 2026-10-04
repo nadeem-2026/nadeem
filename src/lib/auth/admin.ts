@@ -1,3 +1,4 @@
+import "server-only";
 import { createClient } from '@supabase/supabase-js';
 
 // Helper to create a Supabase admin client for background tasks/webhooks

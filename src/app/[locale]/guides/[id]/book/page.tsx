@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { isLocale } from "@/lib/i18n";
 import { authClient } from "@/lib/auth/server";
 import { bookingsMessages } from "@/content/bookings";
+import { publicGuides } from "@/lib/guides/public";
 import { BookingForm } from "@/components/booking-form";
 
 export default async function BookGuidePage({ params }: { params: Promise<{ locale: string, id: string }> }) {
@@ -18,22 +19,9 @@ export default async function BookGuidePage({ params }: { params: Promise<{ loca
     redirect(`/${locale}/login?next=/${locale}/guides/${id}/book`);
   }
 
-  // Fetch the guide profile
-  const { data: profile, error } = await client
-    .from("profiles")
-    .select("id, display_name, guide_profiles!inner(hourly_rate, status, max_participants)")
-    .eq("id", id)
-    .single();
-
-  if (error || !profile) {
-    notFound();
-  }
-
-  const gp = Array.isArray(profile.guide_profiles) ? profile.guide_profiles[0] : profile.guide_profiles;
-  
-  if (gp.status !== "approved") {
-    notFound();
-  }
+  const profile = (await publicGuides()).find(guide => guide.id === id);
+  if (!profile) notFound();
+  const gp = profile;
 
   return (
     <main className="container" id="main-content" tabIndex={-1}>

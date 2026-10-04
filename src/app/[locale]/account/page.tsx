@@ -1,3 +1,4 @@
+import type { Booking, Earning } from "@/lib/bookings/types";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale } from "@/lib/i18n";
@@ -28,8 +29,8 @@ export default async function Account({ params }: { params: Promise<{ locale: st
   }
 
   // Fetch bookings and earnings based on role
-  let bookings: any[] = [];
-  let earnings: any[] = [];
+  let bookings: Booking[] = [];
+  let earnings: Earning[] = [];
   if (profile.role === "guide") {
     const { data } = await client
       .from("bookings")

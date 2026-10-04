@@ -79,7 +79,7 @@ export function AvailabilityForm({ locale, availability }: { locale: Locale; ava
           return <div key={day} className="availability-row" style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
             <label className="checkbox-label" style={{ minWidth: "120px", display: "flex", gap: "0.5rem" }}>
               <input type="checkbox" name={`day_${day}_active`} defaultChecked={!!current} />
-              {(m as any)[`day${day}`]}
+              {m[`day${day}` as "day0" | "day1" | "day2" | "day3" | "day4" | "day5" | "day6"]}
             </label>
             <input type="time" name={`day_${day}_start`} defaultValue={current?.start_time?.slice(0,5) || "09:00"} required />
             <span>{m.endTime}</span>

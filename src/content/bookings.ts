@@ -1,6 +1,7 @@
 import type { Locale } from "@/lib/i18n";
 
 const ar = {
+  viewDetails: "عرض التفاصيل",
   bookTitle: "طلب حجز جولة",
   touristDetails: "تفاصيل الطلب",
   dateLabel: "تاريخ الجولة",
@@ -87,6 +88,7 @@ const ar = {
 };
 
 const en = {
+  viewDetails: "View details",
   bookTitle: "Request a Tour Booking",
   touristDetails: "Booking Details",
   dateLabel: "Tour Date",

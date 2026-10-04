@@ -25,7 +25,7 @@ begin
   exception when insufficient_privilege then null;
   end;
   begin
-    perform public.save_guide_profile('Test','Riyadh','Test',true);
+    perform public.save_guide_profile('Test','Riyadh','Test',array['Arabic'],array['Riyadh'],100,4,array['Tour'],true);
     raise exception 'FAIL: visitor invoked profile RPC';
   exception when insufficient_privilege then null;
   end;
@@ -40,7 +40,7 @@ begin
     raise exception 'FAIL: direct role write';
   exception when insufficient_privilege then null;
   end;
-  perform public.save_guide_profile('Test guide','Riyadh','Development verification',true);
+  perform public.save_guide_profile('Test guide','Riyadh','Development verification',array['Arabic'],array['Riyadh'],100,4,array['Tour'],true);
   begin
     perform public.review_guide_profile(guide_id,'approved','Self approval');
     raise exception 'FAIL: self approval';
@@ -53,7 +53,7 @@ begin
   select count(*) into observed from public.guide_profiles;
   if observed <> 0 then raise exception 'FAIL: guide data leaked'; end if;
   begin
-    perform public.save_guide_profile('Test','City','Bio',true);
+    perform public.save_guide_profile('Test','City','Bio',array['Arabic'],array['Riyadh'],100,4,array['Tour'],true);
     raise exception 'FAIL: tourist wrote a guide profile';
   exception when insufficient_privilege then null;
   end;
@@ -78,7 +78,7 @@ begin
   select count(*) into observed from public.guide_profiles;
   if observed <> 0 then raise exception 'FAIL: suspended account read guide data'; end if;
   begin
-    perform public.save_guide_profile('Test','City','Bio',true);
+    perform public.save_guide_profile('Test','City','Bio',array['Arabic'],array['Riyadh'],100,4,array['Tour'],true);
     raise exception 'FAIL: suspended account wrote a profile';
   exception when insufficient_privilege then null;
   end;

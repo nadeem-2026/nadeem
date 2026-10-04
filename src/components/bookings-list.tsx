@@ -1,19 +1,21 @@
 "use client";
 
+import type { BookingMessages, Booking } from "@/lib/bookings/types";
+
 import { useTransition, useState } from "react";
 import { updateBookingStatus } from "@/lib/bookings/actions";
 import { createPaymentCharge } from "@/lib/payments/actions";
 import { useRouter } from "next/navigation";
 
-export function BookingsList({ 
-  bookings, 
-  role, 
+export function BookingsList({
+  bookings,
+  role,
   m,
   locale
-}: { 
-  bookings: any[]; 
+}: {
+  bookings: Booking[];
   role: "guide" | "tourist";
-  m: any;
+  m: BookingMessages;
   locale: string;
 }) {
   const router = useRouter();
@@ -22,7 +24,7 @@ export function BookingsList({
 
   const handleStatusChange = (bookingId: string, status: string) => {
     if (!confirm(m.confirmAction || "Are you sure?")) return;
-    
+
     startTransition(async () => {
       const res = await updateBookingStatus(bookingId, status);
       if (!res.success) {
@@ -57,16 +59,16 @@ export function BookingsList({
       {bookings.map((booking) => {
         // Find other party's name
         const otherPartyName = role === "guide" ? booking.tourist?.display_name : booking.guide?.display_name;
-        
+
         return (
           <div key={booking.id} style={{ border: "1px solid var(--border-color, #e5e5e5)", borderRadius: "8px", padding: "1.5rem" }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1rem" }}>
               <h3 style={{ margin: 0 }}>
                 {role === "guide" ? (m.touristLabel || "Tourist:") : (m.guideLabel || "Guide:")} {otherPartyName}
               </h3>
-              <span style={{ 
-                padding: "0.25rem 0.75rem", 
-                borderRadius: "20px", 
+              <span style={{
+                padding: "0.25rem 0.75rem",
+                borderRadius: "20px",
                 fontSize: "0.85rem",
                 background: booking.status === "pending" ? "#fff3cd" : booking.status === "confirmed" ? "#d4edda" : "#f8d7da",
                 color: booking.status === "pending" ? "#856404" : booking.status === "confirmed" ? "#155724" : "#721c24"
@@ -74,9 +76,9 @@ export function BookingsList({
                 {m.status?.[booking.status] || booking.status}
               </span>
             </div>
-            
+
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem", fontSize: "0.95rem", color: "var(--text-muted, #666)", marginBottom: "1.5rem" }}>
-              <div><strong>{m.dateLabel || "Date:"}</strong> {new Date(booking.start_time).toLocaleString()}</div>
+              <div><strong>{m.dateLabel || "Date:"}</strong> {new Date(booking.start_time).toLocaleString(locale, { timeZone: "Asia/Riyadh" })}</div>
               <div><strong>{m.durationLabel || "Duration:"}</strong> {booking.duration_hours} {m.hours || "hours"}</div>
               <div><strong>{m.participantsLabel || "Participants:"}</strong> {booking.participants}</div>
               <div><strong>{m.totalPrice || "Total:"}</strong> {booking.total_price} SAR</div>
@@ -96,9 +98,9 @@ export function BookingsList({
               )}
 
               {role === "tourist" && booking.status === "awaiting_payment" && (
-                <button 
-                  className="button button-primary" 
-                  style={{ flex: 1 }} 
+                <button
+                  className="button button-primary"
+                  style={{ flex: 1 }}
                   onClick={() => handlePayment(booking.id)}
                   disabled={payingId === booking.id}
                 >
@@ -113,7 +115,7 @@ export function BookingsList({
               )}
 
               {(booking.status === "confirmed" || booking.status === "in_progress" || booking.status === "completed") && (
-                <button 
+                <button
                   onClick={() => router.push(`/${locale}/bookings/${booking.id}`)}
                   className="button"
                   style={{ flex: 1, background: "var(--background-alt, #f5f5f5)" }}

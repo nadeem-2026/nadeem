@@ -1,8 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { isLocale, type Locale } from "@/lib/i18n";
-import { authClient } from "@/lib/auth/server";
+import { isLocale } from "@/lib/i18n";
+import { publicGuides } from "@/lib/guides/public";
 import { guidesMessages } from "@/content/guides";
 
 export default async function GuideDetailsPage({ params }: { params: Promise<{ locale: string, id: string }> }) {
@@ -10,35 +10,10 @@ export default async function GuideDetailsPage({ params }: { params: Promise<{ l
   if (!isLocale(locale)) notFound();
   
   const m = guidesMessages(locale);
-  const client = await authClient();
-  if (!client) throw new Error("Auth client unavailable");
-
-  // Fetch the guide profile and base profile details
-  const { data: profile, error } = await client
-    .from("profiles")
-    .select("id, display_name, avatar_url, guide_profiles!inner(*)")
-    .eq("id", id)
-    .single();
-
-  if (error || !profile) {
-    notFound();
-  }
-
-  const gp = Array.isArray(profile.guide_profiles) ? profile.guide_profiles[0] : profile.guide_profiles;
-  
-  if (gp.status !== "approved") {
-    return (
-      <main className="container section" id="main-content" tabIndex={-1}>
-        <div className="empty-state">
-          <span className="empty-icon" aria-hidden="true">🔒</span>
-          <h3>{m.notApproved}</h3>
-          <Link href={`/${locale}/guides`} className="button" style={{ marginTop: "1rem" }}>{m.backToSearch}</Link>
-        </div>
-      </main>
-    );
-  }
-
-  const defaultAvatar = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop";
+  const profile = (await publicGuides()).find(guide => guide.id === id);
+  if (!profile) notFound();
+  const gp = profile;
+  const defaultAvatar = "/brand/nadeem-symbol-reverse.svg";
 
   return (
     <main className="container section" id="main-content" tabIndex={-1}>
@@ -52,7 +27,7 @@ export default async function GuideDetailsPage({ params }: { params: Promise<{ l
         <div className="guide-main">
           
           <div className="guide-header-compact">
-            <Image src={profile.avatar_url || defaultAvatar} alt={profile.display_name} width={200} height={200} className="guide-avatar-large" />
+            <Image src={defaultAvatar} alt={profile.display_name} width={200} height={200} className="guide-avatar-large" />
             <div>
               <h1 style={{ fontSize: "2.5rem", margin: "0 0 8px", color: "var(--nadeem-green)" }}>{profile.display_name} <span style={{ fontSize: "1rem", verticalAlign: "middle", background: "var(--nadeem-green)", color: "white", padding: "2px 10px", borderRadius: "12px" }}>✓</span></h1>
               <div style={{ color: "var(--muted)", fontSize: "1.1rem" }}>
@@ -86,11 +61,11 @@ export default async function GuideDetailsPage({ params }: { params: Promise<{ l
             </div>
           </section>
 
-          {gp.what_is_included && (
+          {gp.inclusions.length > 0 && (
             <section style={{ borderBottom: "none" }}>
               <h2>{m.whatIsIncluded}</h2>
               <p style={{ lineHeight: 1.9, fontSize: "1.05rem", color: "var(--muted)", whiteSpace: "pre-wrap" }}>
-                {gp.what_is_included}
+                {gp.inclusions.join(" • ")}
               </p>
             </section>
           )}

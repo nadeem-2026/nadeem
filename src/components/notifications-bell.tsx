@@ -1,29 +1,41 @@
 "use client";
 
+import type { RealtimeChannel, SupabaseClient } from "@supabase/supabase-js";
 import { useEffect, useState, useRef } from "react";
 import { createBrowserClient } from "@/lib/auth/client";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
 
+type Notification = { id: string; is_read: boolean; title: string; body: string; link: string | null; created_at: string };
+
 export function NotificationsBell({ locale }: { locale: Locale }) {
   const [open, setOpen] = useState(false);
-  const [notifications, setNotifications] = useState<any[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const dropdownRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
     const supabase = createBrowserClient();
-    let channel: any;
+    let channel: RealtimeChannel | undefined;
+    let disposed = false;
+    async function fetchNotifications(supabase: SupabaseClient, userId: string) {
+      const { data } = await supabase.from("notifications").select("*").eq("user_id", userId).order("created_at", { ascending: false }).limit(10);
+      if (data && !disposed) {
+        setNotifications(data);
+        setUnreadCount(data.filter((n: Notification) => !n.is_read).length);
+      }
+    }
     
     // Check session
     supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) {
+      if (user && !disposed) {
         fetchNotifications(supabase, user.id);
         
         // Listen to changes
         channel = supabase.channel(`public:notifications:user_id=eq.${user.id}`)
           .on("postgres_changes", { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` }, (payload) => {
-            setNotifications(prev => [payload.new, ...prev]);
+            const notification = payload.new as Notification;
+            setNotifications(prev => prev.some(n => n.id === notification.id) ? prev : [notification, ...prev]);
             setUnreadCount(prev => prev + 1);
           })
           .subscribe();
@@ -38,18 +50,11 @@ export function NotificationsBell({ locale }: { locale: Locale }) {
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
+      disposed = true;
       document.removeEventListener("mousedown", handleClickOutside);
       if (channel) channel.unsubscribe();
     };
   }, []);
-
-  const fetchNotifications = async (supabase: any, userId: string) => {
-    const { data } = await supabase.from("notifications").select("*").eq("user_id", userId).order("created_at", { ascending: false }).limit(10);
-    if (data) {
-      setNotifications(data);
-      setUnreadCount(data.filter((n: any) => !n.is_read).length);
-    }
-  };
 
   const markAsRead = async (id: string) => {
     const supabase = createBrowserClient();

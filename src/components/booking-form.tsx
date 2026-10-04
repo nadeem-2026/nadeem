@@ -1,5 +1,7 @@
 "use client";
 
+import type { BookingMessages } from "@/lib/bookings/types";
+
 import { useState, useTransition } from "react";
 import { createBooking } from "@/lib/bookings/actions";
 import { useRouter } from "next/navigation";
@@ -12,7 +14,7 @@ export function BookingForm({
 }: { 
   guideId: string; 
   hourlyRate: number; 
-  m: any;
+  m: BookingMessages;
   locale: string;
 }) {
   const router = useRouter();
@@ -44,7 +46,7 @@ export function BookingForm({
 
   const handleSubmit = async () => {
     setError(null);
-    const startTimeStr = `${date}T${time}:00`;
+    const startTimeStr = `${date}T${time}:00+03:00`;
     const formData = new FormData();
     formData.set("start_time", startTimeStr);
     formData.set("guide_id", guideId);

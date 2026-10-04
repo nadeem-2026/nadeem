@@ -30,3 +30,9 @@ export async function requireAccount(locale: Locale) {
   if (profile.account_status !== "active") redirect(`/${locale}/login?notice=suspended`);
   return { client, user, profile };
 }
+
+export async function requireAdmin(locale: Locale) {
+  const account = await requireAccount(locale);
+  if (account.profile.role !== "admin") redirect(`/${locale}/account`);
+  return account;
+}

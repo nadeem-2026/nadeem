@@ -1,10 +1,10 @@
-import { requireAccount } from "@/lib/auth/server";
+import { requireAdmin } from "@/lib/auth/server";
 import { getSupabaseAdmin } from "@/lib/auth/admin";
 import type { Locale } from "@/lib/i18n";
 
 export default async function AdminOverviewPage({ params }: { params: Promise<{ locale: string }> }) {
   const locale = (await params).locale as Locale;
-  await requireAccount(locale); // already checked for admin in layout, but double check doesn't hurt
+  await requireAdmin(locale); // already checked for admin in layout, but double check doesn't hurt
 
   const adminClient = getSupabaseAdmin();
 

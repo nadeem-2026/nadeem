@@ -32,6 +32,9 @@ export default async function BookingDetail({ params }: { params: Promise<{ loca
   const isGuide = profile.role === "guide" && booking.guide_id === user.id;
   const isTourist = profile.role === "tourist" && booking.tourist_id === user.id;
   
+  const { data: tourCode } = isTourist && booking.status === "confirmed"
+    ? await client.rpc("get_tour_start_code", { p_booking_id: id }) : { data: null };
+
   const chatActive = booking.status === "confirmed" || booking.status === "in_progress";
 
   let existingReview = null;
@@ -65,11 +68,11 @@ export default async function BookingDetail({ params }: { params: Promise<{ loca
           <section style={{ padding: "1.5rem", background: "var(--background-alt, #f5f5f5)", borderRadius: "8px" }}>
             <h2 style={{ marginBottom: "1rem" }}>{locale === "ar" ? "إدارة الجولة" : "Tour Operations"}</h2>
             
-            {isTourist && booking.status === "confirmed" && booking.tour_otp && (
+            {isTourist && booking.status === "confirmed" && tourCode && (
               <div style={{ padding: "1rem", background: "#e2e3e5", borderRadius: "8px", borderLeft: "4px solid #383d41", marginBottom: "1rem" }}>
                 <p style={{ margin: "0 0 0.5rem 0", fontWeight: "bold" }}>{bm.operations?.touristOtpNote}</p>
                 <div style={{ fontSize: "2rem", letterSpacing: "5px", fontFamily: "monospace", color: "#383d41" }}>
-                  {booking.tour_otp}
+                  {tourCode}
                 </div>
               </div>
             )}

@@ -1,11 +1,13 @@
 "use client";
 
-export function EarningsSummary({ 
-  earnings, 
-  m 
-}: { 
-  earnings: any[]; 
-  m: any;
+import type { BookingMessages, Earning } from "@/lib/bookings/types";
+
+export function EarningsSummary({
+  earnings,
+  m
+}: {
+  earnings: Earning[];
+  m: BookingMessages;
 }) {
   const total = earnings.reduce((acc, e) => acc + Number(e.guide_amount), 0);
   const pending = earnings.filter(e => e.status === "pending").reduce((acc, e) => acc + Number(e.guide_amount), 0);
@@ -45,9 +47,9 @@ export function EarningsSummary({
                 <td style={{ padding: "0.75rem 0", fontWeight: "bold" }}>{e.guide_amount}</td>
                 <td style={{ padding: "0.75rem 0", color: "var(--text-muted, #666)" }}>{e.platform_fee}</td>
                 <td style={{ padding: "0.75rem 0" }}>
-                  <span style={{ 
-                    padding: "0.2rem 0.5rem", 
-                    borderRadius: "12px", 
+                  <span style={{
+                    padding: "0.2rem 0.5rem",
+                    borderRadius: "12px",
                     fontSize: "0.8rem",
                     background: e.status === "pending" ? "#fff3cd" : e.status === "available" ? "#d4edda" : "#f5f5f5",
                     color: e.status === "pending" ? "#856404" : e.status === "available" ? "#155724" : "#666"

@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { resolveComplaint } from "@/lib/admin/actions";
+import type { Complaint } from "@/lib/bookings/types";
 import type { Locale } from "@/lib/i18n";
 
-export function ComplaintsTable({ complaints, locale }: { complaints: any[], locale: Locale }) {
+export function ComplaintsTable({ complaints, locale }: { complaints: Complaint[], locale: Locale }) {
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const isAr = locale === "ar";
 
@@ -46,7 +47,7 @@ export function ComplaintsTable({ complaints, locale }: { complaints: any[], loc
                 <td className="py-3 px-4">{c.tourist?.display_name || 'N/A'}</td>
                 <td className="py-3 px-4">{c.guide?.display_name || 'N/A'}</td>
                 <td className="py-3 px-4 max-w-xs truncate">{c.reason}</td>
-                <td className="py-3 px-4">{new Date(c.bookings?.start_time).toLocaleDateString(locale)}</td>
+                <td className="py-3 px-4">{c.bookings ? new Date(c.bookings.start_time).toLocaleDateString(locale, { timeZone: "Asia/Riyadh" }) : "—"}</td>
                 <td className="py-3 px-4">
                   <span className={`px-2 py-1 rounded text-xs ${c.status === 'resolved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                     {c.status === 'resolved' ? (isAr ? "محلولة" : "Resolved") : (isAr ? "قيد الانتظار" : "Pending")}

@@ -92,42 +92,42 @@ export function NotificationsBell({ locale }: { locale: Locale }) {
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-80 bg-white border shadow-lg rounded-lg overflow-hidden z-50" style={{ right: locale === 'ar' ? 'auto' : 0, left: locale === 'ar' ? 0 : 'auto', color: '#333' }}>
-          <div className="p-3 border-b flex justify-between items-center bg-gray-50">
+        <div className="absolute right-0 mt-2 w-80 bg-white border shadow-lg rounded-lg overflow-hidden z-50" style={{ right: locale === 'ar' ? 'auto' : 0, left: locale === 'ar' ? 0 : 'auto', color: 'var(--color-text)', background: 'var(--color-surface)' }}>
+          <div className="p-3 border-b flex justify-between items-center notification-muted">
             <h3 className="font-semibold text-sm">{locale === "ar" ? "الإشعارات" : "Notifications"}</h3>
             {unreadCount > 0 && (
-              <button onClick={markAllAsRead} className="text-xs text-blue-600 hover:underline">
+              <button onClick={markAllAsRead} className="text-xs notification-link hover:underline">
                 {locale === "ar" ? "تحديد الكل كمقروء" : "Mark all as read"}
               </button>
             )}
           </div>
           <div className="max-h-96 overflow-y-auto">
             {notifications.length === 0 ? (
-              <div className="p-4 text-center text-gray-500 text-sm">
+              <div className="p-4 text-center notification-text text-sm">
                 {locale === "ar" ? "لا توجد إشعارات" : "No notifications"}
               </div>
             ) : (
               notifications.map((n) => (
-                <div key={n.id} className={`p-4 border-b hover:bg-gray-50 transition-colors ${!n.is_read ? 'bg-blue-50/50' : ''}`}>
+                <div key={n.id} className={`p-4 border-b hover:notification-muted transition-colors ${!n.is_read ? 'notification-muted' : ''}`}>
                   <div className="flex justify-between gap-2 mb-1">
                     <h4 className={`text-sm ${!n.is_read ? 'font-bold' : 'font-medium'}`}>{n.title}</h4>
                     {!n.is_read && <span className="w-2 h-2 rounded-full bg-blue-600 mt-1 flex-shrink-0"></span>}
                   </div>
-                  <p className="text-xs text-gray-600 mb-2">{n.body}</p>
+                  <p className="text-xs notification-text mb-2">{n.body}</p>
                   <div className="flex justify-between items-center mt-2">
-                    <span className="text-[10px] text-gray-400">{new Date(n.created_at).toLocaleDateString(locale)}</span>
+                    <span className="text-[10px] notification-text">{new Date(n.created_at).toLocaleDateString(locale)}</span>
                     <div className="flex gap-2">
                       {n.link && (
                         <Link 
                           href={n.link}
                           onClick={() => markAsRead(n.id)}
-                          className="text-xs text-blue-600 hover:underline"
+                          className="text-xs notification-link hover:underline"
                         >
                           {locale === "ar" ? "عرض التفاصيل" : "View Details"}
                         </Link>
                       )}
                       {!n.is_read && (
-                        <button onClick={() => markAsRead(n.id)} className="text-xs text-gray-500 hover:text-gray-700">
+                        <button onClick={() => markAsRead(n.id)} className="text-xs notification-text hover:text-gray-700">
                           {locale === "ar" ? "مقروء" : "Mark read"}
                         </button>
                       )}

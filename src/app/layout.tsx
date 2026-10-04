@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import type { Metadata } from "next";
 import { SiteFooter, SiteHeader } from "@/components/site-shell";
 import { getRequestLocale } from "@/lib/request-locale";
@@ -21,7 +22,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const locale = await getRequestLocale();
-  return <html lang={locale} dir={direction(locale)}>
-    <body><SiteHeader locale={locale} /><aside style={{ padding: "0.75rem 1rem", background: "#D9BB86", color: "#24322E", textAlign: "center" }}>{demoMessages[locale].notice}</aside>{children}<SiteFooter locale={locale} /></body>
+  const savedTheme = (await cookies()).get("nadeem-theme")?.value;
+  const theme = savedTheme === "dark" || savedTheme === "light" ? savedTheme : "system";
+  return <html lang={locale} dir={direction(locale)} data-theme={theme}>
+    <body><SiteHeader locale={locale} theme={theme} /><aside style={{ padding: "0.75rem 1rem", background: "#D9BB86", color: "#24322E", textAlign: "center" }}>{demoMessages[locale].notice}</aside>{children}<SiteFooter locale={locale} /></body>
   </html>;
 }

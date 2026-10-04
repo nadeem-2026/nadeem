@@ -12,7 +12,7 @@ for (const locale of ["ar", "en"] as const) {
     await expect(page.locator("html")).toHaveAttribute("dir", locale === "ar" ? "rtl" : "ltr");
     await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
     await expect(page.getByRole("heading", { level: 1 })).toContainText(locale === "ar" ? "اكتشف السعودية" : "Discover Saudi");
-    await expect(page.locator(".foundation-notice").getByText(locale === "ar" ? "الحجز والدفع قيد التفعيل في المرحلة القادمة" : "Bookings and payments will be activated soon", { exact: true })).toBeVisible();
+    await expect(page.locator(".foundation-notice").getByText(locale === "ar" ? "مشروع جامعي — جرّب الحجز والدفع بالمحاكاة" : "College project — explore bookings with simulated payments", { exact: true })).toBeVisible();
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
     await expect(page.locator("header img")).toBeVisible();
     expect(await page.locator("header img").evaluate((img) => (img as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);

@@ -1,0 +1,12 @@
+import { notFound } from "next/navigation";
+import { isLocale } from "@/lib/i18n";
+export default async function Privacy({params}:{params:Promise<{locale:string}>}) {
+ const {locale}=await params;if(!isLocale(locale))notFound();const ar=locale==="ar";
+ return <main id="main-content" className="container information-page" tabIndex={-1}>
+  <p className="eyebrow">{ar?"النسخة التعليمية":"Educational edition"}</p>
+  <h1>{ar?"الخصوصية في المشروع الجامعي":"Privacy in the college project"}</h1>
+  <section className="info-card"><h2>{ar?"بيانات التجربة":"Demonstration data"}</h2><p>{ar?"يستخدم الموقع البريد الإلكتروني لتسجيل الحساب واستعادته، وبيانات الملف والتوفر والحجوزات والرسائل والتقييمات التي تدخلها لتشغيل العرض. ملفات المرشدين المعتمدة تعرض بياناتها العامة للزوار؛ تفاصيل الحجوزات مخصصة للأطراف المصرح لهم.":"The site uses your email for registration and recovery, and the profile, availability, booking, message and review data you enter to operate the demonstration. Approved guide profiles expose their public details to visitors; booking details are intended for authorized participants."}</p></section>
+  <section className="info-card"><h2>{ar?"التخزين والخدمات":"Storage and services"}</h2><p>{ar?"يستخدم المشروع Supabase للحسابات وقاعدة البيانات وRender للاستضافة. تستخدم ملفات ارتباط لتسجيل الدخول وحفظ اختيار المظهر لمدة تصل إلى سنة. تُحمّل الخطوط من Google Fonts، بينما صور الوجهات محفوظة ضمن الموقع. قد تسجل خدمات الاستضافة معلومات تقنية عن الطلبات.":"The project uses Supabase for accounts and data, and Render for hosting. Cookies support sign-in and store your appearance preference for up to a year. Fonts load from Google Fonts; destination photographs are hosted with the site. Hosting services may record technical request information."}</p></section>
+  <section className="info-card"><h2>{ar?"لا بيانات دفع حقيقية":"No real payment data"}</h2><p>{ar?"الدفع محاكاة فقط، ولا نطلب بطاقة أو حسابًا بنكيًا. تجنب رفع معلومات حساسة، ولا تعتمد على هذه النسخة لحفظ بيانات دائمة. يمكنك تغيير تفضيل المظهر أو حذف ملفات ارتباط الموقع من متصفحك؛ حذفها لا يحذف بيانات الحساب من قاعدة البيانات.":"Payments are simulated; no card or bank account is requested. Avoid sensitive information and do not rely on this preview for permanent storage. You can change your appearance preference or clear site cookies in your browser; clearing cookies does not delete account data from the database."}</p></section>
+ </main>;
+}

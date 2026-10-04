@@ -13,6 +13,8 @@ test("brand and semantic text pairings meet normal-text contrast of 4.5:1", () =
   const pairs = [
     ["124a43", "f7f3ea"], ["24322e", "f7f3ea"], ["52645e", "f7f3ea"],
     ["52645e", "ffffff"], ["d9bb86", "124a43"], ["f7f3ea", "0d3832"],
+    ["eef3ed", "101c19"], ["eef3ed", "1b2c27"], ["b4c6bd", "1b2c27"],
+    ["9ed9c5", "101c19"], ["d2dfd7", "103d36"], ["efd6ab", "103d36"],
     ["124a43", "e5eee7"], ["654a1d", "f1e5ce"], ["24322e", "e9e7dc"],
   ];
   for (const [foreground, background] of pairs) {

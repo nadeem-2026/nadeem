@@ -8,7 +8,7 @@ const ar = {
   otherLanguage: "English",
   languageLabel: "View in English",
   notice: "نسخة تجريبية",
-  noticeDetail: "الحجز والدفع قيد التفعيل في المرحلة القادمة",
+  noticeDetail: "مشروع جامعي — جرّب الحجز والدفع بالمحاكاة",
   
   // Hero
   heroTitle: "اكتشف السعودية برفقة أهلها",
@@ -19,10 +19,10 @@ const ar = {
   // Destinations
   destinationsTitle: "وجهات تستحق الاستكشاف",
   destinations: [
-    { id: "riyadh", name: "الرياض", image: "/brand/nadeem-symbol-reverse.svg" },
-    { id: "jeddah", name: "جدة", image: "/brand/nadeem-symbol-reverse.svg" },
-    { id: "alula", name: "العلا", image: "/brand/nadeem-symbol-reverse.svg" },
-    { id: "abha", name: "أبها", image: "/brand/nadeem-symbol-reverse.svg" }
+    { id: "riyadh", name: "الرياض", image: "/photos/riyadh.jpg" },
+    { id: "jeddah", name: "جدة", image: "/photos/jeddah.jpg" },
+    { id: "alula", name: "العلا", image: "/photos/alula.jpg" },
+    { id: "abha", name: "أبها", image: "/photos/abha.jpg" }
   ],
   
   // Guides
@@ -45,14 +45,14 @@ const ar = {
   howSteps: [
     { title: "ابحث عن مرشدك", text: "اختر المرشد الأنسب لرحلتك بناءً على المدينة، التقييمات، واللغات." },
     { title: "أرسل طلب الحجز", text: "حدد الموعد وأرسل الطلب ليقوم المرشد بمراجعته وقبوله." },
-    { title: "ادفع بأمان وابدأ رحلتك", text: "بعد قبول المرشد، ادفع قيمة الجولة بأمان واستمتع بتجربتك." }
+    { title: "جرّب الدفع وابدأ الجولة", text: "بعد قبول المرشد، أكمل محاكاة الدفع ثم جرّب إدارة الجولة دون خصم أموال." }
   ],
   
   // Trust
   trustTitle: "لماذا نديم؟",
   trustFeatures: [
     { title: "مرشدون موثوقون", text: "تظهر ملفات المرشدين بعد مراجعتها واعتمادها في المنصة." },
-    { title: "الدفع قيد التجهيز", text: "الدفع غير متاح حاليًا، ولا يتم إنشاء عمليات خصم." },
+    { title: "دفع تجريبي واضح", text: "جرّب نجاح الدفع أو فشله دون بطاقة بنكية أو أموال حقيقية." },
     { title: "تجربة ضيافة حقيقية", text: "تعرّف على السعودية بعيون أهلها من خلال تجارب محلية أصيلة." }
   ],
 
@@ -81,7 +81,7 @@ const en: Messages = {
   otherLanguage: "العربية",
   languageLabel: "عرض باللغة العربية",
   notice: "Preview Version",
-  noticeDetail: "Bookings and payments will be activated soon",
+  noticeDetail: "College project — explore bookings with simulated payments",
   
   heroTitle: "Discover Saudi with its locals",
   heroSearchWhere: "Where to? (e.g., Riyadh, AlUla)",
@@ -90,10 +90,10 @@ const en: Messages = {
   
   destinationsTitle: "Destinations worth exploring",
   destinations: [
-    { id: "riyadh", name: "Riyadh", image: "/brand/nadeem-symbol-reverse.svg" },
-    { id: "jeddah", name: "Jeddah", image: "/brand/nadeem-symbol-reverse.svg" },
-    { id: "alula", name: "AlUla", image: "/brand/nadeem-symbol-reverse.svg" },
-    { id: "abha", name: "Abha", image: "/brand/nadeem-symbol-reverse.svg" }
+    { id: "riyadh", name: "Riyadh", image: "/photos/riyadh.jpg" },
+    { id: "jeddah", name: "Jeddah", image: "/photos/jeddah.jpg" },
+    { id: "alula", name: "AlUla", image: "/photos/alula.jpg" },
+    { id: "abha", name: "Abha", image: "/photos/abha.jpg" }
   ],
   
   topGuidesTitle: "Meet our verified guides",
@@ -113,13 +113,13 @@ const en: Messages = {
   howSteps: [
     { title: "Find your guide", text: "Choose the perfect guide based on city, reviews, and languages." },
     { title: "Send a booking request", text: "Select your time and send a request for the guide to review." },
-    { title: "Pay securely & enjoy", text: "After approval, securely pay for your tour and start exploring." }
+    { title: "Simulate payment & explore", text: "After approval, simulate payment and explore the tour workflow. No real money is charged." }
   ],
   
   trustTitle: "Why Nadeem?",
   trustFeatures: [
     { title: "Verified Guides", text: "Guide profiles appear after review and approval on the platform." },
-    { title: "Payments in preparation", text: "Payments are not available yet; no charges are created." },
+    { title: "Transparent payment simulation", text: "Try successful or failed payments without a bank card or real money." },
     { title: "Authentic Hospitality", text: "Discover Saudi Arabia through the eyes of its locals." }
   ],
 

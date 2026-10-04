@@ -16,10 +16,11 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-background">
-          <Image src="/brand/nadeem-symbol-reverse.svg" alt="" fill className="hero-img" priority />
+          <Image src="/photos/alula.jpg" alt="" fill sizes="100vw" className="hero-img" preload />
           <div className="hero-overlay"></div>
         </div>
         <div className="container hero-content">
+          <p className="hero-kicker">{locale === "ar" ? "رفقة محلية. حكايات لا تُنسى." : "Local company. Lasting stories."}</p>
           <h1 className="hero-title">{m.heroTitle}</h1>
           <form className="hero-search" action={`/${locale}/guides`}>
             <div className="search-input-group">
@@ -37,7 +38,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <div className="destinations-grid">
           {m.destinations.map((dest) => (
             <a href={`/${locale}/guides?city=${dest.name}`} className="destination-card" key={dest.id}>
-              <Image src={dest.image} alt="" width={600} height={400} className="destination-img" />
+              <Image src={dest.image} alt="" width={1280} height={853} sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 25vw" className="destination-img" />
               <div className="destination-overlay">
                 <h3>{dest.name}</h3>
               </div>

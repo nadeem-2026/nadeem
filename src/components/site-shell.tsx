@@ -1,3 +1,5 @@
+import { ThemeSwitch, type Theme } from "./theme-switch";
+import { SocialChannels } from "./social-channels";
 import Link from "next/link";
 import { Brand } from "./brand";
 import { getMessages } from "@/content/messages";
@@ -6,7 +8,7 @@ import { LanguageSwitch } from "./language-switch";
 import { authMessages } from "@/content/auth";
 import { NotificationsBell } from "./notifications-bell";
 
-export function SiteHeader({ locale }: { locale: Locale }) {
+export function SiteHeader({ locale, theme = "system" }: { locale: Locale; theme?: Theme }) {
   const m = getMessages(locale);
   return <>
     <a href="#main-content" className="skip-link">{m.skip}</a>
@@ -20,8 +22,9 @@ export function SiteHeader({ locale }: { locale: Locale }) {
           <a href={`/${locale}#platform-status`}>{m.nav.status}</a>
           <Link href={`/${locale}/account`}>{authMessages(locale).account}</Link>
         </nav>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div className="header-controls">
           <NotificationsBell locale={locale} />
+          <ThemeSwitch locale={locale} initialTheme={theme} />
           <LanguageSwitch locale={locale} />
         </div>
       </div>
@@ -34,16 +37,41 @@ export function SiteHeader({ locale }: { locale: Locale }) {
 
 export function SiteFooter({ locale }: { locale: Locale }) {
   const m = getMessages(locale);
-  return <footer className="site-footer"><div className="container footer-inner">
-    <div>
-      <Brand name={m.name} reverse />
-      <p style={{ marginTop: "12px", marginBottom: "16px" }}>{m.footer}</p>
-      <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", fontSize: "0.85rem", opacity: 0.9 }}>
-        <Link href={`/${locale}/terms`} style={{ textDecoration: "underline" }}>{m.footerLinks.terms}</Link>
-        <Link href={`/${locale}/privacy`} style={{ textDecoration: "underline" }}>{m.footerLinks.privacy}</Link>
-        <a href="mailto:support@nadeem.local" style={{ textDecoration: "underline" }}>{m.footerLinks.contact}</a>
+  const ar = locale === "ar";
+  return <footer className="site-footer">
+    <div className="container footer-grid">
+      <div className="footer-brand">
+        <Brand name={m.name} reverse />
+        <p>{ar ? "السعودية أجمل برفقة أهلها. اكتشف الوجهات والحكايات المحلية مع نديم." : "Saudi Arabia, through local eyes. Discover places, people and stories with Nadeem."}</p>
+        <span className="footer-project-label">{ar ? "مشروع تطبيقي جامعي" : "A college project"}</span>
+      </div>
+      <div className="footer-column">
+        <h2>{ar ? "استكشف نديم" : "Explore Nadeem"}</h2>
+        <ul>
+          <li><Link href={`/${locale}/guides`}>{m.nav.guides}</Link></li>
+          <li><Link href={`/${locale}#about`}>{m.nav.about}</Link></li>
+          <li><Link href={`/${locale}#how-it-works`}>{m.nav.how}</Link></li>
+          <li><Link href={`/${locale}/account`}>{authMessages(locale).account}</Link></li>
+        </ul>
+      </div>
+      <div className="footer-column">
+        <h2>{ar ? "معلومات تهمك" : "Useful information"}</h2>
+        <ul>
+          <li><Link href={`/${locale}/terms`}>{m.footerLinks.terms}</Link></li>
+          <li><Link href={`/${locale}/privacy`}>{m.footerLinks.privacy}</Link></li>
+          <li><Link href={`/${locale}/photo-credits`}>{ar ? "مصادر الصور" : "Photo credits"}</Link></li>
+          <li><Link href={`/${locale}#platform-status`}>{m.nav.status}</Link></li>
+        </ul>
+      </div>
+      <div className="footer-column">
+        <h2>{ar ? "تواصل معنا" : "Connect with us"}</h2>
+        <SocialChannels />
+        <p className="social-note">{ar ? "روابط التواصل ستُضاف لاحقًا." : "Contact links will be added later."}</p>
       </div>
     </div>
-    <p className="footer-note">{m.footerNote}</p>
-  </div></footer>;
+    <div className="container footer-bottom">
+      <p>© 2026 {m.name}</p>
+      <p>{ar ? "للتعلم والاستكشاف — لا مدفوعات أو حجوزات تجارية حقيقية." : "Built for learning and exploration — no real payments or commercial bookings."}</p>
+    </div>
+  </footer>;
 }

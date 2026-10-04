@@ -82,8 +82,8 @@ export function ChatRoom({
           return (
             <div key={msg.id} style={{ 
               alignSelf: isMe ? "flex-end" : "flex-start",
-              background: isMe ? "var(--primary, #0070f3)" : "#e0e0e0",
-              color: isMe ? "#fff" : "#333",
+              background: isMe ? "#124a43" : "var(--color-surface)",
+              color: isMe ? "#fff" : "var(--color-text)",
               padding: "0.5rem 1rem",
               borderRadius: "16px",
               maxWidth: "80%",
@@ -96,7 +96,7 @@ export function ChatRoom({
         <div ref={bottomRef} />
       </div>
       
-      <form onSubmit={sendMessage} style={{ display: "flex", gap: "0.5rem", padding: "1rem", borderTop: "1px solid var(--border-color, #e5e5e5)", background: "#fff", borderBottomLeftRadius: "8px", borderBottomRightRadius: "8px" }}>
+      <form onSubmit={sendMessage} style={{ display: "flex", gap: "0.5rem", padding: "1rem", borderTop: "1px solid var(--border-color, #e5e5e5)", background: "var(--color-surface)", borderBottomLeftRadius: "8px", borderBottomRightRadius: "8px" }}>
         <input 
           type="text" 
           value={newMessage} 

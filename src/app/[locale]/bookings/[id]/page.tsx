@@ -79,7 +79,7 @@ export default async function BookingDetail({ params }: { params: Promise<{ loca
             <h2 style={{ marginBottom: "1rem" }}>{locale === "ar" ? "إدارة الجولة" : "Tour Operations"}</h2>
             
             {isTourist && booking.status === "confirmed" && tourCode && (
-              <div style={{ padding: "1rem", background: "#e2e3e5", borderRadius: "8px", borderLeft: "4px solid #383d41", marginBottom: "1rem" }}>
+              <div style={{ padding: "1rem", background: "#e2e3e5", color: "#383d41", borderRadius: "8px", borderLeft: "4px solid #383d41", marginBottom: "1rem" }}>
                 <p style={{ margin: "0 0 0.5rem 0", fontWeight: "bold" }}>{bm.operations?.touristOtpNote}</p>
                 <div style={{ fontSize: "2rem", letterSpacing: "5px", fontFamily: "monospace", color: "#383d41" }}>
                   {tourCode}

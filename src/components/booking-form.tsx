@@ -118,8 +118,8 @@ export function BookingForm({
 
       {step === 2 && (
         <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-          <div style={{ background: "var(--nadeem-ivory)", padding: "1.5rem", borderRadius: "var(--radius-card)", border: "1px solid var(--border)" }}>
-            <h3 style={{ margin: "0 0 1rem", color: "var(--nadeem-green)" }}>{m.summaryTitle}</h3>
+          <div style={{ background: "var(--color-page)", padding: "1.5rem", borderRadius: "var(--radius-card)", border: "1px solid var(--border)" }}>
+            <h3 style={{ margin: "0 0 1rem", color: "var(--color-primary)" }}>{m.summaryTitle}</h3>
             
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.8rem" }}>
               <span style={{ color: "var(--muted)" }}>{m.dateLabel}</span>
@@ -136,7 +136,7 @@ export function BookingForm({
             
             <hr style={{ border: "0", borderTop: "1px solid var(--border)", margin: "1rem 0" }} />
             
-            <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", fontSize: "1.2rem", color: "var(--nadeem-ink)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", fontSize: "1.2rem", color: "var(--color-text)" }}>
               <span>{m.totalPrice}</span>
               <span>{total} ر.س</span>
             </div>

@@ -18,7 +18,7 @@ export default async function GuideDetailsPage({ params }: { params: Promise<{ l
   return (
     <main className="container section" id="main-content" tabIndex={-1}>
       <div style={{ marginBottom: "2rem" }}>
-        <Link href={`/${locale}/guides`} style={{ display: "inline-block", color: "var(--nadeem-green)", textDecoration: "none", fontWeight: 500 }}>
+        <Link href={`/${locale}/guides`} style={{ display: "inline-block", color: "var(--color-primary)", textDecoration: "none", fontWeight: 500 }}>
           <span aria-hidden="true">&larr;</span> {m.backToSearch}
         </Link>
       </div>
@@ -29,7 +29,7 @@ export default async function GuideDetailsPage({ params }: { params: Promise<{ l
           <div className="guide-header-compact">
             <Image src={defaultAvatar} alt={profile.display_name} width={200} height={200} className="guide-avatar-large" />
             <div>
-              <h1 style={{ fontSize: "2.5rem", margin: "0 0 8px", color: "var(--nadeem-green)" }}>{profile.display_name} <span style={{ fontSize: "1rem", verticalAlign: "middle", background: "var(--nadeem-green)", color: "white", padding: "2px 10px", borderRadius: "12px" }}>✓</span></h1>
+              <h1 style={{ fontSize: "2.5rem", margin: "0 0 8px", color: "var(--color-primary)" }}>{profile.display_name} <span style={{ fontSize: "1rem", verticalAlign: "middle", background: "var(--nadeem-green)", color: "white", padding: "2px 10px", borderRadius: "12px" }}>✓</span></h1>
               <div style={{ color: "var(--muted)", fontSize: "1.1rem" }}>
                 <span>📍 {gp.city}</span>
               </div>

@@ -35,11 +35,11 @@ export default async function GuidesSearchPage({ params, searchParams }: { param
   return (
     <main className="container section" id="main-content" tabIndex={-1}>
       <header className="section-heading" style={{ marginInline: "auto", textAlign: "center" }}>
-        <h1 className="hero-title" style={{ color: "var(--nadeem-green)", marginBottom: "16px" }}>{m.title}</h1>
+        <h1 className="hero-title" style={{ color: "var(--color-primary)", marginBottom: "16px" }}>{m.title}</h1>
         <p style={{ fontSize: "1.1rem", color: "var(--muted)" }}>{m.description}</p>
       </header>
 
-      <section style={{ marginBottom: "3rem", background: "white", padding: "1.5rem", borderRadius: "var(--radius-card)", border: "1px solid var(--border)", boxShadow: "0 4px 20px rgba(0,0,0,0.03)" }}>
+      <section style={{ marginBottom: "3rem", background: "var(--color-surface)", padding: "1.5rem", borderRadius: "var(--radius-card)", border: "1px solid var(--border)", boxShadow: "0 4px 20px rgba(0,0,0,0.03)" }}>
         <form className="account-form" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.5rem", alignItems: "end", margin: 0, padding: 0, border: "none", background: "none" }} method="GET">
           
           <div style={{ display: "grid", gap: "8px" }}>
@@ -92,7 +92,7 @@ export default async function GuidesSearchPage({ params, searchParams }: { param
                     <h3 style={{ fontSize: "1.25rem", margin: "0 0 8px" }}>{guide.display_name}</h3>
                     <div style={{ display: "flex", justifyContent: "space-between", color: "var(--muted)", fontSize: "0.9rem", marginBottom: "12px" }}>
                       <span>📍 {gp.city}</span>
-                      <span style={{ fontWeight: "bold", color: "var(--nadeem-ink)" }}>{gp.hourly_rate} {m.hourlyRate}</span>
+                      <span style={{ fontWeight: "bold", color: "var(--color-text)" }}>{gp.hourly_rate} {m.hourlyRate}</span>
                     </div>
                     <p style={{ margin: "0 0 16px", fontSize: "0.95rem", lineHeight: 1.6, color: "var(--muted)", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                       {gp.bio}
@@ -100,7 +100,7 @@ export default async function GuidesSearchPage({ params, searchParams }: { param
                     <div style={{ fontSize: "0.85rem", color: "var(--muted)" }}>
                       <strong>{m.languages}</strong> {(gp.languages || []).join(" • ")}
                     </div>
-                    <div style={{ marginTop: "16px", paddingTop: "16px", borderTop: "1px solid var(--border)", textAlign: "center", color: "var(--nadeem-green)", fontWeight: 500 }}>
+                    <div style={{ marginTop: "16px", paddingTop: "16px", borderTop: "1px solid var(--border)", textAlign: "center", color: "var(--color-primary)", fontWeight: 500 }}>
                       {m.viewProfile} <span aria-hidden="true">→</span>
                     </div>
                   </div>

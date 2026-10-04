@@ -8,7 +8,8 @@ import "./globals.css";
 import { demoMessages } from "@/lib/payments/demo";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const m = getMessages(await getRequestLocale());
+  const locale = await getRequestLocale();
+  const m = getMessages(locale);
   return {
     title: `${m.name} | ${m.footer}`,
     description: m.description,
@@ -16,6 +17,22 @@ export async function generateMetadata(): Promise<Metadata> {
     icons: {
       icon: [{ url: "/favicon.ico", sizes: "16x16 32x32 48x48 64x64" }, { url: "/favicon.svg", type: "image/svg+xml" }],
       apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+    },
+    openGraph: {
+      type: "website",
+      locale: locale === "ar" ? "ar_SA" : "en_US",
+      url: "https://nadeem-sa.com",
+      title: `${m.name} | ${m.footer}`,
+      description: m.description,
+      siteName: m.name,
+      images: [
+        {
+          url: "/photos/alula.jpg",
+          width: 1280,
+          height: 853,
+          alt: m.name,
+        }
+      ]
     },
   };
 }
@@ -25,6 +42,6 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const savedTheme = (await cookies()).get("nadeem-theme")?.value;
   const theme = savedTheme === "dark" || savedTheme === "light" ? savedTheme : "system";
   return <html lang={locale} dir={direction(locale)} data-theme={theme}>
-    <body><SiteHeader locale={locale} theme={theme} /><aside style={{ padding: "0.75rem 1rem", background: "#D9BB86", color: "#24322E", textAlign: "center" }}>{demoMessages[locale].notice}</aside>{children}<SiteFooter locale={locale} /></body>
+    <body><SiteHeader locale={locale} theme={theme} />{children}<SiteFooter locale={locale} /></body>
   </html>;
 }

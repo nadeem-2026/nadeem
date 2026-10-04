@@ -91,7 +91,7 @@ export default async function GuidesSearchPage({ params, searchParams }: { param
             {guides.map((guide) => {
               const gp = guide;
               return (
-                <a href={`/${locale}/guides/${guide.id}`} key={guide.id} className="guide-card">
+                <a href={`/${locale}/guides/${guide.id}`} key={guide.id} className="guide-card hover-lift fade-in">
                   <div className="guide-avatar-container">
                     <GuideAvatar src={guide.avatar_url} name={guide.display_name} size={400} className="guide-avatar" />
                     <span className="badge-verified">✓</span>

@@ -37,8 +37,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <section className="container section destinations-section" aria-labelledby="destinations-title">
         <h2 id="destinations-title" className="section-title">{m.destinationsTitle}</h2>
         <div className="destinations-grid">
-          {m.destinations.map((dest) => (
-            <a href={`/${locale}/guides?city=${dest.name}`} className="destination-card" key={dest.id}>
+          {m.destinations.map((dest, i) => (
+            <a href={`/${locale}/guides?city=${dest.name}`} className="destination-card hover-lift fade-in" style={{ animationDelay: `${i * 100}ms` }} key={dest.id}>
               <Image src={dest.image} alt="" width={1280} height={853} sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 25vw" className="destination-img" />
               <div className="destination-overlay">
                 <h3>{dest.name}</h3>
@@ -54,7 +54,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           <h2 className="section-title text-center">{m.interestsTitle}</h2>
           <div className="interests-grid">
             {m.interests.map((interest, i) => (
-              <div className="interest-card" key={i}>
+              <div className="interest-card hover-lift fade-in" style={{ animationDelay: `${i * 100}ms` }} key={i}>
                 <span className="interest-icon" aria-hidden="true">{interest.icon}</span>
                 <h3>{interest.title}</h3>
               </div>
@@ -68,8 +68,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <section className="container section guides-section" aria-labelledby="guides-title">
           <h2 id="guides-title" className="section-title">{m.topGuidesTitle}</h2>
           <div className="guides-grid">
-            {topGuides.map((guide) => (
-              <a href={`/${locale}/guides/${guide.id}`} className="guide-card" key={guide.id}>
+            {topGuides.map((guide, i) => (
+              <a href={`/${locale}/guides/${guide.id}`} className="guide-card hover-lift fade-in" style={{ animationDelay: `${i * 100}ms` }} key={guide.id}>
                 <div className="guide-avatar-container">
                   <GuideAvatar src={guide.avatar_url} name={guide.display_name} size={200} className="guide-avatar" />
                   <span className="badge-verified">{m.verified}</span>
@@ -92,7 +92,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <h2 id="how-title" className="section-title text-center">{m.howTitle}</h2>
         <ol className="steps-grid">
           {m.howSteps.map((step, index) => (
-            <li className="step-card" key={index}>
+            <li className="step-card hover-lift fade-in" style={{ animationDelay: `${index * 100}ms` }} key={index}>
               <span className="step-number" aria-hidden="true">0{index + 1}</span>
               <h3>{step.title}</h3>
               <p>{step.text}</p>
@@ -107,7 +107,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           <h2 id="trust-title" className="section-title text-center">{m.trustTitle}</h2>
           <div className="trust-grid">
             {m.trustFeatures.map((feature, i) => (
-              <div className="trust-card" key={i}>
+              <div className="trust-card hover-lift fade-in" style={{ animationDelay: `${i * 100}ms` }} key={i}>
                 <h3>{feature.title}</h3>
                 <p>{feature.text}</p>
               </div>

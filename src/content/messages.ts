@@ -7,8 +7,8 @@ const ar = {
   nav: { about: "عن نديم", how: "كيف تعمل المنصة", status: "حالة المنصة", guides: "المرشدين السياحيين" },
   otherLanguage: "English",
   languageLabel: "View in English",
-  notice: "نسخة تجريبية",
-  noticeDetail: "مشروع جامعي — جرّب الحجز والدفع بالمحاكاة",
+  notice: "",
+  noticeDetail: "",
   
   // Hero
   heroTitle: "اكتشف السعودية برفقة أهلها",
@@ -45,19 +45,19 @@ const ar = {
   howSteps: [
     { title: "ابحث عن مرشدك", text: "اختر المرشد الأنسب لرحلتك بناءً على المدينة، التقييمات، واللغات." },
     { title: "أرسل طلب الحجز", text: "حدد الموعد وأرسل الطلب ليقوم المرشد بمراجعته وقبوله." },
-    { title: "جرّب الدفع وابدأ الجولة", text: "بعد قبول المرشد، أكمل محاكاة الدفع ثم جرّب إدارة الجولة دون خصم أموال." }
+    { title: "أكمل الدفع وابدأ الجولة", text: "بعد قبول المرشد، أكمل الدفع بأمان وابدأ جولتك السياحية الممتعة." }
   ],
   
   // Trust
   trustTitle: "لماذا نديم؟",
   trustFeatures: [
     { title: "مرشدون موثوقون", text: "تظهر ملفات المرشدين بعد مراجعتها واعتمادها في المنصة." },
-    { title: "دفع تجريبي واضح", text: "جرّب نجاح الدفع أو فشله دون بطاقة بنكية أو أموال حقيقية." },
+    { title: "دفع آمن وموثوق", text: "خيارات دفع متنوعة وآمنة لضمان حماية معاملاتك المالية." },
     { title: "تجربة ضيافة حقيقية", text: "تعرّف على السعودية بعيون أهلها من خلال تجارب محلية أصيلة." }
   ],
 
   footer: "منصة حجز المرشدين السياحيين",
-  footerNote: "نسخة تجريبية · نديم 2026",
+  footerNote: "جميع الحقوق محفوظة · نديم 2026",
   footerLinks: { terms: "الشروط والأحكام", privacy: "سياسة الخصوصية", contact: "تواصل معنا" },
   backHome: "العودة للرئيسية",
   notFoundTitle: "الصفحة غير موجودة",
@@ -80,8 +80,8 @@ const en: Messages = {
   nav: { about: "About Nadeem", how: "How it works", status: "Platform status", guides: "Tour Guides" },
   otherLanguage: "العربية",
   languageLabel: "عرض باللغة العربية",
-  notice: "Preview Version",
-  noticeDetail: "College project — explore bookings with simulated payments",
+  notice: "",
+  noticeDetail: "",
   
   heroTitle: "Discover Saudi with its locals",
   heroSearchWhere: "Where to? (e.g., Riyadh, AlUla)",
@@ -113,18 +113,18 @@ const en: Messages = {
   howSteps: [
     { title: "Find your guide", text: "Choose the perfect guide based on city, reviews, and languages." },
     { title: "Send a booking request", text: "Select your time and send a request for the guide to review." },
-    { title: "Simulate payment & explore", text: "After approval, simulate payment and explore the tour workflow. No real money is charged." }
+    { title: "Complete payment & start", text: "After approval, complete payment securely and start your enjoyable tour." }
   ],
   
   trustTitle: "Why Nadeem?",
   trustFeatures: [
     { title: "Verified Guides", text: "Guide profiles appear after review and approval on the platform." },
-    { title: "Transparent payment simulation", text: "Try successful or failed payments without a bank card or real money." },
+    { title: "Secure & Reliable Payment", text: "Various secure payment options to ensure your financial transactions are protected." },
     { title: "Authentic Hospitality", text: "Discover Saudi Arabia through the eyes of its locals." }
   ],
 
   footer: "A platform for booking local tour guides",
-  footerNote: "Preview Version · Nadeem 2026",
+  footerNote: "All Rights Reserved · Nadeem 2026",
   footerLinks: { terms: "Terms & Conditions", privacy: "Privacy Policy", contact: "Contact Us" },
   backHome: "Back to home",
   notFoundTitle: "Page not found",

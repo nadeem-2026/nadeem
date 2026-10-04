@@ -9,6 +9,7 @@ import { bookingsMessages } from "@/content/bookings";
 import { GuideForm, AvailabilityForm, ExceptionsForm, type GuideProfile, type DayAvailability, type AvailabilityException } from "@/components/auth-forms";
 import { BookingsList } from "@/components/bookings-list";
 import { EarningsSummary } from "@/components/earnings-summary";
+import { AccountTabs } from "@/components/account-tabs";
 
 export default async function Account({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -56,44 +57,57 @@ export default async function Account({ params }: { params: Promise<{ locale: st
 
   const bm = bookingsMessages(locale);
 
-  return <main id="main-content" className="container account-page" tabIndex={-1}>
-    <p className="eyebrow">{m.account}</p><h1>{profile.display_name || m.account}</h1><p>{m.role}: {m[profile.role]}</p>
-    <p>{m.developmentNote}</p>
-    {guide && <section><h2>{m.profile}</h2><GuideForm locale={locale} name={profile.display_name} guide={guide} /></section>}
-    {guide && <section><h2>{m.availability}</h2><AvailabilityForm locale={locale} availability={availability} /></section>}
-    {guide && <section><h2>{m.exceptions}</h2><ExceptionsForm locale={locale} exceptions={exceptions} /></section>}
-    
-    {(profile.role === "tourist" || profile.role === "guide") && (
-      <section style={{ marginTop: "3rem" }}>
-        <h2 style={{ borderBottom: "1px solid var(--border-color, #e5e5e5)", paddingBottom: "0.5rem" }}>
-          {bm.myBookings}
-        </h2>
-        <BookingsList bookings={bookings} role={profile.role} m={bm} locale={locale} />
-      </section>
-    )}
+  const profileContent = (
+    <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+      <div style={{ padding: "1.5rem", borderRadius: "8px", background: "var(--background-alt, #f5f5f5)" }}>
+        <h2 style={{ margin: "0 0 0.5rem 0" }}>{profile.display_name || m.account}</h2>
+        <p style={{ margin: 0, color: "var(--text-muted, #666)" }}>{m.role}: {m[profile.role]}</p>
+      </div>
+      <form action={signOut.bind(null, locale)}>
+        <button className="button" type="submit">{m.logout}</button>
+      </form>
+    </div>
+  );
 
-    {profile.role === "guide" && (
-      <section style={{ marginTop: "3rem" }}>
-        <h2 style={{ borderBottom: "1px solid var(--border-color, #e5e5e5)", paddingBottom: "0.5rem", color: "var(--primary, #0070f3)" }}>
-          {bm.earningsTitle}
-        </h2>
-        <EarningsSummary earnings={earnings} m={bm} />
-      </section>
-    )}
+  const guideContent = guide ? (
+    <div style={{ display: "flex", flexDirection: "column", gap: "3rem" }}>
+      <section><h2>{m.profile}</h2><GuideForm locale={locale} name={profile.display_name} guide={guide} /></section>
+      <section><h2>{m.availability}</h2><AvailabilityForm locale={locale} availability={availability} /></section>
+      <section><h2>{m.exceptions}</h2><ExceptionsForm locale={locale} exceptions={exceptions} /></section>
+    </div>
+  ) : undefined;
 
-    {profile.role === "admin" && (
-      <section style={{ marginTop: "3rem" }}>
-        <h2 style={{ borderBottom: "1px solid var(--border-color, #e5e5e5)", paddingBottom: "0.5rem" }}>
-          {locale === "ar" ? "الإدارة" : "Administration"}
-        </h2>
-        <Link className="button button-primary" href={`/${locale}/admin`}>
-          {locale === "ar" ? "الدخول إلى لوحة التحكم" : "Go to Admin Dashboard"}
-        </Link>
-      </section>
-    )}
-    
-    <form action={signOut.bind(null, locale)} style={{ marginTop: "2rem" }}>
-      <button className="button" type="submit">{m.logout}</button>
-    </form>
-  </main>;
+  const bookingsContent = (profile.role === "tourist" || profile.role === "guide") ? (
+    <section>
+      <BookingsList bookings={bookings} role={profile.role} m={bm} locale={locale} />
+    </section>
+  ) : undefined;
+
+  const earningsContent = profile.role === "guide" ? (
+    <section>
+      <EarningsSummary earnings={earnings} m={bm} />
+    </section>
+  ) : undefined;
+
+  const adminContent = profile.role === "admin" ? (
+    <section>
+      <Link className="button button-primary" href={`/${locale}/admin`}>
+        {locale === "ar" ? "الدخول إلى لوحة التحكم" : "Go to Admin Dashboard"}
+      </Link>
+    </section>
+  ) : undefined;
+
+  return (
+    <main id="main-content" className="container account-page" tabIndex={-1}>
+      <AccountTabs 
+        locale={locale as any} 
+        role={profile.role} 
+        profileContent={profileContent} 
+        bookingsContent={bookingsContent}
+        guideContent={guideContent}
+        earningsContent={earningsContent}
+        adminContent={adminContent}
+      />
+    </main>
+  );
 }

@@ -29,9 +29,6 @@ export function SiteHeader({ locale, theme = "system" }: { locale: Locale; theme
         </div>
       </div>
     </header>
-    <aside className="foundation-notice" aria-label={m.notice}><div className="container notice-inner">
-      <span className="notice-label">{m.notice}</span><span>{m.noticeDetail}</span>
-    </div></aside>
   </>;
 }
 
@@ -43,7 +40,6 @@ export function SiteFooter({ locale }: { locale: Locale }) {
       <div className="footer-brand">
         <Brand name={m.name} reverse />
         <p>{ar ? "السعودية أجمل برفقة أهلها. اكتشف الوجهات والحكايات المحلية مع نديم." : "Saudi Arabia, through local eyes. Discover places, people and stories with Nadeem."}</p>
-        <span className="footer-project-label">{ar ? "مشروع تطبيقي جامعي" : "A college project"}</span>
       </div>
       <div className="footer-column">
         <h2>{ar ? "استكشف نديم" : "Explore Nadeem"}</h2>
@@ -66,12 +62,10 @@ export function SiteFooter({ locale }: { locale: Locale }) {
       <div className="footer-column">
         <h2>{ar ? "تواصل معنا" : "Connect with us"}</h2>
         <SocialChannels />
-        <p className="social-note">{ar ? "روابط التواصل ستُضاف لاحقًا." : "Contact links will be added later."}</p>
       </div>
     </div>
     <div className="container footer-bottom">
       <p>© 2026 {m.name}</p>
-      <p>{ar ? "للتعلم والاستكشاف — لا مدفوعات أو حجوزات تجارية حقيقية." : "Built for learning and exploration — no real payments or commercial bookings."}</p>
     </div>
   </footer>;
 }

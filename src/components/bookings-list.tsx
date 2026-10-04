@@ -74,7 +74,7 @@ export function BookingsList({
                 background: booking.status === "pending" ? "#fff3cd" : booking.status === "confirmed" ? "#d4edda" : "#f8d7da",
                 color: booking.status === "pending" ? "#856404" : booking.status === "confirmed" ? "#155724" : "#721c24"
               }}>
-                {booking.is_demo ? (locale === "ar" ? "تجريبي — " : "Demo — ") : ""}{m.status?.[booking.status] || booking.status}
+                {m.status?.[booking.status] || booking.status}
               </span>
             </div>
 

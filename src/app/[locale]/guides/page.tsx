@@ -1,10 +1,18 @@
-import Image from "next/image";
+import { GuideAvatar } from "@/components/guide-avatar";
 import { notFound } from "next/navigation";
 import { isLocale } from "@/lib/i18n";
 import { publicGuides } from "@/lib/guides/public";
 import { guidesMessages } from "@/content/guides";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return {
+    title: locale === "ar" ? "ابحث عن مرشد سياحي | نديم" : "Find a Tour Guide | Nadeem",
+    description: locale === "ar" ? "تصفح قائمة المرشدين السياحيين المعتمدين في السعودية للحصول على تجربة فريدة." : "Browse certified tour guides in Saudi Arabia for a unique experience."
+  };
+}
 
 export default async function GuidesSearchPage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: SearchParams }) {
   const { locale } = await params;
@@ -85,7 +93,7 @@ export default async function GuidesSearchPage({ params, searchParams }: { param
               return (
                 <a href={`/${locale}/guides/${guide.id}`} key={guide.id} className="guide-card">
                   <div className="guide-avatar-container">
-                    <Image src={"/brand/nadeem-symbol-reverse.svg"} alt={guide.display_name} width={400} height={400} className="guide-avatar" />
+                    <GuideAvatar src={guide.avatar_url} name={guide.display_name} size={400} className="guide-avatar" />
                     <span className="badge-verified">✓</span>
                   </div>
                   <div className="guide-info">

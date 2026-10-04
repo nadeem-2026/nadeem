@@ -7,6 +7,7 @@ import type { Locale } from "@/lib/i18n";
 import { LanguageSwitch } from "./language-switch";
 import { authMessages } from "@/content/auth";
 import { NotificationsBell } from "./notifications-bell";
+import { MobileNav } from "./mobile-nav";
 
 export function SiteHeader({ locale, theme = "system" }: { locale: Locale; theme?: Theme }) {
   const m = getMessages(locale);
@@ -15,7 +16,8 @@ export function SiteHeader({ locale, theme = "system" }: { locale: Locale; theme
     <header className="site-header">
       <div className="container header-inner">
         <Link href={`/${locale}`} aria-label={m.name} className="brand-link"><Brand name={m.name} /></Link>
-        <nav aria-label={locale === "ar" ? "التنقل الرئيسي" : "Main navigation"}>
+        <MobileNav locale={locale} messages={m.nav} accountText={authMessages(locale).account} />
+        <nav className="desktop-nav" aria-label={locale === "ar" ? "التنقل الرئيسي" : "Main navigation"}>
           <Link href={`/${locale}/guides`}>{m.nav.guides}</Link>
           <a href={`/${locale}#about`}>{m.nav.about}</a>
           <a href={`/${locale}#how-it-works`}>{m.nav.how}</a>

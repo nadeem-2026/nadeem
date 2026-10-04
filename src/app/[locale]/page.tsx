@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getMessages } from "@/content/messages";
+import { GuideAvatar } from "@/components/guide-avatar";
 import { isLocale } from "@/lib/i18n";
 import { publicGuides } from "@/lib/guides/public";
 
@@ -70,7 +71,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             {topGuides.map((guide) => (
               <a href={`/${locale}/guides/${guide.id}`} className="guide-card" key={guide.id}>
                 <div className="guide-avatar-container">
-                  <Image src={"/brand/nadeem-symbol-reverse.svg"} alt={guide.display_name} width={200} height={200} className="guide-avatar" />
+                  <GuideAvatar src={guide.avatar_url} name={guide.display_name} size={200} className="guide-avatar" />
                   <span className="badge-verified">{m.verified}</span>
                 </div>
                 <div className="guide-info">

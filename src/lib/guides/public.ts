@@ -3,7 +3,7 @@ import { authClient } from "@/lib/auth/server";
 export type PublicGuide = {
   id: string; display_name: string; city: string; bio: string;
   hourly_rate: number; languages: string[]; service_areas: string[];
-  max_participants: number; inclusions: string[];
+  max_participants: number; inclusions: string[]; avatar_url?: string | null;
 };
 
 export async function publicGuides(): Promise<PublicGuide[]> {

@@ -11,6 +11,13 @@ import { BookingsList } from "@/components/bookings-list";
 import { EarningsSummary } from "@/components/earnings-summary";
 import { AccountTabs } from "@/components/account-tabs";
 
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return {
+    title: locale === "ar" ? "حسابي | نديم" : "My Account | Nadeem"
+  };
+}
+
 export default async function Account({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();

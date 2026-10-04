@@ -1,9 +1,20 @@
 import Link from "next/link";
-import Image from "next/image";
+import { GuideAvatar } from "@/components/guide-avatar";
 import { notFound } from "next/navigation";
 import { isLocale } from "@/lib/i18n";
 import { publicGuides } from "@/lib/guides/public";
 import { guidesMessages } from "@/content/guides";
+import { authClient } from "@/lib/auth/server";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string, id: string }> }) {
+  const { id } = await params;
+  const profile = (await publicGuides()).find(guide => guide.id === id);
+  if (!profile) return { title: "Not Found" };
+  return {
+    title: `${profile.display_name} - ${profile.city} | Nadeem`,
+    description: profile.bio.substring(0, 160)
+  };
+}
 
 export default async function GuideDetailsPage({ params }: { params: Promise<{ locale: string, id: string }> }) {
   const { locale, id } = await params;
@@ -13,7 +24,18 @@ export default async function GuideDetailsPage({ params }: { params: Promise<{ l
   const profile = (await publicGuides()).find(guide => guide.id === id);
   if (!profile) notFound();
   const gp = profile;
-  const defaultAvatar = "/brand/nadeem-symbol-reverse.svg";
+
+  const client = await authClient();
+  let reviews: any[] = [];
+  if (client) {
+    const { data } = await client
+      .from("reviews")
+      .select("rating, comment, created_at, tourist:profiles!tourist_id(display_name)")
+      .eq("guide_id", id)
+      .order("created_at", { ascending: false });
+    if (data) reviews = data;
+  }
+
 
   return (
     <main className="container section" id="main-content" tabIndex={-1}>
@@ -27,7 +49,7 @@ export default async function GuideDetailsPage({ params }: { params: Promise<{ l
         <div className="guide-main">
           
           <div className="guide-header-compact">
-            <Image src={defaultAvatar} alt={profile.display_name} width={200} height={200} className="guide-avatar-large" />
+            <GuideAvatar src={profile.avatar_url} name={profile.display_name} size={200} className="guide-avatar-large" />
             <div>
               <h1 style={{ fontSize: "2.5rem", margin: "0 0 8px", color: "var(--color-primary)" }}>{profile.display_name} <span style={{ fontSize: "1rem", verticalAlign: "middle", background: "var(--nadeem-green)", color: "white", padding: "2px 10px", borderRadius: "12px" }}>✓</span></h1>
               <div style={{ color: "var(--muted)", fontSize: "1.1rem" }}>
@@ -69,6 +91,26 @@ export default async function GuideDetailsPage({ params }: { params: Promise<{ l
               </p>
             </section>
           )}
+
+          <section style={{ borderBottom: "none" }}>
+            <h2>{locale === "ar" ? "آراء السياح" : "Tourist Reviews"}</h2>
+            {reviews.length === 0 ? (
+              <p style={{ color: "var(--muted)" }}>{locale === "ar" ? "لا توجد تقييمات بعد." : "No reviews yet."}</p>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+                {reviews.map((review, i) => (
+                  <div key={i} style={{ padding: "1.5rem", borderRadius: "12px", background: "var(--color-surface)", border: "1px solid var(--border)" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
+                      <strong>{review.tourist?.display_name || (locale === "ar" ? "سائح مجهول" : "Anonymous Tourist")}</strong>
+                      <span style={{ color: "var(--color-warning)" }}>{"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}</span>
+                    </div>
+                    <p style={{ color: "var(--muted)", margin: "0 0 8px", lineHeight: 1.6 }}>{review.comment}</p>
+                    <small style={{ color: "var(--muted)" }}>{new Date(review.created_at).toLocaleDateString(locale)}</small>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
         </div>
 
         <aside className="guide-sidebar">

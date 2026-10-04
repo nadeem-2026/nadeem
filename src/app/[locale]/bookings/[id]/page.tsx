@@ -10,6 +10,13 @@ import { LiveLocationTracker, LiveLocationViewer } from "@/components/live-locat
 import { TourFeedback } from "@/components/tour-feedback";
 import Link from "next/link";
 
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return {
+    title: locale === "ar" ? "تفاصيل الحجز | نديم" : "Booking Details | Nadeem"
+  };
+}
+
 export default async function BookingDetail({ params }: { params: Promise<{ locale: string; id: string }> }) {
   const { locale, id } = await params;
   if (!isLocale(locale)) notFound();

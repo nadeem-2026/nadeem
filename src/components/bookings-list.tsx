@@ -1,5 +1,6 @@
 "use client";
 
+import { DemoPayment } from "./demo-payment";
 import type { BookingMessages, Booking } from "@/lib/bookings/types";
 
 import { useTransition, useState } from "react";
@@ -73,7 +74,7 @@ export function BookingsList({
                 background: booking.status === "pending" ? "#fff3cd" : booking.status === "confirmed" ? "#d4edda" : "#f8d7da",
                 color: booking.status === "pending" ? "#856404" : booking.status === "confirmed" ? "#155724" : "#721c24"
               }}>
-                {m.status?.[booking.status] || booking.status}
+                {booking.is_demo ? (locale === "ar" ? "تجريبي — " : "Demo — ") : ""}{m.status?.[booking.status] || booking.status}
               </span>
             </div>
 
@@ -85,7 +86,7 @@ export function BookingsList({
               <div style={{ gridColumn: "1 / -1" }}><strong>{m.meetingPointLabel || "Meeting Point:"}</strong> {booking.meeting_point}</div>
             </div>
 
-            <div style={{ display: "flex", gap: "1rem", opacity: isPending ? 0.5 : 1, pointerEvents: isPending ? "none" : "auto" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", opacity: isPending ? 0.5 : 1, pointerEvents: isPending ? "none" : "auto" }}>
               {role === "guide" && booking.status === "pending" && (
                 <>
                   <button onClick={() => handleStatusChange(booking.id, "awaiting_payment")} className="button button-primary" style={{ flex: 1, background: "#28a745" }}>
@@ -97,7 +98,8 @@ export function BookingsList({
                 </>
               )}
 
-              {role === "tourist" && booking.status === "awaiting_payment" && (
+              {role === "tourist" && booking.is_demo && booking.status === "awaiting_payment" && <DemoPayment bookingId={booking.id} locale={locale} />}
+              {role === "tourist" && !booking.is_demo && booking.status === "awaiting_payment" && (
                 <button
                   className="button button-primary"
                   style={{ flex: 1 }}

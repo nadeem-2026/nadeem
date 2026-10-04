@@ -1,3 +1,5 @@
+import { DemoPayment } from "@/components/demo-payment";
+import { demoMessages } from "@/lib/payments/demo";
 import { notFound } from "next/navigation";
 import { isLocale } from "@/lib/i18n";
 import { requireAccount } from "@/lib/auth/server";
@@ -35,6 +37,8 @@ export default async function BookingDetail({ params }: { params: Promise<{ loca
   const { data: tourCode } = isTourist && booking.status === "confirmed"
     ? await client.rpc("get_tour_start_code", { p_booking_id: id }) : { data: null };
 
+  const dm = demoMessages[locale];
+  const { data: demoPayment } = booking.is_demo ? await client.from("demo_payments").select("outcome,amount,platform_fee,guide_amount").eq("booking_id", id).maybeSingle() : { data: null };
   const chatActive = booking.status === "confirmed" || booking.status === "in_progress";
 
   let existingReview = null;
@@ -63,6 +67,12 @@ export default async function BookingDetail({ params }: { params: Promise<{ loca
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "2rem", marginBottom: "3rem" }}>
         
+        {booking.is_demo && <section>
+          <h2>{dm.title}</h2><p>{dm.notice}</p>
+          {demoPayment && <><h3>{dm.summary}</h3><p>{dm.amount}: {demoPayment.amount} · {dm.fee}: {demoPayment.platform_fee} · {dm.guide}: {demoPayment.guide_amount}</p><p>{dm.results[demoPayment.outcome as keyof typeof dm.results]}</p>{demoPayment.outcome === "refunded" && <p>{dm.refundedNote}</p>}</>}
+          {isTourist && booking.status === "awaiting_payment" && <DemoPayment bookingId={id} locale={locale} />}
+          {isTourist && demoPayment?.outcome === "success" && booking.status === "confirmed" && <DemoPayment bookingId={id} locale={locale} refund />}
+        </section>}
         {/* Tour Operations (Only active when confirmed or in_progress) */}
         {chatActive && (
           <section style={{ padding: "1.5rem", background: "var(--background-alt, #f5f5f5)", borderRadius: "8px" }}>

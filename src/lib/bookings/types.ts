@@ -1,7 +1,7 @@
 import type { bookingsMessages } from "@/content/bookings";
 export type BookingMessages = ReturnType<typeof bookingsMessages>;
 export type Booking = {
-  id: string; status: keyof BookingMessages["status"]; start_time: string;
+  id: string; is_demo?: boolean; status: keyof BookingMessages["status"]; start_time: string;
   duration_hours: number; participants: number; meeting_point: string; total_price: number;
   tourist?: { display_name: string } | null; guide?: { display_name: string } | null;
 };

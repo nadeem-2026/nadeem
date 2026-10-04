@@ -20,3 +20,10 @@ test("disabled payment endpoints cannot acknowledge payment or display success",
   await page.goto("/en/payment/callback?tap_id=synthetic", { waitUntil: "domcontentloaded" });
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Payment could not be verified");
 });
+
+test("academic project notice is visible in both languages", async ({ page }) => {
+  await page.goto("/ar", { waitUntil: "domcontentloaded" });
+  await expect(page.getByText("مشروع جامعي — الحجوزات الجديدة تجريبية ولا تتم أي معاملات مالية حقيقية.", { exact: true })).toBeVisible();
+  await page.goto("/en", { waitUntil: "domcontentloaded" });
+  await expect(page.getByText("College project — new bookings are simulations. No real financial transactions take place.", { exact: true })).toBeVisible();
+});

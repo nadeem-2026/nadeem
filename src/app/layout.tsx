@@ -4,6 +4,7 @@ import { getRequestLocale } from "@/lib/request-locale";
 import { direction } from "@/lib/i18n";
 import { getMessages } from "@/content/messages";
 import "./globals.css";
+import { demoMessages } from "@/lib/payments/demo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const m = getMessages(await getRequestLocale());
@@ -21,6 +22,6 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const locale = await getRequestLocale();
   return <html lang={locale} dir={direction(locale)}>
-    <body><SiteHeader locale={locale} />{children}<SiteFooter locale={locale} /></body>
+    <body><SiteHeader locale={locale} /><aside style={{ padding: "0.75rem 1rem", background: "#D9BB86", color: "#24322E", textAlign: "center" }}>{demoMessages[locale].notice}</aside>{children}<SiteFooter locale={locale} /></body>
   </html>;
 }

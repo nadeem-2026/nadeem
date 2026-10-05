@@ -6,8 +6,7 @@ const channels = [
   { name: "YouTube", path: "M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Zm6 3 6 4-6 4V8Z" },
 ];
 export function SocialChannels() {
-  return <ul className="social-channels">{channels.map(channel => <li key={channel.name}>
-    <span className="social-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d={channel.path} /></svg></span>
-    <span>{channel.name}</span>
-  </li>)}</ul>;
+  return <div className="social-channels">{channels.map(channel => <a href="#" aria-label={channel.name} key={channel.name} className="social-icon">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d={channel.path} /></svg>
+  </a>)}</div>;
 }

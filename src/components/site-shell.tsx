@@ -42,7 +42,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
   return <footer className="site-footer">
     <div className="container footer-grid">
       <div className="footer-brand">
-        <Brand name={m.name} reverse />
+        <Brand name={m.name} />
         <p className="footer-tagline">
           {ar 
             ? "السعودية أجمل برفقة أهلها. اكتشف الوجهات والحكايات المحلية مع نديم، حيث تلتقي الأصالة بالحداثة." 

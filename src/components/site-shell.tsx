@@ -16,7 +16,6 @@ export function SiteHeader({ locale, theme = "system" }: { locale: Locale; theme
     <header className="site-header">
       <div className="container header-inner">
         <Link href={`/${locale}`} aria-label={m.name} className="brand-link"><Brand name={m.name} /></Link>
-        <MobileNav locale={locale} messages={m.nav} accountText={authMessages(locale).account} />
         <nav className="desktop-nav" aria-label={locale === "ar" ? "التنقل الرئيسي" : "Main navigation"}>
           <Link href={`/${locale}/guides`}>{m.nav.guides}</Link>
           <a href={`/${locale}#about`}>{m.nav.about}</a>
@@ -27,6 +26,7 @@ export function SiteHeader({ locale, theme = "system" }: { locale: Locale; theme
           <NotificationsBell locale={locale} />
           <ThemeSwitch locale={locale} initialTheme={theme} />
           <LanguageSwitch locale={locale} />
+          <MobileNav locale={locale} messages={m.nav} accountText={authMessages(locale).account} />
         </div>
       </div>
     </header>

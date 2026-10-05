@@ -120,9 +120,7 @@ h3 { font-size: 1.08rem; line-height: 1.6; margin-bottom: 10px; }
 }
 @media (max-width: 700px) {
   .container { width: calc(100% - 40px); }
-  .header-inner { flex-wrap: wrap; column-gap: 16px; row-gap: 0; padding-block: 10px 0; }
   .brand-logo { width: 200px; }
-  .header-inner nav { order: 3; width: 100%; justify-content: space-between; border-top: 1px solid var(--border); gap: 12px; }
   .language-switch { padding-inline: 12px; }
   .notice-inner { font-size: .72rem; flex-wrap: wrap; column-gap: 10px; row-gap: 2px; }
   .hero { grid-template-columns: 1fr; gap: 32px; padding-block: 40px; }
@@ -597,10 +595,11 @@ html[data-theme="dark"] .site-header .brand-logo { filter: brightness(0) invert(
 .info-card a { color: var(--color-primary); text-decoration: underline; text-underline-offset: 4px; }
 .credits-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 @media(max-width:1100px) {
-  .header-inner { flex-wrap: wrap; padding-top: 12px; }
-  .header-inner nav { order: 3; width: 100%; justify-content: center; border-top: 1px solid var(--border); }
   .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px; }
   .destinations-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media(max-width:550px) {
+  .destinations-grid { grid-template-columns: 1fr; }
 }
 @media(max-width:700px) {
   .header-inner .brand-logo { width: 135px; }

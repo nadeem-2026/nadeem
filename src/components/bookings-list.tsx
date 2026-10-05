@@ -62,7 +62,7 @@ export function BookingsList({
         const otherPartyName = role === "guide" ? booking.tourist?.display_name : booking.guide?.display_name;
 
         return (
-          <div key={booking.id} style={{ background: "var(--color-surface)", border: "1px solid var(--border)", borderRadius: "var(--radius-card, 12px)", padding: "1.5rem", boxShadow: "0 4px 20px rgba(0,0,0,0.03)" }}>
+          <div key={booking.id} className="card">
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1rem" }}>
               <h3 style={{ margin: 0 }}>
                 {role === "guide" ? (m.touristLabel || "Tourist:") : (m.guideLabel || "Guide:")} {otherPartyName}
@@ -72,7 +72,7 @@ export function BookingsList({
               </span>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem", fontSize: "0.95rem", color: "var(--text-muted, #666)", marginBottom: "1.5rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem", fontSize: "0.95rem", color: "var(--muted)", marginBottom: "1.5rem" }}>
               <div><strong>{m.dateLabel || "Date:"}</strong> {new Date(booking.start_time).toLocaleString(locale, { timeZone: "Asia/Riyadh" })}</div>
               <div><strong>{m.durationLabel || "Duration:"}</strong> {booking.duration_hours} {m.hours || "hours"}</div>
               <div><strong>{m.participantsLabel || "Participants:"}</strong> {booking.participants}</div>

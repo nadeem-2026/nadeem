@@ -859,6 +859,22 @@ html[data-theme="dark"] .site-header .brand-logo { filter: brightness(0) invert(
   border-color: var(--color-primary);
   box-shadow: 0 4px 12px rgba(14, 53, 38, 0.15);
 }
+
+/* Booking Details UI */
+.booking-callout {
+  padding: 1.5rem;
+  background: var(--background-alt);
+  border-radius: 16px;
+  border-inline-start: 4px solid var(--color-primary);
+  margin-bottom: 1.5rem;
+}
+
+.booking-notice {
+  background: var(--background-alt);
+  padding: 1.25rem;
+  border-radius: 12px;
+  margin-top: 1.5rem;
+}
 .tab-content { animation: fadeIn 0.4s ease; }
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }

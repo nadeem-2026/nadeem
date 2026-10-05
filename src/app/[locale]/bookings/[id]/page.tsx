@@ -79,7 +79,7 @@ export default async function BookingDetail({ params }: { params: Promise<{ loca
         {booking.is_demo && <section className="card">
           <h2 style={{ fontSize: "1.2rem", marginBottom: "1rem" }}>{dm.title}</h2>
           <p style={{ color: "var(--muted)" }}>{dm.notice}</p>
-          {demoPayment && <div style={{ background: "var(--background-alt)", padding: "1.25rem", borderRadius: "12px", marginTop: "1.5rem" }}>
+          {demoPayment && <div className="booking-notice">
             <h3 style={{ fontSize: "1rem", marginBottom: "0.75rem" }}>{dm.summary}</h3>
             <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", marginBottom: "0.75rem" }}>
               <span className="badge badge-in_progress">{dm.amount}: {demoPayment.amount}</span>
@@ -101,7 +101,7 @@ export default async function BookingDetail({ params }: { params: Promise<{ loca
             <h2 style={{ fontSize: "1.2rem", marginBottom: "1.5rem" }}>{locale === "ar" ? "إدارة الجولة" : "Tour Operations"}</h2>
             
             {isTourist && booking.status === "confirmed" && tourCode && (
-              <div style={{ padding: "1.5rem", background: "var(--background-alt)", borderRadius: "16px", borderInlineStart: "4px solid var(--color-primary)", marginBottom: "1.5rem" }}>
+              <div className="booking-callout">
                 <p style={{ margin: "0 0 1rem 0", fontWeight: "600", color: "var(--color-primary)" }}>{bm.operations?.touristOtpNote}</p>
                 <div style={{ fontSize: "2.5rem", letterSpacing: "8px", fontFamily: "monospace", color: "var(--foreground)", background: "var(--color-surface)", padding: "1rem", borderRadius: "8px", display: "inline-block" }}>
                   {tourCode}
@@ -118,7 +118,7 @@ export default async function BookingDetail({ params }: { params: Promise<{ loca
             )}
             
             {booking.status === "in_progress" && isTourist && (
-              <div style={{ padding: "1.5rem", background: "var(--background-alt)", borderRadius: "16px", borderInlineStart: "4px solid var(--color-primary)", marginBottom: "1.5rem" }}>
+              <div className="booking-callout">
                 <strong style={{ display: "block", marginBottom: "0.5rem", color: "var(--color-primary)" }}>{bm.operations?.tourStarted || "Tour is in progress"}</strong>
                 <p style={{ margin: 0, color: "var(--foreground)" }}>
                   {locale === "ar" ? "جولتك بدأت الآن، استمتع بوقتك!" : "Your tour has started, enjoy your time!"}

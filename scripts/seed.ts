@@ -14,14 +14,14 @@ const supabase = createClient(supabaseUrl, supabaseKey, {
 });
 
 const dummyGuides = [
-  { email: "guide1@nadeem.local", password: "password123", name: "أحمد عبدالله", city: "الرياض", role: "guide" },
-  { email: "guide2@nadeem.local", password: "password123", name: "سارة خالد", city: "جدة", role: "guide" },
-  { email: "guide3@nadeem.local", password: "password123", name: "محمد فهد", city: "العلا", role: "guide" }
+  { email: "g1@nadeem.local", password: "password123", name: "أحمد عبدالله", city: "الرياض", role: "guide" },
+  { email: "g2@nadeem.local", password: "password123", name: "سارة خالد", city: "جدة", role: "guide" },
+  { email: "g3@nadeem.local", password: "password123", name: "محمد فهد", city: "العلا", role: "guide" }
 ];
 
 const dummyTourists = [
-  { email: "tourist1@nadeem.local", password: "password123", name: "جون دو", city: "", role: "tourist" },
-  { email: "tourist2@nadeem.local", password: "password123", name: "آنا ماري", city: "", role: "tourist" }
+  { email: "t1@nadeem.local", password: "password123", name: "جون دو", city: "", role: "tourist" },
+  { email: "t2@nadeem.local", password: "password123", name: "آنا ماري", city: "", role: "tourist" }
 ];
 
 async function seed() {
@@ -35,7 +35,7 @@ async function seed() {
       email_confirm: true,
       user_metadata: {
         display_name: u.name,
-        role: u.role
+        account_type: u.role
       }
     });
 

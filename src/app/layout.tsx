@@ -6,6 +6,10 @@ import { direction } from "@/lib/i18n";
 import { getMessages } from "@/content/messages";
 import "./globals.css";
 import { demoMessages } from "@/lib/payments/demo";
+import { Alexandria, Inter } from "next/font/google";
+
+const alexandria = Alexandria({ subsets: ["arabic", "latin"], variable: "--font-arabic" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
@@ -41,7 +45,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const locale = await getRequestLocale();
   const savedTheme = (await cookies()).get("nadeem-theme")?.value;
   const theme = savedTheme === "dark" || savedTheme === "light" ? savedTheme : "system";
-  return <html lang={locale} dir={direction(locale)} data-theme={theme}>
+  return <html lang={locale} dir={direction(locale)} data-theme={theme} className={`${alexandria.variable} ${inter.variable}`}>
     <body><SiteHeader locale={locale} theme={theme} />{children}<SiteFooter locale={locale} /></body>
   </html>;
 }

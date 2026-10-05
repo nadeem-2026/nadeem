@@ -50,7 +50,7 @@ async function seed() {
     await new Promise(r => setTimeout(r, 1000));
     
     if (u.role === "guide") {
-      await supabase.from("profiles").update({
+      await supabase.from("guide_profiles").update({
         bio: `أنا مرشد سياحي من ${u.city}. أمتلك خبرة واسعة في الأماكن السياحية وأحب مشاركة ثقافتنا.`,
         city: u.city,
         languages: ["العربية", "English"],
@@ -58,8 +58,8 @@ async function seed() {
         hourly_rate: 150,
         max_participants: 10,
         inclusions: ["مواصلات", "تذاكر الدخول"],
-        verification_status: "verified" // auto-verify them for testing
-      }).eq("id", data.user.id);
+        status: "approved" // The query list_public_guides requires g.status = 'approved'
+      }).eq("user_id", data.user.id);
       
       console.log(`Updated guide profile for ${u.name}`);
     }

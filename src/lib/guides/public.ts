@@ -4,6 +4,7 @@ export type PublicGuide = {
   id: string; display_name: string; city: string; bio: string;
   hourly_rate: number; languages: string[]; service_areas: string[];
   max_participants: number; inclusions: string[]; avatar_url?: string | null;
+  avg_rating: number; review_count: number;
 };
 
 export async function publicGuides(): Promise<PublicGuide[]> {

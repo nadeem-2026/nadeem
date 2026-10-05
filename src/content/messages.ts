@@ -65,6 +65,23 @@ const ar = {
   errorText: "حاول تحميل الصفحة مرة أخرى.",
   retry: "إعادة المحاولة",
   
+  // Platform Status
+  platformStatusTitle: "حالة المنصة",
+  platformStatus: {
+    ready: {
+      title: "✅ الميزات الجاهزة",
+      items: ["البحث عن مرشدين واستعراض ملفاتهم", "حجز الجولات السياحية", "الدفع الإلكتروني (بيئة تجريبية)", "الوضع الداكن واللغتين"]
+    },
+    inProgress: {
+      title: "🔄 قيد التطوير",
+      items: ["لوحة تحكم المشرفين (Admin)", "توثيق حسابات المرشدين", "صفحات الدخول والتسجيل المحسنة"]
+    },
+    upcoming: {
+      title: "📋 الميزات القادمة",
+      items: ["نظام التقييمات والمراجعات", "المحادثات المباشرة (Chat)", "إدارة الجداول والأوقات للمرشد"]
+    }
+  },
+  
   // General
   emptyStateGuides: "لا يوجد مرشدين متاحين حالياً في هذا البحث",
 };
@@ -129,6 +146,21 @@ const en: Messages = {
   errorTitle: "This page could not be displayed",
   errorText: "Please try loading the page again.",
   retry: "Try again",
+  platformStatusTitle: "Platform Status",
+  platformStatus: {
+    ready: {
+      title: "✅ Ready Features",
+      items: ["Search & view guide profiles", "Book tours", "Online payment (Test mode)", "Dark mode & localization"]
+    },
+    inProgress: {
+      title: "🔄 In Progress",
+      items: ["Admin dashboard", "Guide verification", "Enhanced Auth pages"]
+    },
+    upcoming: {
+      title: "📋 Upcoming Features",
+      items: ["Reviews & Ratings system", "Live chat", "Guide availability management"]
+    }
+  },
   
   emptyStateGuides: "No guides are currently available matching your search",
 };

@@ -102,6 +102,13 @@ export default async function GuidesSearchPage({ params, searchParams }: { param
                       <span>📍 {gp.city}</span>
                       <span style={{ fontWeight: "bold", color: "var(--color-text)" }}>{gp.hourly_rate} {m.hourlyRate}</span>
                     </div>
+                    {gp.review_count > 0 && (
+                      <div style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "0.9rem", marginBottom: "12px" }}>
+                        <span style={{ color: "var(--color-warning)" }}>★</span>
+                        <strong style={{ color: "var(--color-primary)" }}>{gp.avg_rating.toFixed(1)}</strong>
+                        <span style={{ color: "var(--muted)" }}>({gp.review_count} {locale === "ar" ? "تقييم" : "reviews"})</span>
+                      </div>
+                    )}
                     <p style={{ margin: "0 0 16px", fontSize: "0.95rem", lineHeight: 1.6, color: "var(--muted)", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                       {gp.bio}
                     </p>

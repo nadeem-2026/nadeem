@@ -116,6 +116,41 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </div>
       </section>
 
+      {/* Platform Status Section */}
+      <section className="platform-status-section" id="platform-status">
+        <div className="container">
+          <h2 className="section-title text-center">{m.platformStatusTitle}</h2>
+          <div className="status-grid">
+            <div className="status-card ready hover-lift fade-in" style={{ animationDelay: '100ms' }}>
+              <h3>{m.platformStatus.ready.title}</h3>
+              <ul>
+                {m.platformStatus.ready.items.map((item, i) => (
+                  <li key={i}>{item}</li>
+                ))}
+              </ul>
+            </div>
+            
+            <div className="status-card in-progress hover-lift fade-in" style={{ animationDelay: '200ms' }}>
+              <h3>{m.platformStatus.inProgress.title}</h3>
+              <ul>
+                {m.platformStatus.inProgress.items.map((item, i) => (
+                  <li key={i}>{item}</li>
+                ))}
+              </ul>
+            </div>
+            
+            <div className="status-card upcoming hover-lift fade-in" style={{ animationDelay: '300ms' }}>
+              <h3>{m.platformStatus.upcoming.title}</h3>
+              <ul>
+                {m.platformStatus.upcoming.items.map((item, i) => (
+                  <li key={i}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </main>
   );
 }

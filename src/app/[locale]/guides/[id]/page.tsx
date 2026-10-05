@@ -33,9 +33,10 @@ export default async function GuideDetailsPage({ params }: { params: Promise<{ l
       .select("rating, comment, created_at, tourist:profiles!tourist_id(display_name)")
       .eq("guide_id", id)
       .order("created_at", { ascending: false });
-    if (data) reviews = data;
+    if (data && data.length > 0) {
+      reviews = data;
+    }
   }
-
 
   return (
     <main className="container section" id="main-content" tabIndex={-1}>
@@ -52,8 +53,15 @@ export default async function GuideDetailsPage({ params }: { params: Promise<{ l
             <GuideAvatar src={profile.avatar_url} name={profile.display_name} size={200} className="guide-avatar-large" />
             <div>
               <h1 style={{ fontSize: "2.5rem", margin: "0 0 8px", color: "var(--color-primary)" }}>{profile.display_name} <span style={{ fontSize: "1rem", verticalAlign: "middle", background: "var(--nadeem-green)", color: "white", padding: "2px 10px", borderRadius: "12px" }}>✓</span></h1>
-              <div style={{ color: "var(--muted)", fontSize: "1.1rem" }}>
+              <div style={{ color: "var(--muted)", fontSize: "1.1rem", display: "flex", gap: "1rem", alignItems: "center" }}>
                 <span>📍 {gp.city}</span>
+                {gp.review_count > 0 && (
+                  <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                    <span style={{ color: "var(--color-warning)" }}>★</span>
+                    <strong style={{ color: "var(--color-primary)" }}>{gp.avg_rating.toFixed(1)}</strong>
+                    <span>({gp.review_count} {locale === "ar" ? "تقييم" : "reviews"})</span>
+                  </span>
+                )}
               </div>
             </div>
           </div>

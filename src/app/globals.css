@@ -25,7 +25,7 @@ main:focus { outline: none; }
 .container { width: min(1200px, calc(100% - 96px)); margin-inline: auto; }
 .skip-link { position: fixed; top: -100px; inset-inline-start: 16px; z-index: 100; padding: 12px 20px; background: var(--color-surface); border: 2px solid var(--nadeem-green); border-radius: 8px; }
 .skip-link:focus { top: 12px; }
-.site-header { position: sticky; top: 0; z-index: 50; background: rgba(249, 249, 247, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); transition: all 0.3s ease; }
+.site-header { position: sticky; top: 0; z-index: 50; background: light-dark(rgba(249, 249, 247, 0.85), rgba(16, 28, 25, 0.85)); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); transition: all 0.3s ease; }
 .header-inner { min-height: 118px; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
 .brand-link { display: block; flex-shrink: 0; padding-block: 10px; }
 .brand-logo { width: 216px; height: auto; display: block; }
@@ -538,12 +538,12 @@ h3 { font-size: 1.08rem; line-height: 1.6; margin-bottom: 10px; }
 /* Theme values follow the selected color scheme without a client-side flash. */
 :root {
   color-scheme: light dark;
-  --color-page: light-dark(#f7f3ea, #101c19);
+  --color-page: light-dark(#f9f9f7, #101c19);
   --color-surface: light-dark(#ffffff, #1b2c27);
-  --color-text: light-dark(#24322e, #eef3ed);
-  --color-primary: light-dark(#124a43, #9ed9c5);
-  --muted: light-dark(#52645e, #b4c6bd);
-  --border: light-dark(#d9ded8, #3b5148);
+  --color-text: light-dark(#1d2321, #eef3ed);
+  --color-primary: light-dark(#0e3526, #9ed9c5);
+  --muted: light-dark(#6b7280, #b4c6bd);
+  --border: light-dark(rgba(14, 53, 38, 0.08), rgba(158, 217, 197, 0.15));
   --background-alt: light-dark(#eceee5, #243831);
   --section-accent: light-dark(#e9dcc4, #20332d);
   --error: light-dark(#922b21, #ffb4aa);

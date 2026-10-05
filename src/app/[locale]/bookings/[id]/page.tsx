@@ -62,12 +62,12 @@ export default async function BookingDetail({ params }: { params: Promise<{ loca
 
   return (
     <main id="main-content" className="container" tabIndex={-1}>
-      <header style={{ marginBottom: "2rem" }}>
-        <Link href={`/${locale}/account`} style={{ display: "inline-block", marginBottom: "1rem", color: "var(--primary, #0070f3)", textDecoration: "none" }}>
+      <header className="page-header" style={{ marginBottom: "2rem" }}>
+        <Link href={`/${locale}/account`} style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", marginBottom: "1.5rem", color: "var(--color-primary)", textDecoration: "none", fontWeight: "500" }}>
           &larr; {locale === "ar" ? "العودة لحسابي" : "Back to Account"}
         </Link>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "1rem" }}>
-          <h1 style={{ margin: 0 }}>{bm.bookingReference}: {booking.id.split("-")[0]}</h1>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
+          <h1 style={{ margin: 0, fontSize: "1.8rem" }}>{bm.bookingReference}: {booking.id.split("-")[0]}</h1>
           <span className={`badge badge-${booking.status}`} style={{ fontSize: "1rem", padding: "8px 16px" }}>
             {bm.status[booking.status as keyof typeof bm.status] || booking.status}
           </span>
@@ -76,29 +76,34 @@ export default async function BookingDetail({ params }: { params: Promise<{ loca
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "1.5rem", marginBottom: "4rem" }}>
         
-        {booking.is_demo && <section style={{ padding: "1.5rem", background: "var(--color-surface)", border: "1px solid var(--border)", borderRadius: "var(--radius-card, 12px)", boxShadow: "0 4px 20px rgba(0,0,0,0.03)" }}>
+        {booking.is_demo && <section className="card">
           <h2 style={{ fontSize: "1.2rem", marginBottom: "1rem" }}>{dm.title}</h2>
           <p style={{ color: "var(--muted)" }}>{dm.notice}</p>
-          {demoPayment && <div style={{ background: "var(--background-alt)", padding: "1rem", borderRadius: "8px", marginTop: "1rem" }}>
-            <h3 style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>{dm.summary}</h3>
-            <p style={{ margin: "0 0 0.5rem 0", fontSize: "0.9rem" }}>{dm.amount}: {demoPayment.amount} · {dm.fee}: {demoPayment.platform_fee} · {dm.guide}: {demoPayment.guide_amount}</p>
-            <p style={{ margin: "0 0 0.5rem 0", fontSize: "0.9rem" }}>{dm.results[demoPayment.outcome as keyof typeof dm.results]}</p>
-            {demoPayment.outcome === "refunded" && <p style={{ margin: 0, fontSize: "0.9rem" }}>{dm.refundedNote}</p>}
+          {demoPayment && <div style={{ background: "var(--background-alt)", padding: "1.25rem", borderRadius: "12px", marginTop: "1.5rem" }}>
+            <h3 style={{ fontSize: "1rem", marginBottom: "0.75rem" }}>{dm.summary}</h3>
+            <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", marginBottom: "0.75rem" }}>
+              <span className="badge badge-in_progress">{dm.amount}: {demoPayment.amount}</span>
+              <span className="badge badge-awaiting_payment">{dm.fee}: {demoPayment.platform_fee}</span>
+              <span className="badge badge-confirmed">{dm.guide}: {demoPayment.guide_amount}</span>
+            </div>
+            <p style={{ margin: "0 0 0.5rem 0", fontSize: "0.95rem", fontWeight: "500" }}>{dm.results[demoPayment.outcome as keyof typeof dm.results]}</p>
+            {demoPayment.outcome === "refunded" && <p style={{ margin: 0, fontSize: "0.9rem", color: "var(--muted)" }}>{dm.refundedNote}</p>}
           </div>}
           <div style={{ marginTop: "1.5rem" }}>
             {isTourist && booking.status === "awaiting_payment" && <DemoPayment bookingId={id} locale={locale} />}
             {isTourist && demoPayment?.outcome === "success" && booking.status === "confirmed" && <DemoPayment bookingId={id} locale={locale} refund />}
           </div>
         </section>}
+
         {/* Tour Operations (Only active when confirmed or in_progress) */}
         {chatActive && (
-          <section style={{ padding: "1.5rem", background: "var(--color-surface)", border: "1px solid var(--border)", borderRadius: "var(--radius-card, 12px)", boxShadow: "0 4px 20px rgba(0,0,0,0.03)" }}>
+          <section className="card">
             <h2 style={{ fontSize: "1.2rem", marginBottom: "1.5rem" }}>{locale === "ar" ? "إدارة الجولة" : "Tour Operations"}</h2>
             
             {isTourist && booking.status === "confirmed" && tourCode && (
-              <div style={{ padding: "1.5rem", background: "var(--background-alt)", borderRadius: "8px", borderInlineStart: "4px solid var(--primary)", marginBottom: "1.5rem" }}>
-                <p style={{ margin: "0 0 1rem 0", fontWeight: "600" }}>{bm.operations?.touristOtpNote}</p>
-                <div style={{ fontSize: "2.5rem", letterSpacing: "8px", fontFamily: "monospace", color: "var(--text)" }}>
+              <div style={{ padding: "1.5rem", background: "var(--background-alt)", borderRadius: "16px", borderInlineStart: "4px solid var(--color-primary)", marginBottom: "1.5rem" }}>
+                <p style={{ margin: "0 0 1rem 0", fontWeight: "600", color: "var(--color-primary)" }}>{bm.operations?.touristOtpNote}</p>
+                <div style={{ fontSize: "2.5rem", letterSpacing: "8px", fontFamily: "monospace", color: "var(--foreground)", background: "var(--color-surface)", padding: "1rem", borderRadius: "8px", display: "inline-block" }}>
                   {tourCode}
                 </div>
               </div>
@@ -113,9 +118,9 @@ export default async function BookingDetail({ params }: { params: Promise<{ loca
             )}
             
             {booking.status === "in_progress" && isTourist && (
-              <div style={{ padding: "1.5rem", background: "var(--background-alt)", borderRadius: "8px", borderInlineStart: "4px solid var(--primary)", marginBottom: "1.5rem" }}>
-                <strong style={{ display: "block", marginBottom: "0.5rem", color: "var(--primary)" }}>{bm.operations?.tourStarted || "Tour is in progress"}</strong>
-                <p style={{ margin: 0, color: "var(--text)" }}>
+              <div style={{ padding: "1.5rem", background: "var(--background-alt)", borderRadius: "16px", borderInlineStart: "4px solid var(--color-primary)", marginBottom: "1.5rem" }}>
+                <strong style={{ display: "block", marginBottom: "0.5rem", color: "var(--color-primary)" }}>{bm.operations?.tourStarted || "Tour is in progress"}</strong>
+                <p style={{ margin: 0, color: "var(--foreground)" }}>
                   {locale === "ar" ? "جولتك بدأت الآن، استمتع بوقتك!" : "Your tour has started, enjoy your time!"}
                 </p>
               </div>
@@ -137,7 +142,7 @@ export default async function BookingDetail({ params }: { params: Promise<{ loca
 
         {/* Feedback Section (Only for completed tours) */}
         {isTourist && booking.status === "completed" && (
-          <section style={{ padding: "1.5rem", background: "var(--color-surface)", border: "1px solid var(--border)", borderRadius: "var(--radius-card, 12px)", boxShadow: "0 4px 20px rgba(0,0,0,0.03)" }}>
+          <section className="card">
             <TourFeedback 
               bookingId={booking.id} 
               m={bm} 
@@ -149,9 +154,9 @@ export default async function BookingDetail({ params }: { params: Promise<{ loca
         )}
 
         {/* Chat Section */}
-        <section style={{ padding: "1.5rem", background: "var(--color-surface)", border: "1px solid var(--border)", borderRadius: "var(--radius-card, 12px)", boxShadow: "0 4px 20px rgba(0,0,0,0.03)" }}>
+        <section className="card">
           <h2 style={{ fontSize: "1.2rem", marginBottom: "1.5rem" }}>{bm.operations?.chat || "Chat"}</h2>
-          <div style={{ background: "var(--background-alt)", borderRadius: "8px", overflow: "hidden", border: "1px solid var(--border)" }}>
+          <div style={{ background: "var(--background-alt)", borderRadius: "12px", overflow: "hidden", border: "1px solid var(--border)" }}>
             <ChatRoom bookingId={booking.id} userId={user.id} m={bm} active={chatActive} />
           </div>
         </section>

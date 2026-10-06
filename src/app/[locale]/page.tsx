@@ -48,15 +48,16 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </div>
       </section>
 
-      {/* Interests Section */}
-      <section className="interests-section">
+      {/* Services Section */}
+      <section className="interests-section" id="services">
         <div className="container">
-          <h2 className="section-title text-center">{m.interestsTitle}</h2>
+          <h2 className="section-title text-center">{m.servicesTitle}</h2>
           <div className="interests-grid">
-            {m.interests.map((interest, i) => (
+            {m.services.map((service, i) => (
               <div className="interest-card hover-lift fade-in" style={{ animationDelay: `${i * 100}ms` }} key={i}>
-                <span className="interest-icon" aria-hidden="true">{interest.icon}</span>
-                <h3>{interest.title}</h3>
+                <span className="interest-icon" aria-hidden="true">{service.icon}</span>
+                <h3>{service.title}</h3>
+                <p style={{ color: "var(--muted)", marginTop: "12px", fontSize: "0.95rem", lineHeight: "1.6" }}>{service.text}</p>
               </div>
             ))}
           </div>
@@ -148,6 +149,19 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               </ul>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section className="container section contact-section" id="contact" aria-labelledby="contact-title">
+        <div className="contact-card" style={{ background: "var(--section-accent)", padding: "64px 20px", borderRadius: "var(--radius-card)", textAlign: "center" }}>
+          <h2 id="contact-title" className="section-title">{m.contactTitle}</h2>
+          <p style={{ color: "var(--muted)", fontSize: "1.1rem", marginBottom: "32px", maxWidth: "600px", margin: "0 auto 32px auto" }}>{m.contactText}</p>
+          <form style={{ maxWidth: "500px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "16px" }} onSubmit={(e) => e.preventDefault()}>
+            <input type="email" placeholder={m.contactEmailPlaceholder} style={{ padding: "16px", borderRadius: "var(--radius-button)", border: "1px solid var(--border)", background: "var(--color-surface)", fontSize: "1rem", outline: "none", color: "var(--foreground)", width: "100%" }} required />
+            <textarea placeholder={m.contactMessagePlaceholder} rows={4} style={{ padding: "16px", borderRadius: "var(--radius-button)", border: "1px solid var(--border)", background: "var(--color-surface)", fontSize: "1rem", outline: "none", color: "var(--foreground)", width: "100%", resize: "vertical" }} required></textarea>
+            <button type="submit" className="button button-primary" style={{ width: "100%", justifyContent: "center" }}>{m.contactBtn}</button>
+          </form>
         </div>
       </section>
 

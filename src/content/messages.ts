@@ -4,7 +4,7 @@ const ar = {
   name: "نديم",
   description: "منصة حجز المرشدين السياحيين في المملكة العربية السعودية",
   skip: "انتقل إلى المحتوى",
-  nav: { about: "عن نديم", how: "كيف تعمل المنصة", guides: "المرشدين السياحيين" },
+  nav: { home: "الرئيسية", about: "عن نديم", services: "الخدمات", contact: "تواصل معنا" },
   otherLanguage: "English",
   languageLabel: "View in English",
   
@@ -30,6 +30,21 @@ const ar = {
   guideTour: "ريال / جولة",
   verified: "معتمد",
   
+  // Services
+  servicesTitle: "خدماتنا",
+  services: [
+    { title: "جولات سياحية مخصصة", text: "استمتع بجولات مصممة خصيصاً لتناسب اهتماماتك وجدولك الزمني.", icon: "🗺️" },
+    { title: "مرشدون محليون معتمدون", text: "نوفر لك نخبة من المرشدين المرخصين والموثوقين لضمان تجربة آمنة.", icon: "🏅" },
+    { title: "دعم على مدار الساعة", text: "فريق دعم فني لخدمتك في أي وقت خلال رحلتك.", icon: "🎧" }
+  ],
+
+  // Contact
+  contactTitle: "تواصل معنا",
+  contactText: "نحن هنا لمساعدتك والإجابة على جميع استفساراتك.",
+  contactEmailPlaceholder: "البريد الإلكتروني",
+  contactMessagePlaceholder: "كيف يمكننا مساعدتك؟",
+  contactBtn: "إرسال رسالة",
+
   // Interests
   interestsTitle: "تجارب تناسب اهتماماتك",
   interests: [
@@ -92,7 +107,7 @@ const en: Messages = {
   name: "Nadeem",
   description: "A platform for booking local tour guides in Saudi Arabia",
   skip: "Skip to content",
-  nav: { about: "About Nadeem", how: "How it works", guides: "Tour Guides" },
+  nav: { home: "Home", about: "About Nadeem", services: "Services", contact: "Contact Us" },
   otherLanguage: "العربية",
   languageLabel: "عرض باللغة العربية",
   
@@ -114,6 +129,19 @@ const en: Messages = {
   guideHourly: "SAR / hour",
   guideTour: "SAR / tour",
   verified: "Verified",
+  
+  servicesTitle: "Our Services",
+  services: [
+    { title: "Customized Tours", text: "Enjoy tours tailored specifically to your interests and schedule.", icon: "🗺️" },
+    { title: "Certified Local Guides", text: "We provide elite licensed guides to ensure a safe experience.", icon: "🏅" },
+    { title: "24/7 Support", text: "Technical support team to serve you anytime during your trip.", icon: "🎧" }
+  ],
+  
+  contactTitle: "Contact Us",
+  contactText: "We are here to help you and answer all your inquiries.",
+  contactEmailPlaceholder: "Email address",
+  contactMessagePlaceholder: "How can we help you?",
+  contactBtn: "Send Message",
   
   interestsTitle: "Experiences for your interests",
   interests: [

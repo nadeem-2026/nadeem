@@ -42,9 +42,10 @@ export function MobileNav({
                 </svg>
               </button>
             </div>
-            <Link href={`/${locale}/guides`} onClick={() => setIsOpen(false)}>{messages.guides}</Link>
+            <Link href={`/${locale}`} onClick={() => setIsOpen(false)}>{messages.home}</Link>
             <a href={`/${locale}#about`} onClick={() => setIsOpen(false)}>{messages.about}</a>
-            <a href={`/${locale}#how-it-works`} onClick={() => setIsOpen(false)}>{messages.how}</a>
+            <a href={`/${locale}#services`} onClick={() => setIsOpen(false)}>{messages.services}</a>
+            <a href={`/${locale}#contact`} onClick={() => setIsOpen(false)}>{messages.contact}</a>
             <Link href={`/${locale}/account`} onClick={() => setIsOpen(false)} className="mobile-account-link">{accountText}</Link>
           </nav>
         </div>

@@ -18,9 +18,10 @@ export function SiteHeader({ locale, theme = "system" }: { locale: Locale; theme
       <div className="container header-inner">
         <Link href={`/${locale}`} aria-label={m.name} className="brand-link"><Brand name={m.name} /></Link>
         <nav className="desktop-nav" aria-label={locale === "ar" ? "التنقل الرئيسي" : "Main navigation"}>
-          <Link href={`/${locale}/guides`}>{m.nav.guides}</Link>
+          <Link href={`/${locale}`}>{m.nav.home}</Link>
           <a href={`/${locale}#about`}>{m.nav.about}</a>
-          <a href={`/${locale}#how-it-works`}>{m.nav.how}</a>
+          <a href={`/${locale}#services`}>{m.nav.services}</a>
+          <a href={`/${locale}#contact`}>{m.nav.contact}</a>
           <Link href={`/${locale}/account`}>{authMessages(locale).account}</Link>
         </nav>
         <div className="header-controls">

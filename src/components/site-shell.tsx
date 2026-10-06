@@ -68,9 +68,9 @@ export function SiteFooter({ locale }: { locale: Locale }) {
       <div className="footer-column">
         <h2>{ar ? "استكشف نديم" : "Explore Nadeem"}</h2>
         <ul>
-          <li><Link href={`/${locale}/guides`}><ArrowIcon size={14} className="footer-arrow" /> {m.nav.guides}</Link></li>
+          <li><Link href={`/${locale}`}><ArrowIcon size={14} className="footer-arrow" /> {m.nav.home}</Link></li>
           <li><Link href={`/${locale}#about`}><ArrowIcon size={14} className="footer-arrow" /> {m.nav.about}</Link></li>
-          <li><Link href={`/${locale}#how-it-works`}><ArrowIcon size={14} className="footer-arrow" /> {m.nav.how}</Link></li>
+          <li><Link href={`/${locale}#services`}><ArrowIcon size={14} className="footer-arrow" /> {m.nav.services}</Link></li>
           <li><Link href={`/${locale}/account`}><ArrowIcon size={14} className="footer-arrow" /> {authMessages(locale).account}</Link></li>
         </ul>
       </div>

@@ -1,9 +1,10 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { authenticate, saveGuide, reviewGuide, saveAvailability, addException, deleteException, type AuthIntent, type FormState } from "@/lib/auth/actions";
 import { authMessages } from "@/content/auth";
 import type { Locale } from "@/lib/i18n";
+import { GuideFileUpload } from "./guide-file-upload";
 
 function Feedback({ state, locale }: { state: FormState; locale: Locale }) {
   const m = authMessages(locale);
@@ -25,26 +26,86 @@ export function AuthForm({ locale, intent, configured }: { locale: Locale; inten
   </form>;
 }
 
-export type GuideProfile = { user_id: string; city: string; bio: string; languages: string[]; service_areas: string[]; hourly_rate: number; max_participants: number; inclusions: string[]; status: "draft" | "pending_review" | "approved" | "rejected" | "suspended"; review_reason: string | null };
+export type GuideProfile = { user_id: string; city: string; bio: string; languages: string[]; service_areas: string[]; hourly_rate: number; max_participants: number; inclusions: string[]; status: "draft" | "pending_review" | "approved" | "rejected" | "suspended"; review_reason: string | null; first_name?: string; last_name?: string; full_name_ar?: string; full_name_en?: string; address_details?: any; national_id_url?: string; official_license_url?: string; language_certificates?: any; personal_photo_url?: string; avatar_url?: string; };
 export function GuideForm({ locale, name, guide }: { locale: Locale; name: string; guide: GuideProfile }) {
   const m = authMessages(locale);
   const [state, action, pending] = useActionState(saveGuide.bind(null, locale), {});
+  const [step, setStep] = useState(1);
   const locked = !["draft", "rejected"].includes(guide.status);
+
+  const nextStep = () => setStep(s => Math.min(s + 1, 5));
+  const prevStep = () => setStep(s => Math.max(s - 1, 1));
+
   return <form action={action} className="account-form">
     <p>{m.status}: <strong>{guide.status === "suspended" ? m.guideSuspended : m[guide.status]}</strong></p>
     {guide.review_reason && <p>{m.reason}: {guide.review_reason}</p>}
     {locked && <p>{m.locked}</p>}
-    <fieldset disabled={pending || locked}>
+
+    <div className="stepper" style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem', justifyContent: 'center' }}>
+      {[1, 2, 3, 4, 5].map(s => (
+        <div key={s} style={{ 
+          width: '30px', height: '30px', borderRadius: '50%', 
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          background: step === s ? 'var(--primary-color, #0070f3)' : (step > s ? '#4caf50' : '#ccc'),
+          color: '#fff', fontWeight: 'bold'
+        }}>{s}</div>
+      ))}
+    </div>
+
+    <fieldset disabled={pending || locked} style={{ display: step === 1 ? 'block' : 'none' }}>
+      <h3>1. {m.personal_info || "البيانات الشخصية"}</h3>
       <label>{m.name}<input name="name" defaultValue={name} maxLength={120} required /></label>
+      <div style={{ display: 'flex', gap: '1rem' }}>
+        <label style={{ flex: 1 }}>{m.first_name}<input name="first_name" defaultValue={guide.first_name} maxLength={50} required /></label>
+        <label style={{ flex: 1 }}>{m.last_name}<input name="last_name" defaultValue={guide.last_name} maxLength={50} required /></label>
+      </div>
+      <label>{m.full_name_ar}<input name="full_name_ar" defaultValue={guide.full_name_ar} maxLength={120} required /></label>
+      <label>{m.full_name_en}<input name="full_name_en" defaultValue={guide.full_name_en} maxLength={120} required dir="ltr" /></label>
+      <label>{m.address_details}<textarea name="address_details" defaultValue={typeof guide.address_details === 'string' ? guide.address_details : JSON.stringify(guide.address_details || {})} rows={3} maxLength={500} required /></label>
       <label>{m.city}<input name="city" defaultValue={guide.city} maxLength={120} required /></label>
-      <label>{m.bio}<textarea name="bio" defaultValue={guide.bio} rows={6} maxLength={2000} required /></label>
+    </fieldset>
+
+    <fieldset disabled={pending || locked} style={{ display: step === 2 ? 'block' : 'none' }}>
+      <h3>2. {m.personal_photo || "الصورة الشخصية"}</h3>
+      <GuideFileUpload name="personal_photo_url" label={m.personal_photo || "Personal Photo"} defaultValue={guide.personal_photo_url || guide.avatar_url} acceptedTypes="image/jpeg, image/png" />
+    </fieldset>
+
+    <fieldset disabled={pending || locked} style={{ display: step === 3 ? 'block' : 'none' }}>
+      <h3>3. {m.official_docs || "الوثائق الرسمية"}</h3>
+      <GuideFileUpload name="national_id_url" label={m.national_id_url} required defaultValue={guide.national_id_url} acceptedTypes="image/jpeg, image/png, application/pdf" />
+      <GuideFileUpload name="official_license_url" label={m.official_license_url} required defaultValue={guide.official_license_url} acceptedTypes="image/jpeg, image/png, application/pdf" />
+    </fieldset>
+
+    <fieldset disabled={pending || locked} style={{ display: step === 4 ? 'block' : 'none' }}>
+      <h3>4. {m.languages_and_certs || "اللغات والشهادات"}</h3>
       <label>{m.languages}<input name="languages" defaultValue={(guide.languages || []).join(", ")} maxLength={200} required /></label>
+      <GuideFileUpload name="language_certificates" label={m.language_certificates} defaultValue={typeof guide.language_certificates === 'string' ? guide.language_certificates : guide.language_certificates?.url} acceptedTypes="image/jpeg, image/png, application/pdf" />
+    </fieldset>
+
+    <fieldset disabled={pending || locked} style={{ display: step === 5 ? 'block' : 'none' }}>
+      <h3>5. {m.bio_and_services || "النبذة والخدمات"}</h3>
+      <label>{m.bio}<textarea name="bio" defaultValue={guide.bio} rows={6} maxLength={2000} required /></label>
       <label>{m.service_areas}<input name="service_areas" defaultValue={(guide.service_areas || []).join(", ")} maxLength={200} required /></label>
       <label>{m.hourly_rate}<input name="hourly_rate" type="number" step="0.01" min="0" defaultValue={guide.hourly_rate || 0} required /></label>
       <label>{m.max_participants}<input name="max_participants" type="number" min="1" defaultValue={guide.max_participants || 1} required /></label>
       <label>{m.inclusions}<input name="inclusions" defaultValue={(guide.inclusions || []).join(", ")} maxLength={500} required /></label>
-      <div className="hero-actions"><button className="button" type="submit" name="intent" value="save">{m.save}</button><button className="button button-primary" type="submit" name="intent" value="submit">{m.send}</button></div>
     </fieldset>
+
+    <div className="hero-actions" style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between' }}>
+      {step > 1 ? (
+        <button type="button" className="button" onClick={prevStep} disabled={pending || locked}>{m.previous || "Previous"}</button>
+      ) : <div />}
+      
+      {step < 5 ? (
+        <button type="button" className="button button-primary" onClick={nextStep} disabled={pending || locked}>{m.next || "Next"}</button>
+      ) : (
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <button className="button" type="submit" name="intent" value="save" disabled={pending || locked}>{m.save}</button>
+          <button className="button button-primary" type="submit" name="intent" value="submit" disabled={pending || locked}>{m.send}</button>
+        </div>
+      )}
+    </div>
+
     <Feedback state={state} locale={locale} />
   </form>;
 }

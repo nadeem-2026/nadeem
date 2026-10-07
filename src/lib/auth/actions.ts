@@ -70,13 +70,33 @@ export async function saveGuide(locale: Locale, _previous: FormState, form: Form
   const hourly_rate = parseFloat(form.get("hourly_rate")?.toString() || "0") || 0;
   const max_participants = parseInt(form.get("max_participants")?.toString() || "1", 10) || 1;
   const inclusions = form.get("inclusions")?.toString().split(",").map(s => shortText(s.trim(), 100)).filter(Boolean) || [];
+  
+  const first_name = shortText(form.get("first_name"), 50);
+  const last_name = shortText(form.get("last_name"), 50);
+  const full_name_ar = shortText(form.get("full_name_ar"), 120);
+  const full_name_en = shortText(form.get("full_name_en"), 120);
+  
+  let address_details = {};
+  try { address_details = JSON.parse(form.get("address_details")?.toString() || "{}"); } catch { address_details = { raw: form.get("address_details")?.toString() }; }
+  
+  const national_id_url = form.get("national_id_url")?.toString() || "";
+  const official_license_url = form.get("official_license_url")?.toString() || "";
+  const language_certificates_val = form.get("language_certificates")?.toString() || "";
+  const language_certificates = language_certificates_val ? { url: language_certificates_val } : {};
+
   const submit = form.get("intent") === "submit";
   if (!name || !city || !bio) return { error: "invalid" };
   const { error } = await client.rpc("save_guide_profile", { 
     p_name: name, p_city: city, p_bio: bio, 
     p_languages: languages, p_service_areas: service_areas, 
     p_hourly_rate: hourly_rate, p_max_participants: max_participants, 
-    p_inclusions: inclusions, p_submit: submit 
+    p_inclusions: inclusions, 
+    p_first_name: first_name, p_last_name: last_name, 
+    p_full_name_ar: full_name_ar, p_full_name_en: full_name_en, 
+    p_address_details: address_details, 
+    p_national_id_url: national_id_url, p_official_license_url: official_license_url, 
+    p_language_certificates: language_certificates,
+    p_submit: submit 
   });
   if (error) return { error: "failed" };
   revalidatePath(`/${locale}/account`);

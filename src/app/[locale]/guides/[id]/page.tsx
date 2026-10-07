@@ -55,7 +55,7 @@ export default async function GuideDetailsPage({ params }: { params: Promise<{ l
               <GuideAvatar src={profile.avatar_url} name={profile.display_name} size={160} className="guide-avatar-large" />
             </div>
             <div style={{ position: "relative", zIndex: 1, marginTop: "60px", flex: 1 }}>
-              <h1 style={{ fontSize: "2.2rem", margin: "0 0 8px", color: "var(--color-primary)" }}>{profile.display_name} <span style={{ fontSize: "0.9rem", verticalAlign: "middle", background: "var(--nadeem-green)", color: "white", padding: "2px 10px", borderRadius: "12px", marginLeft: "8px" }}>✓ {m.verified}</span></h1>
+              <h1 style={{ fontSize: "2.2rem", margin: "0 0 8px", color: "var(--color-primary)" }}>{profile.display_name} <span style={{ fontSize: "0.9rem", verticalAlign: "middle", background: "var(--nadeem-green)", color: "white", padding: "2px 10px", borderRadius: "12px", marginLeft: "8px" }}>✓ {locale === "ar" ? "موثوق" : "Verified"}</span></h1>
               <div style={{ color: "var(--muted)", fontSize: "1.05rem", display: "flex", gap: "16px", alignItems: "center", flexWrap: "wrap" }}>
                 <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>📍 {gp.city}</span>
                 {gp.review_count > 0 && (

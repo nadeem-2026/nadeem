@@ -47,16 +47,19 @@ export default async function GuideDetailsPage({ params }: { params: Promise<{ l
       </div>
 
       <div className="guide-details-grid">
-        <div className="guide-main">
+        <div className="guide-main" style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
           
-          <div className="guide-header-compact">
-            <GuideAvatar src={profile.avatar_url} name={profile.display_name} size={200} className="guide-avatar-large" />
-            <div>
-              <h1 style={{ fontSize: "2.5rem", margin: "0 0 8px", color: "var(--color-primary)" }}>{profile.display_name} <span style={{ fontSize: "1rem", verticalAlign: "middle", background: "var(--nadeem-green)", color: "white", padding: "2px 10px", borderRadius: "12px" }}>✓</span></h1>
-              <div style={{ color: "var(--muted)", fontSize: "1.1rem", display: "flex", gap: "1rem", alignItems: "center" }}>
-                <span>📍 {gp.city}</span>
+          <div className="dashboard-card" style={{ display: "flex", flexWrap: "wrap", gap: "32px", alignItems: "center", position: "relative", overflow: "hidden" }}>
+            <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "120px", background: "var(--section-accent)", zIndex: 0 }}></div>
+            <div style={{ position: "relative", zIndex: 1, marginTop: "40px" }}>
+              <GuideAvatar src={profile.avatar_url} name={profile.display_name} size={160} className="guide-avatar-large" />
+            </div>
+            <div style={{ position: "relative", zIndex: 1, marginTop: "60px", flex: 1 }}>
+              <h1 style={{ fontSize: "2.2rem", margin: "0 0 8px", color: "var(--color-primary)" }}>{profile.display_name} <span style={{ fontSize: "0.9rem", verticalAlign: "middle", background: "var(--nadeem-green)", color: "white", padding: "2px 10px", borderRadius: "12px", marginLeft: "8px" }}>✓ {m.verified}</span></h1>
+              <div style={{ color: "var(--muted)", fontSize: "1.05rem", display: "flex", gap: "16px", alignItems: "center", flexWrap: "wrap" }}>
+                <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>📍 {gp.city}</span>
                 {gp.review_count > 0 && (
-                  <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                  <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                     <span style={{ color: "var(--color-warning)" }}>★</span>
                     <strong style={{ color: "var(--color-primary)" }}>{gp.avg_rating.toFixed(1)}</strong>
                     <span>({gp.review_count} {locale === "ar" ? "تقييم" : "reviews"})</span>
@@ -66,70 +69,72 @@ export default async function GuideDetailsPage({ params }: { params: Promise<{ l
             </div>
           </div>
 
-          <section>
+          <div className="dashboard-card">
             <h2>{m.aboutGuide}</h2>
-            <p style={{ lineHeight: 1.9, fontSize: "1.05rem", color: "var(--muted)", whiteSpace: "pre-wrap" }}>
+            <p style={{ lineHeight: 1.8, fontSize: "1.05rem", color: "var(--muted)", whiteSpace: "pre-wrap", margin: 0 }}>
               {gp.bio}
             </p>
-          </section>
+          </div>
 
-          <section>
+          <div className="dashboard-card">
             <h2>{m.languages}</h2>
             <div className="pills-list">
               {(gp.languages || []).map((lang: string) => (
                 <span key={lang} className="pill">{lang}</span>
               ))}
             </div>
-          </section>
+          </div>
 
-          <section>
+          <div className="dashboard-card">
             <h2>{m.serviceAreas}</h2>
             <div className="pills-list">
               {(gp.service_areas || []).map((area: string) => (
                 <span key={area} className="pill">{area}</span>
               ))}
             </div>
-          </section>
+          </div>
 
           {gp.inclusions.length > 0 && (
-            <section style={{ borderBottom: "none" }}>
+            <div className="dashboard-card">
               <h2>{m.whatIsIncluded}</h2>
-              <p style={{ lineHeight: 1.9, fontSize: "1.05rem", color: "var(--muted)", whiteSpace: "pre-wrap" }}>
-                {gp.inclusions.join(" • ")}
+              <p style={{ lineHeight: 1.8, fontSize: "1.05rem", color: "var(--muted)", whiteSpace: "pre-wrap", margin: 0 }}>
+                {gp.inclusions.map(i => `✓ ${i}`).join("\n")}
               </p>
-            </section>
+            </div>
           )}
 
-          <section style={{ borderBottom: "none" }}>
+          <div className="dashboard-card">
             <h2>{locale === "ar" ? "آراء السياح" : "Tourist Reviews"}</h2>
             {reviews.length === 0 ? (
-              <p style={{ color: "var(--muted)" }}>{locale === "ar" ? "لا توجد تقييمات بعد." : "No reviews yet."}</p>
+              <p style={{ color: "var(--muted)", margin: 0 }}>{locale === "ar" ? "لا توجد تقييمات بعد." : "No reviews yet."}</p>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
                 {reviews.map((review, i) => (
-                  <div key={i} style={{ padding: "1.5rem", borderRadius: "12px", background: "var(--color-surface)", border: "1px solid var(--border)" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
+                  <div key={i} style={{ padding: "1.5rem", borderRadius: "12px", background: "var(--background-alt)", border: "1px solid var(--border)" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px", flexWrap: "wrap", gap: "8px" }}>
                       <strong>{review.tourist?.display_name || (locale === "ar" ? "سائح مجهول" : "Anonymous Tourist")}</strong>
-                      <span style={{ color: "var(--color-warning)" }}>{"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}</span>
+                      <span style={{ color: "var(--color-warning)", letterSpacing: "2px" }}>{"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}</span>
                     </div>
-                    <p style={{ color: "var(--muted)", margin: "0 0 8px", lineHeight: 1.6 }}>{review.comment}</p>
+                    <p style={{ color: "var(--foreground)", margin: "0 0 12px", lineHeight: 1.6 }}>"{review.comment}"</p>
                     <small style={{ color: "var(--muted)" }}>{new Date(review.created_at).toLocaleDateString(locale)}</small>
                   </div>
                 ))}
               </div>
             )}
-          </section>
+          </div>
         </div>
 
         <aside className="guide-sidebar">
-          <div className="booking-widget">
+          <div className="dashboard-card" style={{ position: "sticky", top: "40px" }}>
             <div>
-              <p className="widget-price">{gp.hourly_rate} <span>{m.hourlyRate}</span></p>
-              <p className="widget-meta">
-                <strong>{m.maxParticipants}:</strong> {gp.max_participants}
+              <p className="widget-price" style={{ color: "var(--color-primary)" }}>{gp.hourly_rate} <span>{m.hourlyRate}</span></p>
+              <div style={{ height: "1px", background: "var(--border)", margin: "24px 0" }}></div>
+              <p className="widget-meta" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span>{m.maxParticipants}</span>
+                <strong style={{ color: "var(--foreground)", fontSize: "1.1rem" }}>{gp.max_participants}</strong>
               </p>
             </div>
-            <Link href={`/${locale}/guides/${id}/book`} className="button button-primary">
+            <Link href={`/${locale}/guides/${id}/book`} className="button button-primary" style={{ width: "100%", justifyContent: "center", marginTop: "16px", padding: "16px" }}>
               {m.bookNowBtn}
             </Link>
           </div>

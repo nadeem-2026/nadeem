@@ -34,27 +34,26 @@ export function AccountTabs({
   ].filter(t => t.show);
 
   return (
-    <div className="account-tabs-container">
-      <div className="tabs-nav-wrapper">
-        <div className="tabs-nav">
-          {tabs.map(tab => {
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={`tab-button ${isActive ? "active" : ""}`}
-                aria-selected={isActive}
-                role="tab"
-              >
-                {tab.label}
-              </button>
-            );
-          })}
-        </div>
+    <div className="account-layout">
+      <div className="account-sidebar">
+        <h3 style={{ fontSize: "1.1rem", marginBottom: "16px", color: "var(--foreground)", padding: "0 10px" }} className="hide-on-mobile">{ar ? "إدارة الحساب" : "Account Management"}</h3>
+        {tabs.map(tab => {
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`tab-button ${isActive ? "active" : ""}`}
+              aria-selected={isActive}
+              role="tab"
+            >
+              {tab.label}
+            </button>
+          );
+        })}
       </div>
 
-      <div className="tab-content">
+      <div className="account-content fade-in">
         {activeTab === "profile" && profileContent}
         {activeTab === "bookings" && bookingsContent}
         {activeTab === "guide" && guideContent}

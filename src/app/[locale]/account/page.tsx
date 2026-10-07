@@ -65,11 +65,10 @@ export default async function Account({ params }: { params: Promise<{ locale: st
   const bm = bookingsMessages(locale);
 
   const profileContent = (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-      <div style={{ padding: "1.5rem", borderRadius: "8px", background: "var(--background-alt, #f5f5f5)" }}>
-        <h2 style={{ margin: "0 0 0.5rem 0" }}>{profile.display_name || m.account}</h2>
-        <p style={{ margin: 0, color: "var(--text-muted, #666)" }}>{m.role}: {m[profile.role]}</p>
-      </div>
+    <div className="dashboard-card">
+      <h2 style={{ marginBottom: "8px" }}>{profile.display_name || m.account}</h2>
+      <p style={{ color: "var(--muted)", marginBottom: "32px", fontSize: "0.95rem" }}>{m.role}: {m[profile.role]}</p>
+      
       <form action={signOut.bind(null, locale)}>
         <button className="button" type="submit">{m.logout}</button>
       </form>
@@ -77,31 +76,34 @@ export default async function Account({ params }: { params: Promise<{ locale: st
   );
 
   const guideContent = guide ? (
-    <div style={{ display: "flex", flexDirection: "column", gap: "3rem" }}>
-      <section><h2>{m.profile}</h2><GuideForm locale={locale} name={profile.display_name} guide={guide} /></section>
-      <section><h2>{m.availability}</h2><AvailabilityForm locale={locale} availability={availability} /></section>
-      <section><h2>{m.exceptions}</h2><ExceptionsForm locale={locale} exceptions={exceptions} /></section>
+    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+      <div className="dashboard-card"><h2>{m.profile}</h2><GuideForm locale={locale} name={profile.display_name} guide={guide} /></div>
+      <div className="dashboard-card"><h2>{m.availability}</h2><AvailabilityForm locale={locale} availability={availability} /></div>
+      <div className="dashboard-card"><h2>{m.exceptions}</h2><ExceptionsForm locale={locale} exceptions={exceptions} /></div>
     </div>
   ) : undefined;
 
   const bookingsContent = (profile.role === "tourist" || profile.role === "guide") ? (
-    <section>
+    <div className="dashboard-card">
+      <h2>{locale === "ar" ? "الحجوزات" : "Bookings"}</h2>
       <BookingsList bookings={bookings} role={profile.role} m={bm} locale={locale} />
-    </section>
+    </div>
   ) : undefined;
 
   const earningsContent = profile.role === "guide" ? (
-    <section>
+    <div className="dashboard-card">
+      <h2>{locale === "ar" ? "الأرباح" : "Earnings"}</h2>
       <EarningsSummary earnings={earnings} m={bm} />
-    </section>
+    </div>
   ) : undefined;
 
   const adminContent = profile.role === "admin" ? (
-    <section>
+    <div className="dashboard-card">
+      <h2>{locale === "ar" ? "الإدارة" : "Administration"}</h2>
       <Link className="button button-primary" href={`/${locale}/admin`}>
         {locale === "ar" ? "الدخول إلى لوحة التحكم" : "Go to Admin Dashboard"}
       </Link>
-    </section>
+    </div>
   ) : undefined;
 
   return (

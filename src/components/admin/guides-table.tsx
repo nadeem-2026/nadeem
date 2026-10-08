@@ -1,3 +1,5 @@
+"use client";
+
 import { ReviewForm, type GuideProfile } from "@/components/auth-forms";
 import { authMessages } from "@/content/auth";
 import type { Locale } from "@/lib/i18n";

@@ -13,7 +13,8 @@ import Link from "next/link";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   return {
-    title: locale === "ar" ? "تفاصيل الحجز | نديم" : "Booking Details | Nadeem"
+    title: locale === "ar" ? "تفاصيل الحجز | نديم" : "Booking Details | Nadeem",
+    robots: { index: false, follow: false }
   };
 }
 

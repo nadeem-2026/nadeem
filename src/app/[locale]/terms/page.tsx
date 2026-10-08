@@ -1,5 +1,15 @@
 import { notFound } from "next/navigation";
 import { isLocale } from "@/lib/i18n";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return {
+    title: locale === "ar" ? "الشروط والأحكام | نديم" : "Terms and Conditions | Nadeem",
+    description: locale === "ar" ? "الشروط والأحكام الخاصة باستخدام منصة نديم للمرشدين والسياح." : "Terms and conditions for using Nadeem platform for guides and tourists.",
+    robots: { index: false, follow: false }
+  };
+}
+
 export default async function Terms({params}:{params:Promise<{locale:string}>}) {
  const {locale}=await params;if(!isLocale(locale))notFound();const ar=locale==="ar";
  return <main id="main-content" className="container information-page" tabIndex={-1}>

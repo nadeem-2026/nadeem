@@ -2,6 +2,14 @@ import { requireAdmin } from "@/lib/auth/server";
 import { getSupabaseAdmin } from "@/lib/auth/admin";
 import type { Locale } from "@/lib/i18n";
 
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const locale = (await params).locale as Locale;
+  return {
+    title: locale === "ar" ? "لوحة الإدارة | نديم" : "Admin Dashboard | Nadeem",
+    description: locale === "ar" ? "لوحة تحكم إدارة منصة نديم" : "Nadeem Platform Admin Dashboard"
+  };
+}
+
 export default async function AdminOverviewPage({ params }: { params: Promise<{ locale: string }> }) {
   const locale = (await params).locale as Locale;
   await requireAdmin(locale); // already checked for admin in layout, but double check doesn't hurt

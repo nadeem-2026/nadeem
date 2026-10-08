@@ -2,6 +2,14 @@ import { requireAdmin } from "@/lib/auth/server";
 import type { Locale } from "@/lib/i18n";
 import { GuidesTable } from "@/components/admin/guides-table";
 
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const locale = (await params).locale as Locale;
+  return {
+    title: locale === "ar" ? "إدارة المرشدين | نديم" : "Manage Guides | Nadeem",
+    description: locale === "ar" ? "لوحة تحكم إدارة المرشدين السياحيين" : "Guides Management Dashboard"
+  };
+}
+
 export default async function AdminGuidesPage({ params }: { params: Promise<{ locale: string }> }) {
   const locale = (await params).locale as Locale;
   const { client: adminClient } = await requireAdmin(locale);

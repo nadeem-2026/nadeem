@@ -10,7 +10,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   return {
     title: locale === "ar" ? "ابحث عن مرشد سياحي | نديم" : "Find a Tour Guide | Nadeem",
-    description: locale === "ar" ? "تصفح قائمة المرشدين السياحيين المعتمدين في السعودية للحصول على تجربة فريدة." : "Browse certified tour guides in Saudi Arabia for a unique experience."
+    description: locale === "ar" ? "تصفح قائمة المرشدين السياحيين المعتمدين في السعودية للحصول على تجربة فريدة." : "Browse certified tour guides in Saudi Arabia for a unique experience.",
+    openGraph: {
+      title: locale === "ar" ? "ابحث عن مرشد سياحي | نديم" : "Find a Tour Guide | Nadeem",
+      description: locale === "ar" ? "تصفح قائمة المرشدين السياحيين المعتمدين في السعودية للحصول على تجربة فريدة." : "Browse certified tour guides in Saudi Arabia for a unique experience."
+    }
   };
 }
 

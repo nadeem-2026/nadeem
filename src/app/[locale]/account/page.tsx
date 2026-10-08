@@ -14,7 +14,9 @@ import { AccountTabs } from "@/components/account-tabs";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   return {
-    title: locale === "ar" ? "حسابي | نديم" : "My Account | Nadeem"
+    title: locale === "ar" ? "حسابي | نديم" : "My Account | Nadeem",
+    description: locale === "ar" ? "إدارة حسابك الشخصي وحجوزاتك في منصة نديم" : "Manage your Nadeem personal account and bookings",
+    robots: { index: false, follow: false }
   };
 }
 

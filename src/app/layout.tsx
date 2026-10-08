@@ -45,7 +45,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const locale = await getRequestLocale();
   const savedTheme = (await cookies()).get("nadeem-theme")?.value;
   const theme = savedTheme === "dark" || savedTheme === "light" ? savedTheme : "system";
-  return <html lang={locale} dir={direction(locale)} data-theme={theme} className={`${alexandria.variable} ${inter.variable}`}>
-    <body><SiteHeader locale={locale} theme={theme} />{children}<SiteFooter locale={locale} /></body>
+  return <html lang={locale} dir={direction(locale)} data-theme={theme} className={`${alexandria.variable} ${inter.variable}`} suppressHydrationWarning>
+    <body suppressHydrationWarning><SiteHeader locale={locale} theme={theme} />{children}<SiteFooter locale={locale} /></body>
   </html>;
 }

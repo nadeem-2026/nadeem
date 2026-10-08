@@ -10,9 +10,16 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { id } = await params;
   const profile = (await publicGuides()).find(guide => guide.id === id);
   if (!profile) return { title: "Not Found" };
+  const title = `${profile.display_name} - ${profile.city} | Nadeem`;
+  const description = profile.bio.substring(0, 160);
   return {
-    title: `${profile.display_name} - ${profile.city} | Nadeem`,
-    description: profile.bio.substring(0, 160)
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: profile.avatar_url ? [{ url: profile.avatar_url, alt: profile.display_name }] : []
+    }
   };
 }
 

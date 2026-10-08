@@ -2,6 +2,15 @@ import { notFound } from "next/navigation";
 import { isLocale } from "@/lib/i18n";
 import { photoCredits } from "@/content/photos";
 
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return {
+    title: locale === "ar" ? "مصادر الصور | نديم" : "Photo Credits | Nadeem",
+    description: locale === "ar" ? "مصادر الصور المستخدمة في منصة نديم وحقوق النشر الخاصة بها." : "Sources and copyrights of photos used in Nadeem platform.",
+    robots: { index: false, follow: false }
+  };
+}
+
 export default async function Credits({ params }: { params: Promise<{locale:string}> }) {
   const {locale}=await params; if(!isLocale(locale)) notFound();
   const ar=locale==="ar";

@@ -15,7 +15,7 @@ export default async function AdminGuidesPage({ params }: { params: Promise<{ lo
   const { client: adminClient } = await requireAdmin(locale);
   const { data: guides, error } = await adminClient
     .from("guide_profiles")
-    .select("*, profiles(display_name)")
+    .select("*, profiles!guide_profiles_user_id_fkey(display_name)")
     .order("created_at", { ascending: false });
 
   if (error) throw new Error("Guide review queue could not be loaded");

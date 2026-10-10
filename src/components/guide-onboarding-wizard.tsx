@@ -20,7 +20,8 @@ import {
   ShieldCheck, 
   AlertCircle, 
   Edit3,
-  ExternalLink
+  ExternalLink,
+  Lightbulb
 } from "lucide-react";
 
 interface GuideOnboardingWizardProps {
@@ -334,7 +335,7 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
                     key={c}
                     type="button"
                     onClick={() => setSelectedCity(c)}
-                    className={`py-1.5 px-3 rounded-xl text-xs font-semibold border transition ${selectedCity === c ? "bg-[var(--color-primary)] text-white border-[var(--color-primary)] shadow-xs" : "bg-[var(--color-surface)] text-[var(--color-text)] border-[var(--border)] hover:bg-[var(--background-alt)]"}`}
+                    className={`py-1.5 px-3 rounded-xl text-xs font-semibold border transition ${selectedCity === c ? "bg-[var(--color-primary)] text-[var(--color-on-primary)] border-[var(--color-primary)] shadow-xs" : "bg-[var(--color-surface)] text-[var(--color-text)] border-[var(--border)] hover:bg-[var(--background-alt)]"}`}
                   >
                     {c}
                   </button>
@@ -402,8 +403,9 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
               />
 
               <div className="p-4 rounded-xl bg-[var(--color-surface)] border border-[var(--border)] text-xs text-[var(--muted)] space-y-1">
-                <span className="font-bold text-[var(--color-text)] block mb-1">
-                  💡 {isAr ? "إرشادات الصورة المعتمدة:" : "Photo guidelines:"}
+                <span className="font-bold text-[var(--color-text)] flex items-center gap-1.5 mb-1">
+                  <Lightbulb size={14} className="text-amber-500" />
+                  <span>{isAr ? "إرشادات الصورة المعتمدة:" : "Photo guidelines:"}</span>
                 </span>
                 <p className="m-0">• {isAr ? "وجه مبتسم وواضح في منتصف الإطار وبإضاءة جيدة." : "Clear face, centered, good lighting."}</p>
                 <p className="m-0">• {isAr ? "الزي الوطني السعودي الرسمي أو زي مهني لائق." : "Traditional Saudi attire or professional outfit."}</p>
@@ -481,7 +483,7 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
                       key={lang}
                       type="button"
                       onClick={() => toggleLanguage(lang)}
-                      className={`py-2 px-3.5 rounded-xl text-xs font-bold border transition flex items-center gap-1.5 ${isSelected ? "bg-[var(--color-primary)] text-white border-[var(--color-primary)] shadow-xs" : "bg-[var(--color-surface)] text-[var(--color-text)] border-[var(--border)] hover:bg-[var(--background-alt)]"}`}
+                      className={`py-2 px-3.5 rounded-xl text-xs font-bold border transition flex items-center gap-1.5 ${isSelected ? "bg-[var(--color-primary)] text-[var(--color-on-primary)] border-[var(--color-primary)] shadow-xs" : "bg-[var(--color-surface)] text-[var(--color-text)] border-[var(--border)] hover:bg-[var(--background-alt)]"}`}
                     >
                       {isSelected && <Check size={13} />}
                       <span>{lang}</span>
@@ -613,7 +615,7 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
                       key={inc}
                       type="button"
                       onClick={() => toggleInclusion(inc)}
-                      className={`py-1.5 px-3 rounded-xl text-xs font-semibold border transition flex items-center gap-1.5 ${isSelected ? "bg-[var(--color-primary)] text-white border-[var(--color-primary)] shadow-xs" : "bg-[var(--color-surface)] text-[var(--color-text)] border-[var(--border)] hover:bg-[var(--background-alt)]"}`}
+                      className={`py-1.5 px-3 rounded-xl text-xs font-semibold border transition flex items-center gap-1.5 ${isSelected ? "bg-[var(--color-primary)] text-[var(--color-on-primary)] border-[var(--color-primary)] shadow-xs" : "bg-[var(--color-surface)] text-[var(--color-text)] border-[var(--border)] hover:bg-[var(--background-alt)]"}`}
                     >
                       {isSelected && <Check size={12} />}
                       <span>{inc}</span>

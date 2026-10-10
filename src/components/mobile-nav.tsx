@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
+import { Menu, X } from "lucide-react";
 
 export function MobileNav({ 
   locale, 
@@ -23,13 +24,7 @@ export function MobileNav({
         aria-expanded={isOpen}
         aria-label="Toggle menu"
       >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          {isOpen ? (
-            <path d="M18 6L6 18M6 6l12 12" />
-          ) : (
-            <path d="M3 12h18M3 6h18M3 18h18" />
-          )}
-        </svg>
+        {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
       {isOpen && (
@@ -37,17 +32,12 @@ export function MobileNav({
           <nav className="mobile-menu-drawer" onClick={e => e.stopPropagation()} aria-label={locale === "ar" ? "التنقل الرئيسي" : "Main navigation"}>
             <div className="mobile-menu-header">
               <button className="close-btn" onClick={() => setIsOpen(false)} aria-label="Close menu">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M18 6L6 18M6 6l12 12" />
-                </svg>
+                <X size={24} />
               </button>
             </div>
             <Link href={`/${locale}`} onClick={() => setIsOpen(false)}>{messages.home}</Link>
             <Link href={`/${locale}/guides`} onClick={() => setIsOpen(false)}>{locale === "ar" ? "المرشدون السياحيون" : "Tour Guides"}</Link>
-            <a href={`/${locale}#about`} onClick={() => setIsOpen(false)}>{messages.about}</a>
-            <a href={`/${locale}#services`} onClick={() => setIsOpen(false)}>{messages.services}</a>
             <Link href={`/${locale}/become-a-guide`} onClick={() => setIsOpen(false)}>{locale === "ar" ? "انضم كمرشد" : "Become a Guide"}</Link>
-            <a href={`/${locale}#contact`} onClick={() => setIsOpen(false)}>{messages.contact}</a>
             <Link href={`/${locale}/account`} onClick={() => setIsOpen(false)} className="mobile-account-link">{accountText}</Link>
           </nav>
         </div>

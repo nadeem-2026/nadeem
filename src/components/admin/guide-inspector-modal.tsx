@@ -387,7 +387,7 @@ export function GuideInspectorModal({
                 type="button"
                 onClick={() => handleDecisionSubmit("approved")}
                 disabled={isSubmitting}
-                className="flex items-center gap-2 py-2.5 px-6 rounded-xl bg-[var(--color-primary)] hover:bg-[#124a43] text-white font-bold text-sm shadow-md transition"
+                className="flex items-center gap-2 py-2.5 px-6 rounded-xl bg-[var(--color-primary)] hover:bg-[var(--btn-primary-hover-bg)] text-[var(--color-on-primary)] font-bold text-sm shadow-md transition"
               >
                 {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
                 <span>{isAr ? "اعتماد المرشد رسمياً" : "Approve Guide"}</span>

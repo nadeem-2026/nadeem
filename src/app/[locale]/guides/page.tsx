@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { isLocale } from "@/lib/i18n";
 import { publicGuides } from "@/lib/guides/public";
 import { guidesMessages } from "@/content/guides";
-import { MapPin, Star, ShieldCheck, Search, SlidersHorizontal, ArrowLeft, ArrowRight, Languages as LanguagesIcon, Sparkles } from "lucide-react";
+import { MapPin, Star, ShieldCheck, Search, SlidersHorizontal, ArrowLeft, ArrowRight, Languages as LanguagesIcon, Sparkles, Globe } from "lucide-react";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -155,18 +155,18 @@ export default async function GuidesSearchPage({ params, searchParams }: { param
               {isAr ? "النتائج المطابقة للتصفية:" : "Active filters:"}
             </span>
             {cityQuery && (
-              <span className="pill text-xs">
-                📍 {cityQuery}
+              <span className="pill text-xs inline-flex items-center gap-1.5">
+                <MapPin size={12} className="text-[var(--color-primary)]" /> {cityQuery}
               </span>
             )}
             {langQuery && (
-              <span className="pill text-xs">
-                🌐 {langQuery}
+              <span className="pill text-xs inline-flex items-center gap-1.5">
+                <Globe size={12} className="text-[var(--color-primary)]" /> {langQuery}
               </span>
             )}
             {nameQuery && (
-              <span className="pill text-xs">
-                🔎 &ldquo;{nameQuery}&rdquo;
+              <span className="pill text-xs inline-flex items-center gap-1.5">
+                <Search size={12} className="text-[var(--color-primary)]" /> &ldquo;{nameQuery}&rdquo;
               </span>
             )}
             <Link 

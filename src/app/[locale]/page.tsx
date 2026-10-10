@@ -4,6 +4,7 @@ import { getMessages } from "@/content/messages";
 import { GuideAvatar } from "@/components/guide-avatar";
 import { isLocale } from "@/lib/i18n";
 import { publicGuides } from "@/lib/guides/public";
+import { Map, ShieldCheck, Headphones } from "lucide-react";
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -11,6 +12,12 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   const m = getMessages(locale);
 
   const topGuides = (await publicGuides()).slice(0, 3);
+
+  const serviceIcons = [
+    <Map key="map" className="w-10 h-10 text-emerald-800" aria-hidden="true" />,
+    <ShieldCheck key="shield" className="w-10 h-10 text-emerald-800" aria-hidden="true" />,
+    <Headphones key="headphones" className="w-10 h-10 text-emerald-800" aria-hidden="true" />
+  ];
 
   return (
     <main id="main-content" tabIndex={-1}>
@@ -55,7 +62,9 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           <div className="interests-grid">
             {m.services.map((service, i) => (
               <div className="interest-card hover-lift fade-in" style={{ animationDelay: `${i * 100}ms` }} key={i}>
-                <span className="interest-icon" aria-hidden="true">{service.icon}</span>
+                <div style={{ display: "flex", justifyContent: "center", marginBottom: "16px" }}>
+                  {serviceIcons[i % serviceIcons.length]}
+                </div>
                 <h3>{service.title}</h3>
                 <p style={{ color: "var(--muted)", marginTop: "12px", fontSize: "0.95rem", lineHeight: "1.6" }}>{service.text}</p>
               </div>
@@ -117,41 +126,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </div>
       </section>
 
-      {/* Platform Status Section */}
-      <section className="platform-status-section" id="platform-status">
-        <div className="container">
-          <h2 className="section-title text-center">{m.platformStatusTitle}</h2>
-          <div className="status-grid">
-            <div className="status-card ready hover-lift fade-in" style={{ animationDelay: '100ms' }}>
-              <h3>{m.platformStatus.ready.title}</h3>
-              <ul>
-                {m.platformStatus.ready.items.map((item, i) => (
-                  <li key={i}>{item}</li>
-                ))}
-              </ul>
-            </div>
-            
-            <div className="status-card in-progress hover-lift fade-in" style={{ animationDelay: '200ms' }}>
-              <h3>{m.platformStatus.inProgress.title}</h3>
-              <ul>
-                {m.platformStatus.inProgress.items.map((item, i) => (
-                  <li key={i}>{item}</li>
-                ))}
-              </ul>
-            </div>
-            
-            <div className="status-card upcoming hover-lift fade-in" style={{ animationDelay: '300ms' }}>
-              <h3>{m.platformStatus.upcoming.title}</h3>
-              <ul>
-                {m.platformStatus.upcoming.items.map((item, i) => (
-                  <li key={i}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Contact Section */}
       <section className="container section contact-section" id="contact" aria-labelledby="contact-title">
         <div className="contact-card" style={{ background: "var(--section-accent)", padding: "64px 20px", borderRadius: "var(--radius-card)", textAlign: "center" }}>
@@ -164,7 +138,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </form>
         </div>
       </section>
-
     </main>
   );
 }

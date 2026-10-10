@@ -108,7 +108,7 @@ export function NotificationsBell({ locale }: { locale: Locale }) {
               </div>
             ) : (
               notifications.map((n) => (
-                <div key={n.id} className={`p-4 border-b hover:notification-muted transition-colors ${!n.is_read ? 'notification-muted' : ''}`}>
+                <div key={n.id} className={`p-4 border-b border-[var(--border)] hover:bg-[var(--background-alt)] transition-colors ${!n.is_read ? 'notification-muted' : ''}`}>
                   <div className="flex justify-between gap-2 mb-1">
                     <h4 className={`text-sm ${!n.is_read ? 'font-bold' : 'font-medium'}`}>{n.title}</h4>
                     {!n.is_read && <span className="w-2 h-2 rounded-full bg-blue-600 mt-1 flex-shrink-0"></span>}
@@ -127,7 +127,7 @@ export function NotificationsBell({ locale }: { locale: Locale }) {
                         </Link>
                       )}
                       {!n.is_read && (
-                        <button onClick={() => markAsRead(n.id)} className="text-xs notification-text hover:text-gray-700">
+                        <button onClick={() => markAsRead(n.id)} className="text-xs notification-text hover:text-[var(--color-primary)]">
                           {locale === "ar" ? "مقروء" : "Mark read"}
                         </button>
                       )}

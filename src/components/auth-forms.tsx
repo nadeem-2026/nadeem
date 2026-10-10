@@ -5,7 +5,7 @@ import { authenticate, reviewGuide, saveAvailability, addException, deleteExcept
 import { authMessages } from "@/content/auth";
 import type { Locale } from "@/lib/i18n";
 import { GuideOnboardingWizard } from "./guide-onboarding-wizard";
-import { Clock, Calendar, Plus, Trash2, CalendarX2, Check } from "lucide-react";
+import { Clock, Calendar, Plus, Trash2, CalendarX2, Check, Sparkles, Compass } from "lucide-react";
 
 
 function Feedback({ state, locale }: { state: FormState; locale: Locale }) {
@@ -30,10 +30,10 @@ export function AuthForm({ locale, intent, configured }: { locale: Locale; inten
               <button
                 type="button"
                 onClick={() => setSelectedRole("tourist")}
-                className={`p-3 rounded-xl border text-start transition flex flex-col gap-1 cursor-pointer ${selectedRole === "tourist" ? "bg-[var(--color-primary)] text-white border-[var(--color-primary)] shadow-xs" : "bg-[var(--color-surface)] border-[var(--border)] text-[var(--color-text)] hover:bg-[var(--background-alt)]"}`}
+                className={`p-3 rounded-xl border text-start transition flex flex-col gap-1 cursor-pointer ${selectedRole === "tourist" ? "bg-[var(--color-primary)] text-[var(--color-on-primary)] border-[var(--color-primary)] shadow-xs" : "bg-[var(--color-surface)] border-[var(--border)] text-[var(--color-text)] hover:bg-[var(--background-alt)]"}`}
               >
-                <span className="font-bold text-sm">🎒 {m.tourist}</span>
-                <span className={`text-[11px] leading-tight ${selectedRole === "tourist" ? "text-white/80" : "text-[var(--muted)]"}`}>
+                <span className="font-bold text-sm flex items-center gap-1.5"><Sparkles className="w-4 h-4 text-amber-400" /> {m.tourist}</span>
+                <span className={`text-[11px] leading-tight ${selectedRole === "tourist" ? "opacity-85" : "text-[var(--muted)]"}`}>
                   {isAr ? "استكشف المملكة واحجز جولات مع مرشدين" : "Explore Saudi and book unique tours"}
                 </span>
               </button>
@@ -41,10 +41,10 @@ export function AuthForm({ locale, intent, configured }: { locale: Locale; inten
               <button
                 type="button"
                 onClick={() => setSelectedRole("guide")}
-                className={`p-3 rounded-xl border text-start transition flex flex-col gap-1 cursor-pointer ${selectedRole === "guide" ? "bg-[var(--color-primary)] text-white border-[var(--color-primary)] shadow-xs" : "bg-[var(--color-surface)] border-[var(--border)] text-[var(--color-text)] hover:bg-[var(--background-alt)]"}`}
+                className={`p-3 rounded-xl border text-start transition flex flex-col gap-1 cursor-pointer ${selectedRole === "guide" ? "bg-[var(--color-primary)] text-[var(--color-on-primary)] border-[var(--color-primary)] shadow-xs" : "bg-[var(--color-surface)] border-[var(--border)] text-[var(--color-text)] hover:bg-[var(--background-alt)]"}`}
               >
-                <span className="font-bold text-sm">🧭 {m.guide}</span>
-                <span className={`text-[11px] leading-tight ${selectedRole === "guide" ? "text-white/80" : "text-[var(--muted)]"}`}>
+                <span className="font-bold text-sm flex items-center gap-1.5"><Compass className="w-4 h-4 text-emerald-400" /> {m.guide}</span>
+                <span className={`text-[11px] leading-tight ${selectedRole === "guide" ? "opacity-85" : "text-[var(--muted)]"}`}>
                   {isAr ? "قدّم تجارب سياحية وحقق عوائد مميزة" : "Host authentic tours and earn income"}
                 </span>
               </button>

@@ -43,6 +43,7 @@ export function MobileNav({
               </button>
             </div>
             <Link href={`/${locale}`} onClick={() => setIsOpen(false)}>{messages.home}</Link>
+            <Link href={`/${locale}/guides`} onClick={() => setIsOpen(false)}>{locale === "ar" ? "المرشدون السياحيون" : "Tour Guides"}</Link>
             <a href={`/${locale}#about`} onClick={() => setIsOpen(false)}>{messages.about}</a>
             <a href={`/${locale}#services`} onClick={() => setIsOpen(false)}>{messages.services}</a>
             <Link href={`/${locale}/become-a-guide`} onClick={() => setIsOpen(false)}>{locale === "ar" ? "انضم كمرشد" : "Become a Guide"}</Link>

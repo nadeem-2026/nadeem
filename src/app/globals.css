@@ -1366,6 +1366,81 @@ html[dir="ltr"] .tab-button { text-align: left; }
   border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
+html[data-theme="dark"] .badge-status-confirmed {
+  background: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+  border-color: rgba(16, 185, 129, 0.4);
+}
+html[data-theme="dark"] .badge-status-in_progress {
+  background: rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+  border-color: rgba(59, 130, 246, 0.4);
+}
+html[data-theme="dark"] .badge-status-awaiting_payment,
+html[data-theme="dark"] .badge-status-pending {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fcd34d;
+  border-color: rgba(245, 158, 11, 0.4);
+}
+html[data-theme="dark"] .badge-status-completed {
+  background: rgba(158, 217, 197, 0.2);
+  color: #9ed9c5;
+  border-color: rgba(158, 217, 197, 0.4);
+}
+html[data-theme="dark"] .badge-status-cancelled,
+html[data-theme="dark"] .badge-status-declined,
+html[data-theme="dark"] .badge-status-expired {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+html[data-theme="dark"] .wallet-stat-card.available .wallet-stat-value,
+html[data-theme="dark"] .wallet-stat-card.available .wallet-stat-label {
+  color: #6ee7b7 !important;
+}
+html[data-theme="dark"] .wallet-stat-card.pending .wallet-stat-value,
+html[data-theme="dark"] .wallet-stat-card.pending .wallet-stat-label {
+  color: #fcd34d !important;
+}
+@media (prefers-color-scheme: dark) {
+  html[data-theme="system"] .badge-status-confirmed {
+    background: rgba(16, 185, 129, 0.2);
+    color: #6ee7b7;
+    border-color: rgba(16, 185, 129, 0.4);
+  }
+  html[data-theme="system"] .badge-status-in_progress {
+    background: rgba(59, 130, 246, 0.2);
+    color: #93c5fd;
+    border-color: rgba(59, 130, 246, 0.4);
+  }
+  html[data-theme="system"] .badge-status-awaiting_payment,
+  html[data-theme="system"] .badge-status-pending {
+    background: rgba(245, 158, 11, 0.2);
+    color: #fcd34d;
+    border-color: rgba(245, 158, 11, 0.4);
+  }
+  html[data-theme="system"] .badge-status-completed {
+    background: rgba(158, 217, 197, 0.2);
+    color: #9ed9c5;
+    border-color: rgba(158, 217, 197, 0.4);
+  }
+  html[data-theme="system"] .badge-status-cancelled,
+  html[data-theme="system"] .badge-status-declined,
+  html[data-theme="system"] .badge-status-expired {
+    background: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+    border-color: rgba(239, 68, 68, 0.4);
+  }
+  html[data-theme="system"] .wallet-stat-card.available .wallet-stat-value,
+  html[data-theme="system"] .wallet-stat-card.available .wallet-stat-label {
+    color: #6ee7b7 !important;
+  }
+  html[data-theme="system"] .wallet-stat-card.pending .wallet-stat-value,
+  html[data-theme="system"] .wallet-stat-card.pending .wallet-stat-label {
+    color: #fcd34d !important;
+  }
+}
+
 /* Filter Chips */
 .filter-chips-row {
   display: flex;

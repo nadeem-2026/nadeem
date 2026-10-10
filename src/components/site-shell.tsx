@@ -19,6 +19,7 @@ export function SiteHeader({ locale, theme = "system" }: { locale: Locale; theme
         <Link href={`/${locale}`} aria-label={m.name} className="brand-link"><Brand name={m.name} /></Link>
         <nav className="desktop-nav" aria-label={locale === "ar" ? "التنقل الرئيسي" : "Main navigation"}>
           <Link href={`/${locale}`}>{m.nav.home}</Link>
+          <Link href={`/${locale}/guides`}>{locale === "ar" ? "المرشدون السياحيون" : "Tour Guides"}</Link>
           <a href={`/${locale}#about`}>{m.nav.about}</a>
           <a href={`/${locale}#services`}>{m.nav.services}</a>
           <Link href={`/${locale}/become-a-guide`}>{locale === "ar" ? "انضم كمرشد" : "Become a Guide"}</Link>
@@ -70,6 +71,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
         <h2>{ar ? "استكشف نديم" : "Explore Nadeem"}</h2>
         <ul>
           <li><Link href={`/${locale}`}><ArrowIcon size={14} className="footer-arrow" /> {m.nav.home}</Link></li>
+          <li><Link href={`/${locale}/guides`}><ArrowIcon size={14} className="footer-arrow" /> {ar ? "المرشدون السياحيون" : "Tour Guides"}</Link></li>
           <li><Link href={`/${locale}/become-a-guide`}><ArrowIcon size={14} className="footer-arrow" /> {ar ? "انضم كمرشد سياحي" : "Become a Guide"}</Link></li>
           <li><Link href={`/${locale}#about`}><ArrowIcon size={14} className="footer-arrow" /> {m.nav.about}</Link></li>
           <li><Link href={`/${locale}#services`}><ArrowIcon size={14} className="footer-arrow" /> {m.nav.services}</Link></li>

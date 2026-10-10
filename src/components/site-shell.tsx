@@ -177,24 +177,9 @@ export function SiteFooter({ locale }: { locale: Locale }) {
 
         </div>
 
-        {/* Enhanced Bottom Bar */}
+        {/* Bottom Bar */}
         <div className="footer-bottom">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 text-xs">
-            <p>© 2026 {m.name}. {ar ? "جميع الحقوق محفوظة." : "All rights reserved."}</p>
-            <span className="hidden sm:inline text-[var(--border)]">•</span>
-            <p className="text-[11px] text-[var(--muted)]">
-              {ar ? "سجل تجاري: 1010789012 • ترخيص سياحي: 73100234" : "CR: 1010789012 • Tourism Lic: 73100234"}
-            </p>
-          </div>
-
-          {/* Live Platform Status Indicator */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs font-semibold">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span>{ar ? "جميع الأنظمة تعمل بكفاءة" : "All systems operational"}</span>
-          </div>
+          <p>© 2026 {m.name}. {ar ? "جميع الحقوق محفوظة." : "All rights reserved."}</p>
 
           <div className="footer-bottom-links items-center gap-4">
             <Link href={`/${locale}/contact`}>{m.footerLinks.contact}</Link>

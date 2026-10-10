@@ -77,6 +77,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
       <div className="footer-column">
         <h2>{ar ? "معلومات تهمك" : "Useful information"}</h2>
         <ul>
+          <li><Link href={`/${locale}/contact`}><ArrowIcon size={14} className="footer-arrow" /> {m.footerLinks.contact}</Link></li>
           <li><Link href={`/${locale}/terms`}><ArrowIcon size={14} className="footer-arrow" /> {m.footerLinks.terms}</Link></li>
           <li><Link href={`/${locale}/privacy`}><ArrowIcon size={14} className="footer-arrow" /> {m.footerLinks.privacy}</Link></li>
           <li><Link href={`/${locale}/photo-credits`}><ArrowIcon size={14} className="footer-arrow" /> {ar ? "مصادر الصور" : "Photo credits"}</Link></li>
@@ -107,6 +108,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
     <div className="container footer-bottom">
       <p>© 2026 {m.name}. {ar ? "جميع الحقوق محفوظة." : "All rights reserved."}</p>
       <div className="footer-bottom-links">
+        <Link href={`/${locale}/contact`}>{m.footerLinks.contact}</Link>
         <Link href={`/${locale}/terms`}>{m.footerLinks.terms}</Link>
         <Link href={`/${locale}/privacy`}>{m.footerLinks.privacy}</Link>
       </div>

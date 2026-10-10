@@ -126,18 +126,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section className="container section contact-section" id="contact" aria-labelledby="contact-title">
-        <div className="contact-card" style={{ background: "var(--section-accent)", padding: "64px 20px", borderRadius: "var(--radius-card)", textAlign: "center" }}>
-          <h2 id="contact-title" className="section-title">{m.contactTitle}</h2>
-          <p style={{ color: "var(--muted)", fontSize: "1.1rem", marginBottom: "32px", maxWidth: "600px", margin: "0 auto 32px auto" }}>{m.contactText}</p>
-          <form style={{ maxWidth: "500px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "16px" }} action={`/${locale}`}>
-            <input type="email" placeholder={m.contactEmailPlaceholder} style={{ padding: "16px", borderRadius: "var(--radius-button)", border: "1px solid var(--border)", background: "var(--color-surface)", fontSize: "1rem", outline: "none", color: "var(--foreground)", width: "100%" }} required />
-            <textarea placeholder={m.contactMessagePlaceholder} rows={4} style={{ padding: "16px", borderRadius: "var(--radius-button)", border: "1px solid var(--border)", background: "var(--color-surface)", fontSize: "1rem", outline: "none", color: "var(--foreground)", width: "100%", resize: "vertical" }} required></textarea>
-            <button type="submit" className="button button-primary" style={{ width: "100%", justifyContent: "center" }}>{m.contactBtn}</button>
-          </form>
-        </div>
-      </section>
     </main>
   );
 }

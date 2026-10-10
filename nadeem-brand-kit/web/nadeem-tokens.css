@@ -1,21 +1,17 @@
-/* Nadeem premium brand colors */
+/* Nadeem brand colors. UI fonts must be loaded separately. */
 :root {
-  --nadeem-green: #0E3526;
-  --nadeem-green-hover: #185B42;
-  --nadeem-sand: #E5D9B6;
-  --nadeem-sand-dark: #C9B88B;
-  --nadeem-alabaster: #F9F9F7;
-  --nadeem-charcoal: #1D2321;
+  --nadeem-green: #124a43;
+  --nadeem-sand: #d9bb86;
+  --nadeem-ivory: #f7f3ea;
+  --nadeem-ink: #24322e;
   --nadeem-white: #ffffff;
-  --color-page: var(--nadeem-alabaster);
+  --color-page: var(--nadeem-ivory);
   --color-surface: var(--nadeem-white);
-  --color-text: var(--nadeem-charcoal);
+  --color-text: var(--nadeem-ink);
   --color-primary: var(--nadeem-green);
-  --color-on-primary: var(--nadeem-white);
-  --radius-control: 9999px; /* Pill buttons for modern look */
-  --radius-card: 1.5rem;
-  --shadow-soft: 0 24px 40px -8px rgba(14, 53, 38, 0.05), 0 8px 16px -4px rgba(14, 53, 38, 0.03);
-  --shadow-float: 0 32px 50px -10px rgba(14, 53, 38, 0.08), 0 12px 24px -6px rgba(14, 53, 38, 0.04);
+  --color-on-primary: var(--nadeem-ivory);
+  --radius-control: 0.75rem;
+  --radius-card: 1rem;
 }
-html[lang="ar"] body { font-family: var(--font-arabic), "IBM Plex Sans Arabic", sans-serif; line-height: 1.8; }
-html[lang="en"] body { font-family: var(--font-sans), "Inter", sans-serif; line-height: 1.6; }
+html[lang="ar"] body { font-family: "IBM Plex Sans Arabic", sans-serif; line-height: 1.7; }
+html[lang="en"] body { font-family: "Inter", sans-serif; line-height: 1.5; }

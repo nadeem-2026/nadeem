@@ -10,7 +10,7 @@ import { NotificationsBell } from "./notifications-bell";
 import { MobileNav } from "./mobile-nav";
 import { Mail, Phone, MapPin, ArrowRight, ArrowLeft } from "lucide-react";
 
-export function SiteHeader({ locale, theme = "system" }: { locale: Locale; theme?: Theme }) {
+export function SiteHeader({ locale, theme = "light" }: { locale: Locale; theme?: Theme }) {
   const m = getMessages(locale);
   return <>
     <a href="#main-content" className="skip-link">{m.skip}</a>

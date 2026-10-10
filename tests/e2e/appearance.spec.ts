@@ -1,23 +1,20 @@
 import { expect, test } from "@playwright/test";
 
-test("theme follows the device and persists explicit choices across routes and reloads", async ({ page }) => {
+test("theme persists explicit choices across routes and reloads", async ({ page }) => {
   const errors: string[]=[]; page.on("pageerror",error=>errors.push(error.message));
-  await page.emulateMedia({ colorScheme: "dark" });
   await page.goto("/en",{waitUntil:"domcontentloaded"});
+  await expect(page.locator("body")).toHaveCSS("background-color","rgb(249, 249, 247)");
+  await page.locator(".theme-switch").click();
   await expect(page.locator("body")).toHaveCSS("background-color","rgb(16, 28, 25)");
-  await page.getByLabel("Appearance").selectOption("light");
-  await expect(page.locator("body")).toHaveCSS("background-color","rgb(247, 243, 234)");
   await page.reload({waitUntil:"domcontentloaded"});
-  await expect(page.locator("html")).toHaveAttribute("data-theme","light");
-  await page.getByLabel("Appearance").selectOption("dark");
+  await expect(page.locator("html")).toHaveAttribute("data-theme","dark");
   await page.getByRole("link",{name:"عرض باللغة العربية"}).click();
-  await expect(page.getByLabel("مظهر الموقع")).toHaveValue("dark");
+  await expect(page.locator("html")).toHaveAttribute("data-theme","dark");
   await page.goto("/ar/login",{waitUntil:"domcontentloaded"});
   await expect(page.locator("body")).toHaveCSS("background-color","rgb(16, 28, 25)");
   await expect(page.locator("input").first()).toHaveCSS("background-color","rgb(27, 44, 39)");
-  await page.getByLabel("مظهر الموقع").selectOption("system");
-  await page.emulateMedia({colorScheme:"light"});
-  await expect(page.locator("body")).toHaveCSS("background-color","rgb(247, 243, 234)");
+  await page.locator(".theme-switch").click();
+  await expect(page.locator("body")).toHaveCSS("background-color","rgb(249, 249, 247)");
   expect(errors).toEqual([]);
 });
 
@@ -48,6 +45,6 @@ test("destination photos load locally in dark mode without mobile overflow", asy
   }
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   await page.screenshot({path:testInfo.outputPath("dark-home.png"),fullPage:true});
-  await page.getByLabel("مظهر الموقع").selectOption("light");
+  await page.locator(".theme-switch").click();
   await page.screenshot({path:testInfo.outputPath("light-home.png"),fullPage:true});
 });

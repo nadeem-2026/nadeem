@@ -32,8 +32,11 @@ main:focus { outline: none; }
 .header-inner nav { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; font-size: .88rem; font-weight: 500; }
 .header-inner nav a { padding-block: 12px; border-bottom: 2px solid transparent; transition: color 0.2s ease, border-color 0.2s ease; }
 .header-inner nav a:hover { color: var(--color-primary); border-bottom-color: var(--color-primary); }
-.language-switch, .theme-switch { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 8px 16px; border: 1px solid var(--border); border-radius: var(--radius-control); font-size: .9rem; background: var(--color-surface); color: var(--color-text); transition: all 0.2s ease; }
+.language-switch, .theme-switch { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; border: 1px solid var(--border); border-radius: var(--radius-control); font-size: .9rem; background: var(--color-surface); color: var(--color-text); transition: all 0.2s ease; cursor: pointer; }
+.language-switch { gap: 8px; padding: 8px 16px; }
+.theme-switch { width: 44px; height: 44px; padding: 0; }
 .language-switch:hover, .theme-switch:hover { background: var(--background-alt); border-color: var(--color-primary); color: var(--color-primary); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.theme-switch:active { transform: scale(0.92); }
 .foundation-notice { font-size: .82rem; background: var(--background-alt); }
 .notice-inner { display: flex; align-items: center; justify-content: center; gap: 12px; padding-block: 10px; }
 .notice-label { font-weight: 600; color: var(--color-primary); }
@@ -638,8 +641,6 @@ input, select, textarea { color: var(--color-text); background: var(--color-surf
 input::placeholder, textarea::placeholder { color: var(--muted); opacity: 1; }
 .search-input { background: var(--color-surface); color: var(--color-text); }
 .header-controls { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-.theme-switch select { border: 0; font: inherit; font-size: .85rem; background: transparent; color: inherit; max-width: 85px; min-height: 42px; cursor: pointer; outline: none; }
-.theme-switch option { background: var(--color-surface); color: var(--color-text); }
 .header-inner { gap: 20px; }
 .header-inner .brand-logo { width: 175px; }
 html[data-theme="dark"] .site-header .brand-logo { filter: brightness(0) invert(1); }

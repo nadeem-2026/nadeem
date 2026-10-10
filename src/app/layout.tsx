@@ -5,6 +5,7 @@ import { getRequestLocale } from "@/lib/request-locale";
 import { direction } from "@/lib/i18n";
 import { getMessages } from "@/content/messages";
 import "./globals.css";
+import type { Theme } from "@/components/theme-switch";
 import { Alexandria, Inter } from "next/font/google";
 
 const alexandria = Alexandria({ subsets: ["arabic", "latin"], variable: "--font-arabic" });
@@ -43,7 +44,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const locale = await getRequestLocale();
   const savedTheme = (await cookies()).get("nadeem-theme")?.value;
-  const theme = savedTheme === "dark" || savedTheme === "light" ? savedTheme : "system";
+  const theme: Theme = savedTheme === "dark" ? "dark" : "light";
   return <html lang={locale} dir={direction(locale)} data-theme={theme} className={`${alexandria.variable} ${inter.variable}`} suppressHydrationWarning>
     <body suppressHydrationWarning><SiteHeader locale={locale} theme={theme} />{children}<SiteFooter locale={locale} /></body>
   </html>;

@@ -2,6 +2,7 @@
 import { usePathname } from "next/navigation";
 import type { Locale } from "@/lib/i18n";
 import { getMessages } from "@/content/messages";
+import { Globe } from "lucide-react";
 
 export function LanguageSwitch({ locale }: { locale: Locale }) {
   const pathname = usePathname();
@@ -9,5 +10,16 @@ export function LanguageSwitch({ locale }: { locale: Locale }) {
   const suffix = /^\/(ar|en)(\/|$)/.test(pathname) ? pathname.replace(/^\/(ar|en)/, "") : "";
   const m = getMessages(locale);
   // Full navigation updates the root layout's language, including account pages.
-  return <a className="language-switch" href={`/${other}${suffix}`} hrefLang={other} lang={other} aria-label={m.languageLabel}><span aria-hidden="true">◎</span> {m.otherLanguage}</a>;
+  return (
+    <a 
+      className="language-switch" 
+      href={`/${other}${suffix}`} 
+      hrefLang={other} 
+      lang={other} 
+      aria-label={m.languageLabel}
+    >
+      <Globe size={16} aria-hidden="true" />
+      <span>{m.otherLanguage}</span>
+    </a>
+  );
 }

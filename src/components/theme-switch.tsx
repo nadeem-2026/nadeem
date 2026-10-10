@@ -1,37 +1,38 @@
 "use client";
 import { useState } from "react";
 import type { Locale } from "@/lib/i18n";
-import { Sun, Moon, Monitor } from "lucide-react";
+import { Sun, Moon } from "lucide-react";
 
-export type Theme = "system" | "light" | "dark";
+export type Theme = "light" | "dark";
 
-export function ThemeSwitch({ locale, initialTheme }: { locale: Locale; initialTheme: Theme }) {
-  const [theme, setTheme] = useState(initialTheme);
+export function ThemeSwitch({ locale, initialTheme = "light" }: { locale: Locale; initialTheme?: Theme }) {
+  const [theme, setTheme] = useState<Theme>(initialTheme === "dark" ? "dark" : "light");
   const ar = locale === "ar";
 
-  const renderIcon = () => {
-    if (theme === "dark") return <Moon className="w-4 h-4 text-emerald-400" aria-hidden="true" />;
-    if (theme === "light") return <Sun className="w-4 h-4 text-amber-500" aria-hidden="true" />;
-    return <Monitor className="w-4 h-4 text-muted" aria-hidden="true" />;
+  const toggleTheme = () => {
+    const next: Theme = theme === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    document.cookie = `nadeem-theme=${next}; Path=/; Max-Age=31536000; SameSite=Lax${typeof location !== "undefined" && location.protocol === "https:" ? "; Secure" : ""}`;
+    setTheme(next);
   };
 
+  const label = theme === "dark"
+    ? (ar ? "التبديل إلى الوضع الفاتح" : "Switch to light mode")
+    : (ar ? "التبديل إلى الوضع الداكن" : "Switch to dark mode");
+
   return (
-    <label className="theme-switch" title={ar ? "تغيير مظهر الموقع" : "Toggle theme"}>
-      {renderIcon()}
-      <span className="sr-only">{ar ? "مظهر الموقع" : "Appearance"}</span>
-      <select 
-        value={theme} 
-        onChange={event => {
-          const next = event.target.value as Theme;
-          document.documentElement.dataset.theme = next;
-          document.cookie = `nadeem-theme=${next}; Path=/; Max-Age=31536000; SameSite=Lax${location.protocol === "https:" ? "; Secure" : ""}`;
-          setTheme(next);
-        }}
-      >
-        <option value="system">{ar ? "الجهاز" : "System"}</option>
-        <option value="light">{ar ? "فاتح" : "Light"}</option>
-        <option value="dark">{ar ? "داكن" : "Dark"}</option>
-      </select>
-    </label>
+    <button
+      type="button"
+      onClick={toggleTheme}
+      className="theme-switch"
+      aria-label={label}
+      title={label}
+    >
+      {theme === "dark" ? (
+        <Sun size={20} className="text-amber-400 transition-transform duration-200 hover:rotate-45" aria-hidden="true" />
+      ) : (
+        <Moon size={20} className="text-[var(--color-primary)] transition-transform duration-200 hover:-rotate-12" aria-hidden="true" />
+      )}
+    </button>
   );
 }

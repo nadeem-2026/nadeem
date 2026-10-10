@@ -21,6 +21,7 @@ export function SiteHeader({ locale, theme = "light" }: { locale: Locale; theme?
           <Link href={`/${locale}`}>{m.nav.home}</Link>
           <Link href={`/${locale}/guides`}>{locale === "ar" ? "المرشدون السياحيون" : "Tour Guides"}</Link>
           <Link href={`/${locale}/become-a-guide`}>{locale === "ar" ? "انضم كمرشد" : "Become a Guide"}</Link>
+          <Link href={`/${locale}/contact`}>{m.nav.contact}</Link>
           <Link href={`/${locale}/account`}>{authMessages(locale).account}</Link>
         </nav>
         <div className="header-controls">

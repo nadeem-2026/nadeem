@@ -38,6 +38,7 @@ export function MobileNav({
             <Link href={`/${locale}`} onClick={() => setIsOpen(false)}>{messages.home}</Link>
             <Link href={`/${locale}/guides`} onClick={() => setIsOpen(false)}>{locale === "ar" ? "المرشدون السياحيون" : "Tour Guides"}</Link>
             <Link href={`/${locale}/become-a-guide`} onClick={() => setIsOpen(false)}>{locale === "ar" ? "انضم كمرشد" : "Become a Guide"}</Link>
+            <Link href={`/${locale}/contact`} onClick={() => setIsOpen(false)}>{messages.contact}</Link>
             <Link href={`/${locale}/account`} onClick={() => setIsOpen(false)} className="mobile-account-link">{accountText}</Link>
           </nav>
         </div>

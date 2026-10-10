@@ -18,12 +18,10 @@ export default async function AdminComplaintsPage({ params }: { params: Promise<
     `)
     .order("created_at", { ascending: false });
 
-  const isAr = locale === "ar";
-
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-6">{isAr ? "إدارة الشكاوى" : "Manage Complaints"}</h1>
+    <div className="space-y-6">
       <ComplaintsTable complaints={complaints || []} locale={locale} />
     </div>
   );
 }
+

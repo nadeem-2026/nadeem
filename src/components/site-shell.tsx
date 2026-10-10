@@ -21,6 +21,7 @@ export function SiteHeader({ locale, theme = "system" }: { locale: Locale; theme
           <Link href={`/${locale}`}>{m.nav.home}</Link>
           <a href={`/${locale}#about`}>{m.nav.about}</a>
           <a href={`/${locale}#services`}>{m.nav.services}</a>
+          <Link href={`/${locale}/become-a-guide`}>{locale === "ar" ? "انضم كمرشد" : "Become a Guide"}</Link>
           <a href={`/${locale}#contact`}>{m.nav.contact}</a>
           <Link href={`/${locale}/account`}>{authMessages(locale).account}</Link>
         </nav>
@@ -69,6 +70,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
         <h2>{ar ? "استكشف نديم" : "Explore Nadeem"}</h2>
         <ul>
           <li><Link href={`/${locale}`}><ArrowIcon size={14} className="footer-arrow" /> {m.nav.home}</Link></li>
+          <li><Link href={`/${locale}/become-a-guide`}><ArrowIcon size={14} className="footer-arrow" /> {ar ? "انضم كمرشد سياحي" : "Become a Guide"}</Link></li>
           <li><Link href={`/${locale}#about`}><ArrowIcon size={14} className="footer-arrow" /> {m.nav.about}</Link></li>
           <li><Link href={`/${locale}#services`}><ArrowIcon size={14} className="footer-arrow" /> {m.nav.services}</Link></li>
           <li><Link href={`/${locale}/account`}><ArrowIcon size={14} className="footer-arrow" /> {authMessages(locale).account}</Link></li>

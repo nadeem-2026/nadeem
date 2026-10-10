@@ -5,7 +5,6 @@ import { getRequestLocale } from "@/lib/request-locale";
 import { direction } from "@/lib/i18n";
 import { getMessages } from "@/content/messages";
 import "./globals.css";
-import { demoMessages } from "@/lib/payments/demo";
 import { Alexandria, Inter } from "next/font/google";
 
 const alexandria = Alexandria({ subsets: ["arabic", "latin"], variable: "--font-arabic" });

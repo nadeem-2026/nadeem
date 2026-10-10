@@ -78,12 +78,13 @@ export default async function Account({ params }: { params: Promise<{ locale: st
   );
 
   const guideContent = guide ? (
-    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-      <div className="dashboard-card"><h2>{m.profile}</h2><GuideForm locale={locale} name={profile.display_name} guide={guide} /></div>
+    <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
+      <GuideForm locale={locale} name={profile.display_name} guide={guide} />
       <div className="dashboard-card"><h2>{m.availability}</h2><AvailabilityForm locale={locale} availability={availability} /></div>
       <div className="dashboard-card"><h2>{m.exceptions}</h2><ExceptionsForm locale={locale} exceptions={exceptions} /></div>
     </div>
   ) : undefined;
+
 
   const bookingsContent = (profile.role === "tourist" || profile.role === "guide") ? (
     <div className="dashboard-card">
@@ -111,7 +112,7 @@ export default async function Account({ params }: { params: Promise<{ locale: st
   return (
     <main id="main-content" className="container account-page" tabIndex={-1}>
       <AccountTabs 
-        locale={locale as any} 
+        locale={locale} 
         role={profile.role} 
         profileContent={profileContent} 
         bookingsContent={bookingsContent}

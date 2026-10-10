@@ -6,7 +6,6 @@ import { Brand } from "@/components/brand";
 export default async function NotFound() {
   const locale = await getRequestLocale();
   const m = getMessages(locale);
-  const isRTL = locale === "ar";
   
   return (
     <main id="main-content" className="container" tabIndex={-1} style={{ minHeight: "70vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>

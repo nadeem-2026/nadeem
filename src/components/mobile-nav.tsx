@@ -10,7 +10,7 @@ export function MobileNav({
   accountText 
 }: { 
   locale: Locale; 
-  messages: any; 
+  messages: Record<string, string>; 
   accountText: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -45,6 +45,7 @@ export function MobileNav({
             <Link href={`/${locale}`} onClick={() => setIsOpen(false)}>{messages.home}</Link>
             <a href={`/${locale}#about`} onClick={() => setIsOpen(false)}>{messages.about}</a>
             <a href={`/${locale}#services`} onClick={() => setIsOpen(false)}>{messages.services}</a>
+            <Link href={`/${locale}/become-a-guide`} onClick={() => setIsOpen(false)}>{locale === "ar" ? "انضم كمرشد" : "Become a Guide"}</Link>
             <a href={`/${locale}#contact`} onClick={() => setIsOpen(false)}>{messages.contact}</a>
             <Link href={`/${locale}/account`} onClick={() => setIsOpen(false)} className="mobile-account-link">{accountText}</Link>
           </nav>

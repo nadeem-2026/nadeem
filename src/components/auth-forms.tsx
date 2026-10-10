@@ -1,10 +1,11 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { authenticate, saveGuide, reviewGuide, saveAvailability, addException, deleteException, type AuthIntent, type FormState } from "@/lib/auth/actions";
+import { authenticate, reviewGuide, saveAvailability, addException, deleteException, type AuthIntent, type FormState } from "@/lib/auth/actions";
 import { authMessages } from "@/content/auth";
 import type { Locale } from "@/lib/i18n";
-import { GuideFileUpload } from "./guide-file-upload";
+import { GuideOnboardingWizard } from "./guide-onboarding-wizard";
+
 
 function Feedback({ state, locale }: { state: FormState; locale: Locale }) {
   const m = authMessages(locale);
@@ -14,10 +15,45 @@ function Feedback({ state, locale }: { state: FormState; locale: Locale }) {
 export function AuthForm({ locale, intent, configured }: { locale: Locale; intent: AuthIntent; configured: boolean }) {
   const m = authMessages(locale);
   const [state, action, pending] = useActionState(authenticate.bind(null, locale, intent), {});
+  const [selectedRole, setSelectedRole] = useState<"tourist" | "guide">("tourist");
+  const isAr = locale === "ar";
+
   return <form action={action} className="account-form">
     {!configured && <p role="status">{m.unavailable}</p>}
     <fieldset disabled={pending || !configured}>
-      {intent === "signup" && <><label>{m.name}<input name="name" autoComplete="name" required maxLength={120} /></label><label>{m.role}<select name="role" required><option value="tourist">{m.tourist}</option><option value="guide">{m.guide}</option></select></label></>}
+      {intent === "signup" && (
+        <>
+          <div className="space-y-2 mb-2">
+            <span className="text-xs font-bold block text-[var(--color-text)]">{m.role}</span>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setSelectedRole("tourist")}
+                className={`p-3 rounded-xl border text-start transition flex flex-col gap-1 cursor-pointer ${selectedRole === "tourist" ? "bg-[var(--color-primary)] text-white border-[var(--color-primary)] shadow-xs" : "bg-[var(--color-surface)] border-[var(--border)] text-[var(--color-text)] hover:bg-[var(--background-alt)]"}`}
+              >
+                <span className="font-bold text-sm">🎒 {m.tourist}</span>
+                <span className={`text-[11px] leading-tight ${selectedRole === "tourist" ? "text-white/80" : "text-[var(--muted)]"}`}>
+                  {isAr ? "استكشف المملكة واحجز جولات مع مرشدين" : "Explore Saudi and book unique tours"}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSelectedRole("guide")}
+                className={`p-3 rounded-xl border text-start transition flex flex-col gap-1 cursor-pointer ${selectedRole === "guide" ? "bg-[var(--color-primary)] text-white border-[var(--color-primary)] shadow-xs" : "bg-[var(--color-surface)] border-[var(--border)] text-[var(--color-text)] hover:bg-[var(--background-alt)]"}`}
+              >
+                <span className="font-bold text-sm">🧭 {m.guide}</span>
+                <span className={`text-[11px] leading-tight ${selectedRole === "guide" ? "text-white/80" : "text-[var(--muted)]"}`}>
+                  {isAr ? "قدّم تجارب سياحية وحقق عوائد مميزة" : "Host authentic tours and earn income"}
+                </span>
+              </button>
+            </div>
+            <input type="hidden" name="role" value={selectedRole} />
+          </div>
+
+          <label>{m.name}<input name="name" autoComplete="name" required maxLength={120} /></label>
+        </>
+      )}
       {intent !== "update" && <label>{m.email}<input name="email" type="email" dir="ltr" autoComplete="email" maxLength={254} required /></label>}
       {intent !== "forgot" && <label>{m.password}<input name="password" type="password" dir="ltr" autoComplete={intent === "login" ? "current-password" : "new-password"} minLength={intent === "login" ? 1 : 12} maxLength={128} required aria-describedby="password-hint" /><small id="password-hint">{intent !== "login" && m.passwordHint}</small></label>}
       <button className="button button-primary" type="submit">{pending ? m.busy : m[intent]}</button>
@@ -26,89 +62,12 @@ export function AuthForm({ locale, intent, configured }: { locale: Locale; inten
   </form>;
 }
 
-export type GuideProfile = { user_id: string; city: string; bio: string; languages: string[]; service_areas: string[]; hourly_rate: number; max_participants: number; inclusions: string[]; status: "draft" | "pending_review" | "approved" | "rejected" | "suspended"; review_reason: string | null; first_name?: string; last_name?: string; full_name_ar?: string; full_name_en?: string; address_details?: any; national_id_url?: string; official_license_url?: string; language_certificates?: any; personal_photo_url?: string; avatar_url?: string; };
+export type GuideProfile = { user_id: string; city: string; bio: string; languages: string[]; service_areas: string[]; hourly_rate: number; max_participants: number; inclusions: string[]; status: "draft" | "pending_review" | "approved" | "rejected" | "suspended"; review_reason: string | null; first_name?: string; last_name?: string; full_name_ar?: string; full_name_en?: string; address_details?: unknown; national_id_url?: string; official_license_url?: string; language_certificates?: unknown; personal_photo_url?: string; avatar_url?: string; };
+
 export function GuideForm({ locale, name, guide }: { locale: Locale; name: string; guide: GuideProfile }) {
-  const m = authMessages(locale);
-  const [state, action, pending] = useActionState(saveGuide.bind(null, locale), {});
-  const [step, setStep] = useState(1);
-  const locked = !["draft", "rejected"].includes(guide.status);
-
-  const nextStep = () => setStep(s => Math.min(s + 1, 5));
-  const prevStep = () => setStep(s => Math.max(s - 1, 1));
-
-  return <form action={action} className="account-form">
-    <p>{m.status}: <strong>{guide.status === "suspended" ? m.guideSuspended : m[guide.status]}</strong></p>
-    {guide.review_reason && <p>{m.reason}: {guide.review_reason}</p>}
-    {locked && <p>{m.locked}</p>}
-
-    <div className="stepper" style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem', justifyContent: 'center' }}>
-      {[1, 2, 3, 4, 5].map(s => (
-        <div key={s} style={{ 
-          width: '30px', height: '30px', borderRadius: '50%', 
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: step === s ? 'var(--primary-color, #0070f3)' : (step > s ? '#4caf50' : '#ccc'),
-          color: '#fff', fontWeight: 'bold'
-        }}>{s}</div>
-      ))}
-    </div>
-
-    <fieldset disabled={pending || locked} style={{ display: step === 1 ? 'block' : 'none' }}>
-      <h3>1. {m.personal_info || "البيانات الشخصية"}</h3>
-      <label>{m.name}<input name="name" defaultValue={name} maxLength={120} required /></label>
-      <div style={{ display: 'flex', gap: '1rem' }}>
-        <label style={{ flex: 1 }}>{m.first_name}<input name="first_name" defaultValue={guide.first_name} maxLength={50} required /></label>
-        <label style={{ flex: 1 }}>{m.last_name}<input name="last_name" defaultValue={guide.last_name} maxLength={50} required /></label>
-      </div>
-      <label>{m.full_name_ar}<input name="full_name_ar" defaultValue={guide.full_name_ar} maxLength={120} required /></label>
-      <label>{m.full_name_en}<input name="full_name_en" defaultValue={guide.full_name_en} maxLength={120} required dir="ltr" /></label>
-      <label>{m.address_details}<textarea name="address_details" defaultValue={typeof guide.address_details === 'string' ? guide.address_details : JSON.stringify(guide.address_details || {})} rows={3} maxLength={500} required /></label>
-      <label>{m.city}<input name="city" defaultValue={guide.city} maxLength={120} required /></label>
-    </fieldset>
-
-    <fieldset disabled={pending || locked} style={{ display: step === 2 ? 'block' : 'none' }}>
-      <h3>2. {m.personal_photo || "الصورة الشخصية"}</h3>
-      <GuideFileUpload name="personal_photo_url" label={m.personal_photo || "Personal Photo"} defaultValue={guide.personal_photo_url || guide.avatar_url} acceptedTypes="image/jpeg, image/png" />
-    </fieldset>
-
-    <fieldset disabled={pending || locked} style={{ display: step === 3 ? 'block' : 'none' }}>
-      <h3>3. {m.official_docs || "الوثائق الرسمية"}</h3>
-      <GuideFileUpload name="national_id_url" label={m.national_id_url} required defaultValue={guide.national_id_url} acceptedTypes="image/jpeg, image/png, application/pdf" />
-      <GuideFileUpload name="official_license_url" label={m.official_license_url} required defaultValue={guide.official_license_url} acceptedTypes="image/jpeg, image/png, application/pdf" />
-    </fieldset>
-
-    <fieldset disabled={pending || locked} style={{ display: step === 4 ? 'block' : 'none' }}>
-      <h3>4. {m.languages_and_certs || "اللغات والشهادات"}</h3>
-      <label>{m.languages}<input name="languages" defaultValue={(guide.languages || []).join(", ")} maxLength={200} required /></label>
-      <GuideFileUpload name="language_certificates" label={m.language_certificates} defaultValue={typeof guide.language_certificates === 'string' ? guide.language_certificates : guide.language_certificates?.url} acceptedTypes="image/jpeg, image/png, application/pdf" />
-    </fieldset>
-
-    <fieldset disabled={pending || locked} style={{ display: step === 5 ? 'block' : 'none' }}>
-      <h3>5. {m.bio_and_services || "النبذة والخدمات"}</h3>
-      <label>{m.bio}<textarea name="bio" defaultValue={guide.bio} rows={6} maxLength={2000} required /></label>
-      <label>{m.service_areas}<input name="service_areas" defaultValue={(guide.service_areas || []).join(", ")} maxLength={200} required /></label>
-      <label>{m.hourly_rate}<input name="hourly_rate" type="number" step="0.01" min="0" defaultValue={guide.hourly_rate || 0} required /></label>
-      <label>{m.max_participants}<input name="max_participants" type="number" min="1" defaultValue={guide.max_participants || 1} required /></label>
-      <label>{m.inclusions}<input name="inclusions" defaultValue={(guide.inclusions || []).join(", ")} maxLength={500} required /></label>
-    </fieldset>
-
-    <div className="hero-actions" style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between' }}>
-      {step > 1 ? (
-        <button type="button" className="button" onClick={prevStep} disabled={pending || locked}>{m.previous || "Previous"}</button>
-      ) : <div />}
-      
-      {step < 5 ? (
-        <button type="button" className="button button-primary" onClick={nextStep} disabled={pending || locked}>{m.next || "Next"}</button>
-      ) : (
-        <div style={{ display: 'flex', gap: '1rem' }}>
-          <button className="button" type="submit" name="intent" value="save" disabled={pending || locked}>{m.save}</button>
-          <button className="button button-primary" type="submit" name="intent" value="submit" disabled={pending || locked}>{m.send}</button>
-        </div>
-      )}
-    </div>
-
-    <Feedback state={state} locale={locale} />
-  </form>;
+  return <GuideOnboardingWizard locale={locale} name={name} guide={guide} />;
 }
+
 
 export function ReviewForm({ locale, guide }: { locale: Locale; guide: GuideProfile }) {
   const m = authMessages(locale);

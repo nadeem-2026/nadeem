@@ -23,14 +23,15 @@ export function AccountTabs({
   adminContent
 }: AccountTabsProps) {
   const ar = locale === "ar";
-  const [activeTab, setActiveTab] = useState<"profile" | "bookings" | "guide" | "earnings" | "admin">("profile");
+  type TabKey = "profile" | "bookings" | "guide" | "earnings" | "admin";
+  const [activeTab, setActiveTab] = useState<TabKey>("profile");
 
-  const tabs = [
-    { id: "profile", label: ar ? "ملخص الحساب" : "Account Summary", show: true },
-    { id: "bookings", label: ar ? "الحجوزات" : "Bookings", show: role === "guide" || role === "tourist" },
-    { id: "guide", label: ar ? "المرشد والتوفر" : "Guide Profile & Availability", show: role === "guide" },
-    { id: "earnings", label: ar ? "الأرباح" : "Earnings", show: role === "guide" },
-    { id: "admin", label: ar ? "الإدارة" : "Administration", show: role === "admin" }
+  const tabs: { id: TabKey; label: string; show: boolean }[] = [
+    { id: "profile" as const, label: ar ? "ملخص الحساب" : "Account Summary", show: true },
+    { id: "bookings" as const, label: ar ? "الحجوزات" : "Bookings", show: role === "guide" || role === "tourist" },
+    { id: "guide" as const, label: ar ? "المرشد والتوفر" : "Guide Profile & Availability", show: role === "guide" },
+    { id: "earnings" as const, label: ar ? "الأرباح" : "Earnings", show: role === "guide" },
+    { id: "admin" as const, label: ar ? "الإدارة" : "Administration", show: role === "admin" }
   ].filter(t => t.show);
 
   return (
@@ -42,7 +43,7 @@ export function AccountTabs({
           return (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
+              onClick={() => setActiveTab(tab.id)}
               className={`tab-button ${isActive ? "active" : ""}`}
               aria-selected={isActive}
               role="tab"

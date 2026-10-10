@@ -1,7 +1,8 @@
 import { requireAccount } from "@/lib/auth/server";
+import { getSupabaseAdmin } from "@/lib/auth/admin";
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
+import { AdminShell } from "@/components/admin/admin-shell";
 
 export default async function AdminLayout({
   children,
@@ -17,27 +18,21 @@ export default async function AdminLayout({
     notFound();
   }
 
-  const isAr = locale === "ar";
+  const adminClient = getSupabaseAdmin();
+  const [{ count: pendingGuidesCount }, { count: unresolvedComplaintsCount }] = await Promise.all([
+    adminClient.from("guide_profiles").select("*", { count: "exact", head: true }).eq("status", "pending_review"),
+    adminClient.from("complaints").select("*", { count: "exact", head: true }).eq("status", "pending")
+  ]);
 
   return (
-    <div className="container" style={{ display: "flex", gap: "2rem", paddingTop: "2rem", paddingBottom: "4rem" }}>
-      <aside style={{ width: "250px", flexShrink: 0 }}>
-        <nav style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          <h2 className="text-xl font-bold mb-4">{isAr ? "لوحة التحكم" : "Dashboard"}</h2>
-          <Link href={`/${locale}/admin`} className="hover:text-primary">
-            {isAr ? "نظرة عامة" : "Overview"}
-          </Link>
-          <Link href={`/${locale}/admin/guides`} className="hover:text-primary">
-            {isAr ? "المرشدين" : "Guides"}
-          </Link>
-          <Link href={`/${locale}/admin/complaints`} className="hover:text-primary">
-            {isAr ? "الشكاوى" : "Complaints"}
-          </Link>
-        </nav>
-      </aside>
-      <main style={{ flexGrow: 1 }}>
-        {children}
-      </main>
-    </div>
+    <AdminShell
+      locale={locale}
+      pendingGuidesCount={pendingGuidesCount || 0}
+      unresolvedComplaintsCount={unresolvedComplaintsCount || 0}
+      adminName={profile.display_name || (locale === "ar" ? "المشرف" : "Administrator")}
+    >
+      {children}
+    </AdminShell>
   );
 }
+

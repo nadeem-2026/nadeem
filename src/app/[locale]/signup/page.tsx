@@ -8,4 +8,6 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     robots: { index: false, follow: false }
   };
 }
-export default function Signup({ params }: { params: Promise<{ locale: string }> }) { return <AuthPage params={params} intent="signup" />; }
+export default async function Signup({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ notice?: string }> }) {
+  return <AuthPage params={params} intent="signup" notice={(await searchParams).notice} />;
+}

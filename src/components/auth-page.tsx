@@ -26,6 +26,16 @@ export async function AuthPage({ params, intent, notice }: { params: Promise<{ l
           
           {notice === "suspended" && <p role="alert" className="form-error">{m.suspended}</p>}
           {notice === "expired" && <p role="alert" className="form-error">{m.sessionExpired}</p>}
+          {notice === "failed" && <p role="alert" className="form-error">{m.failed}</p>}
+          {notice === "unavailable" && <p role="alert" className="form-error">{m.unavailable}</p>}
+          {notice === "google_not_configured" && (
+            <div role="alert" className="form-notice-box">
+              <strong style={{ display: "block", marginBottom: "4px" }}>
+                {ar ? "خدمة Google غير مفعّلة في Supabase بعد" : "Google Sign-In is not enabled in Supabase yet"}
+              </strong>
+              <span>{m.googleNotConfigured}</span>
+            </div>
+          )}
           
           <AuthForm locale={locale} intent={intent} configured={!!getAuthConfig()} />
           

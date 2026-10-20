@@ -23,6 +23,11 @@ const ar = {
   availability: "أوقات التوفر الأسبوعية", day0: "الأحد", day1: "الإثنين", day2: "الثلاثاء", day3: "الأربعاء", day4: "الخميس", day5: "الجمعة", day6: "السبت",
   startTime: "من", endTime: "إلى", available: "متاح", unavailableDay: "غير متاح", updateAvailability: "تحديث الأوقات",
   exceptions: "الاستثناءات (أيام العطل والتعديلات)", addException: "إضافة استثناء", exceptionDate: "التاريخ", isAvailable: "متاح؟", noExceptions: "لا توجد استثناءات مضافة.", delete: "حذف", personal_info: "البيانات الشخصية", personal_photo: "الصورة الشخصية", official_docs: "الوثائق الرسمية", languages_and_certs: "اللغات والشهادات", bio_and_services: "النبذة والخدمات", previous: "السابق", next: "التالي",
+  continueWithGoogle: "تسجيل الدخول بواسطة Google",
+  signUpWithGoogle: "التسجيل السريع بواسطة Google",
+  orDivider: "أو",
+  googleAuthFailed: "تعذّر تسجيل الدخول باستخدام Google. تحقق من الإعدادات أو حاول لاحقًا.",
+  googleNotConfigured: "خدمة Google غير مفعّلة في Supabase بعد. يلزم تفعيل مزود Google في لوحة التحكم وإضافة Client ID و Client Secret.",
 };
 type AuthMessages = typeof ar;
 const en: AuthMessages = {
@@ -48,5 +53,10 @@ const en: AuthMessages = {
   availability: "Weekly Availability", day0: "Sunday", day1: "Monday", day2: "Tuesday", day3: "Wednesday", day4: "Thursday", day5: "Friday", day6: "Saturday",
   startTime: "From", endTime: "To", available: "Available", unavailableDay: "Unavailable", updateAvailability: "Update Availability",
   exceptions: "Exceptions (Days Off & Custom Hours)", addException: "Add Exception", exceptionDate: "Date", isAvailable: "Available?", noExceptions: "No exceptions added.", delete: "Delete", personal_info: "Personal Information", personal_photo: "Personal Photo", official_docs: "Official Documents", languages_and_certs: "Languages & Certificates", bio_and_services: "Bio & Services", previous: "Previous", next: "Next",
+  continueWithGoogle: "Continue with Google",
+  signUpWithGoogle: "Sign up with Google",
+  orDivider: "or",
+  googleAuthFailed: "Failed to sign in with Google. Check settings or try again later.",
+  googleNotConfigured: "Google Sign-In is not enabled yet in your Supabase project. Enable Google in Supabase dashboard and add Client ID and Secret.",
 };
 export function authMessages(locale: Locale): AuthMessages { return locale === "ar" ? ar : en; }

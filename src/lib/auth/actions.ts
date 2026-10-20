@@ -48,6 +48,52 @@ export async function authenticate(locale: Locale, intent: AuthIntent, _previous
   redirect(`/${locale}/account`);
 }
 
+export async function signInWithGoogle(locale: Locale, intent: "login" | "signup", role?: "tourist" | "guide") {
+  if (!isLocale(locale)) return;
+  const config = getAuthConfig();
+  const client = await authClient();
+  if (!client || !config) redirect(`/${locale}/${intent}?notice=unavailable`);
+
+  // Verify whether Google provider is active in Supabase
+  try {
+    const res = await fetch(`${config.url}/auth/v1/settings`, {
+      headers: { apikey: config.key },
+      cache: "no-store",
+    });
+    if (res.ok) {
+      const settings = await res.json();
+      if (settings?.external && settings.external.google === false) {
+        redirect(`/${locale}/${intent}?notice=google_not_configured`);
+      }
+    }
+  } catch (e: unknown) {
+    if (e && typeof e === "object" && "digest" in e && typeof (e as { digest: string }).digest === "string" && (e as { digest: string }).digest.startsWith("NEXT_REDIRECT")) {
+      throw e;
+    }
+  }
+
+  const nextPath = `/${locale}/account`;
+  const roleQuery = role && (role === "guide" || role === "tourist") ? `&role=${role}` : "";
+  const redirectTo = `${config.siteUrl}/${locale}/auth/callback?next=${encodeURIComponent(nextPath)}${roleQuery}`;
+
+  const { data, error } = await client.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo,
+      queryParams: {
+        access_type: "offline",
+        prompt: "select_account",
+      },
+    },
+  });
+
+  if (error || !data.url) {
+    redirect(`/${locale}/${intent}?notice=failed`);
+  }
+
+  redirect(data.url);
+}
+
 export async function signOut(locale: Locale) {
   if (!isLocale(locale)) return;
   const client = await authClient();

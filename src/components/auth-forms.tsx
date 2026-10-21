@@ -97,7 +97,10 @@ export function AuthForm({ locale, intent, configured }: { locale: Locale; inten
             <span className="auth-divider-line" />
           </div>
 
-          <label>{m.name}<input name="name" autoComplete="name" required maxLength={120} /></label>
+          <div className="auth-names-row">
+            <label>{m.first_name}<input name="first_name" autoComplete="given-name" required maxLength={60} /></label>
+            <label>{m.last_name}<input name="last_name" autoComplete="family-name" required maxLength={60} /></label>
+          </div>
         </>
       )}
 

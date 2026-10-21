@@ -2687,4 +2687,18 @@ html[data-theme="dark"] .admin-status-pill {
   line-height: 1.5;
 }
 
+.auth-names-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 500px) {
+  .auth-names-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+
 

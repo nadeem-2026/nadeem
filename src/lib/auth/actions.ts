@@ -35,10 +35,20 @@ export async function authenticate(locale: Locale, intent: AuthIntent, _previous
   if (typeof password !== "string" || !password || password.length > 128) return { error: "invalid" };
   if (intent === "signup") {
     const role = registrationRole(form.get("role"));
-    const name = shortText(form.get("name"), 120);
+    const firstName = shortText(form.get("first_name"), 60);
+    const lastName = shortText(form.get("last_name"), 60);
+    const legacyName = shortText(form.get("name"), 120);
+    const name = (firstName && lastName)
+      ? shortText(`${firstName} ${lastName}`.trim(), 120)
+      : legacyName;
     if (!role || !name || !passwordValid(password)) return { error: "invalid" };
     const { error } = await client.auth.signUp({ email, password, options: {
-      data: { account_type: role, display_name: name },
+      data: {
+        account_type: role,
+        display_name: name,
+        ...(firstName ? { first_name: firstName } : {}),
+        ...(lastName ? { last_name: lastName } : {}),
+      },
       emailRedirectTo: `${config.siteUrl}/${locale}/auth/callback`,
     } });
     return error ? { error: "failed" } : { success: "checkEmail" };

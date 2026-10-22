@@ -148,7 +148,7 @@ export function AuthForm({ locale, intent, configured }: { locale: Locale; inten
               aria-label={isAr ? (showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور") : (showPassword ? "Hide password" : "Show password")}
               title={isAr ? (showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور") : (showPassword ? "Hide password" : "Show password")}
             >
-              {showPassword ? <EyeOff className="w-5 h-5" aria-hidden="true" /> : <Eye className="w-5 h-5" aria-hidden="true" />}
+              {showPassword ? <Eye className="w-5 h-5" aria-hidden="true" /> : <EyeOff className="w-5 h-5" aria-hidden="true" />}
             </button>
           </div>
           <small id="password-hint">{intent !== "login" && m.passwordHint}</small>

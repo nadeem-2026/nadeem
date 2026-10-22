@@ -245,3 +245,64 @@ export async function deleteException(locale: Locale, id: string) {
     revalidatePath(`/${locale}/account`);
   }
 }
+
+export type TouristProfile = {
+  user_id: string;
+  phone_number: string;
+  nationality: string;
+  country_of_residence: string;
+  city_of_residence: string;
+  preferred_languages: string[];
+  interests: string[];
+  travel_style: "solo" | "family" | "couples" | "friends";
+  dietary_requirements: string;
+  mobility_needs: string;
+  emergency_contact_name: string;
+  emergency_contact_phone: string;
+  bio: string;
+  created_at?: string;
+  updated_at?: string;
+};
+
+export async function saveTourist(locale: Locale, _previous: FormState, form: FormData): Promise<FormState> {
+  if (!isLocale(locale)) return { error: "invalid" };
+  const { client, profile } = await requireAccount(locale);
+  if (profile.role !== "tourist" && profile.role !== "admin") return { error: "failed" };
+
+  const display_name = shortText(form.get("display_name"), 120);
+  const phone_number = shortText(form.get("phone_number"), 30);
+  const nationality = shortText(form.get("nationality"), 60);
+  const country_of_residence = shortText(form.get("country_of_residence"), 60);
+  const city_of_residence = shortText(form.get("city_of_residence"), 60);
+  const preferred_languages = form.getAll("preferred_languages").map(String).filter(Boolean);
+  const interests = form.getAll("interests").map(String).filter(Boolean);
+  const travel_style_val = String(form.get("travel_style") || "solo");
+  const travel_style = ["solo", "family", "couples", "friends"].includes(travel_style_val) ? travel_style_val : "solo";
+  const dietary_requirements = shortText(form.get("dietary_requirements"), 250);
+  const mobility_needs = shortText(form.get("mobility_needs"), 250);
+  const emergency_contact_name = shortText(form.get("emergency_contact_name"), 100);
+  const emergency_contact_phone = shortText(form.get("emergency_contact_phone"), 30);
+  const bio = shortText(form.get("bio"), 500);
+  const avatar_url = shortText(form.get("avatar_url"), 500);
+
+  const { error } = await client.rpc("save_tourist_profile", {
+    p_display_name: display_name,
+    p_phone_number: phone_number,
+    p_nationality: nationality,
+    p_country_of_residence: country_of_residence,
+    p_city_of_residence: city_of_residence,
+    p_preferred_languages: preferred_languages.length > 0 ? preferred_languages : ["ar"],
+    p_interests: interests,
+    p_travel_style: travel_style,
+    p_dietary_requirements: dietary_requirements,
+    p_mobility_needs: mobility_needs,
+    p_emergency_contact_name: emergency_contact_name,
+    p_emergency_contact_phone: emergency_contact_phone,
+    p_bio: bio,
+    p_avatar_url: avatar_url || null,
+  });
+
+  if (error) return { error: "failed" };
+  revalidatePath(`/${locale}/account`);
+  return { success: "saved" };
+}

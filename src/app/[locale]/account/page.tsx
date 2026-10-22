@@ -7,6 +7,8 @@ import { signOut } from "@/lib/auth/actions";
 import { authMessages } from "@/content/auth";
 import { bookingsMessages } from "@/content/bookings";
 import { GuideForm, AvailabilityForm, ExceptionsForm, type GuideProfile, type DayAvailability, type AvailabilityException } from "@/components/auth-forms";
+import { TouristProfileForm } from "@/components/tourist-profile-form";
+import type { TouristProfile } from "@/lib/auth/actions";
 import { BookingsList } from "@/components/bookings-list";
 import { EarningsSummary } from "@/components/earnings-summary";
 import { AccountTabs } from "@/components/account-tabs";
@@ -21,7 +23,8 @@ import {
   LogOut, 
   CheckCircle2, 
   ArrowRight,
-  ArrowLeft 
+  ArrowLeft,
+  Sparkles 
 } from "lucide-react";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -54,6 +57,7 @@ export default async function Account({ params }: { params: Promise<{ locale: st
   // Fetch bookings and earnings based on role
   let bookings: Booking[] = [];
   let earnings: Earning[] = [];
+  let touristProfile: TouristProfile | null = null;
   if (profile.role === "guide") {
     const { data } = await client
       .from("bookings")
@@ -69,12 +73,20 @@ export default async function Account({ params }: { params: Promise<{ locale: st
       .order("created_at", { ascending: false });
     if (earningsData) earnings = earningsData;
   } else if (profile.role === "tourist") {
-    const { data } = await client
-      .from("bookings")
-      .select("*, guide:guide_id(display_name)")
-      .eq("tourist_id", profile.id)
-      .order("start_time", { ascending: false });
-    if (data) bookings = data;
+    const [bookingsRes, tpRes] = await Promise.all([
+      client
+        .from("bookings")
+        .select("*, guide:guide_id(display_name)")
+        .eq("tourist_id", profile.id)
+        .order("start_time", { ascending: false }),
+      client
+        .from("tourist_profiles")
+        .select("*")
+        .eq("user_id", profile.id)
+        .maybeSingle()
+    ]);
+    if (bookingsRes.data) bookings = bookingsRes.data;
+    if (tpRes.data) touristProfile = tpRes.data;
   }
 
   const bm = bookingsMessages(locale);
@@ -138,6 +150,25 @@ export default async function Account({ params }: { params: Promise<{ locale: st
             </span>
           </div>
         </div>
+
+        {profile.role === "tourist" && (
+          <div style={{ padding: "16px", background: "linear-gradient(135deg, rgba(14, 53, 38, 0.04) 0%, rgba(197, 160, 89, 0.08) 100%)", borderRadius: "12px", border: "1px solid rgba(14, 53, 38, 0.1)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px", marginBottom: "20px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <Sparkles className="w-5 h-5 text-amber-500 flex-shrink-0" />
+              <div>
+                <strong style={{ display: "block", fontSize: "0.95rem", color: "var(--color-primary)" }}>
+                  {isAr ? "بروفايل السائح المتكامل" : "Comprehensive Traveler Profile"}
+                </strong>
+                <p style={{ margin: "2px 0 0", fontSize: "0.82rem", color: "var(--muted)" }}>
+                  {isAr ? "يمكنك تخصيص اهتماماتك ولغاتك وتفضيلات الرحلة من تبويب 'الملف السياحي'." : "Customize your interests, languages, and preferences under 'Traveler Profile'."}
+                </p>
+              </div>
+            </div>
+            <span className="badge-status badge-status-confirmed" style={{ fontSize: "0.85rem", padding: "4px 12px" }}>
+              {touristProfile?.nationality ? (isAr ? "الملف محدث" : "Profile Active") : (isAr ? "بانتظار الإكمال" : "Needs Completion")}
+            </span>
+          </div>
+        )}
 
         {/* Quick Stats overview */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "12px", paddingTop: "20px", borderTop: "1px solid var(--border)" }}>
@@ -260,6 +291,16 @@ export default async function Account({ params }: { params: Promise<{ locale: st
     </div>
   ) : undefined;
 
+  const touristProfileContent = profile.role === "tourist" ? (
+    <TouristProfileForm
+      locale={locale}
+      displayName={profile.display_name}
+      avatarUrl={profile.avatar_url || undefined}
+      email={user.email}
+      profile={touristProfile}
+    />
+  ) : undefined;
+
   return (
     <main id="main-content" className="container account-page" tabIndex={-1}>
       <AccountTabs 
@@ -272,6 +313,7 @@ export default async function Account({ params }: { params: Promise<{ locale: st
         confirmedCount={confirmedCount}
         availableEarnings={availableEarnings}
         profileContent={profileContent} 
+        touristProfileContent={touristProfileContent}
         bookingsContent={bookingsContent}
         guideContent={guideContent}
         earningsContent={earningsContent}

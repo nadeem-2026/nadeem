@@ -19,13 +19,19 @@ export async function authClient() {
   });
 }
 
-export type Profile = { id: string; display_name: string; role: "tourist" | "guide" | "admin"; account_status: "active" | "suspended" };
+export type Profile = { 
+  id: string; 
+  display_name: string; 
+  role: "tourist" | "guide" | "admin"; 
+  account_status: "active" | "suspended";
+  avatar_url?: string | null;
+};
 export async function requireAccount(locale: Locale) {
   const client = await authClient();
   if (!client) redirect(`/${locale}/login?notice=unavailable`);
   const { data: { user }, error } = await client.auth.getUser();
   if (error || !user || !user.email_confirmed_at) redirect(`/${locale}/login`);
-  const { data: profile, error: profileError } = await client.from("profiles").select("id, display_name, role, account_status").eq("id", user.id).single<Profile>();
+  const { data: profile, error: profileError } = await client.from("profiles").select("id, display_name, role, account_status, avatar_url").eq("id", user.id).single<Profile>();
   if (profileError || !profile) throw new Error("Account profile is not available. Check migrations and access policies.");
   if (profile.account_status !== "active") redirect(`/${locale}/login?notice=suspended`);
   return { client, user, profile };

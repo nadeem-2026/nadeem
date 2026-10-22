@@ -61,6 +61,10 @@ export default async function BookingDetail({ params }: { params: Promise<{ loca
     existingComplaint = complaintRes.data;
   }
 
+  const { data: touristProfile } = (isGuide || profile.role === "admin")
+    ? await client.from("tourist_profiles").select("*").eq("user_id", booking.tourist_id).maybeSingle()
+    : { data: null };
+
   return (
     <main id="main-content" className="container" tabIndex={-1}>
       <header className="page-header" style={{ marginBottom: "2rem" }}>
@@ -95,6 +99,71 @@ export default async function BookingDetail({ params }: { params: Promise<{ loca
             {isTourist && demoPayment?.outcome === "success" && booking.status === "confirmed" && <DemoPayment bookingId={id} locale={locale} refund />}
           </div>
         </section>}
+
+        {/* Tourist Profile & Care Summary for Guide/Admin */}
+        {(isGuide || profile.role === "admin") && touristProfile && (
+          <section className="card" style={{ border: "1px solid rgba(14, 53, 38, 0.15)", background: "linear-gradient(135deg, rgba(14, 53, 38, 0.02) 0%, rgba(197, 160, 89, 0.05) 100%)" }}>
+            <h2 style={{ fontSize: "1.2rem", marginBottom: "1rem", color: "var(--color-primary)", display: "flex", alignItems: "center", gap: "8px" }}>
+              <span>🎒</span>
+              {locale === "ar" ? "تفضيلات ورعاية السائح" : "Tourist Preferences & Care"}
+            </h2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px" }}>
+              {touristProfile.phone_number && (
+                <div>
+                  <span style={{ fontSize: "0.8rem", color: "var(--muted)", display: "block" }}>{locale === "ar" ? "رقم الاتصال / واتساب" : "Contact / WhatsApp"}</span>
+                  <strong dir="ltr" style={{ fontSize: "0.95rem" }}>{touristProfile.phone_number}</strong>
+                </div>
+              )}
+              {touristProfile.nationality && (
+                <div>
+                  <span style={{ fontSize: "0.8rem", color: "var(--muted)", display: "block" }}>{locale === "ar" ? "الجنسية" : "Nationality"}</span>
+                  <strong style={{ fontSize: "0.95rem" }}>{touristProfile.nationality}</strong>
+                </div>
+              )}
+              {touristProfile.travel_style && (
+                <div>
+                  <span style={{ fontSize: "0.8rem", color: "var(--muted)", display: "block" }}>{locale === "ar" ? "نمط الرحلة" : "Travel Style"}</span>
+                  <strong style={{ fontSize: "0.95rem" }}>
+                    {touristProfile.travel_style === "family" ? (locale === "ar" ? "عائلي مع أطفال" : "Family with kids") :
+                     touristProfile.travel_style === "couples" ? (locale === "ar" ? "أزواج" : "Couples") :
+                     touristProfile.travel_style === "friends" ? (locale === "ar" ? "مجموعة أصدقاء" : "Friends") :
+                     (locale === "ar" ? "مسافر فردي" : "Solo Traveler")}
+                  </strong>
+                </div>
+              )}
+              {touristProfile.dietary_requirements && (
+                <div>
+                  <span style={{ fontSize: "0.8rem", color: "var(--muted)", display: "block" }}>{locale === "ar" ? "القيود والحساسية الغذائية" : "Dietary Restrictions"}</span>
+                  <strong style={{ fontSize: "0.95rem", color: "#b45309" }}>{touristProfile.dietary_requirements}</strong>
+                </div>
+              )}
+              {touristProfile.mobility_needs && (
+                <div>
+                  <span style={{ fontSize: "0.8rem", color: "var(--muted)", display: "block" }}>{locale === "ar" ? "الاحتياجات الحركية الخاصة" : "Mobility Needs"}</span>
+                  <strong style={{ fontSize: "0.95rem" }}>{touristProfile.mobility_needs}</strong>
+                </div>
+              )}
+              {touristProfile.emergency_contact_phone && (
+                <div>
+                  <span style={{ fontSize: "0.8rem", color: "var(--muted)", display: "block" }}>{locale === "ar" ? "جهة اتصال للطوارئ" : "Emergency Contact"}</span>
+                  <strong dir="ltr" style={{ fontSize: "0.95rem" }}>{touristProfile.emergency_contact_name ? `${touristProfile.emergency_contact_name}: ` : ""}{touristProfile.emergency_contact_phone}</strong>
+                </div>
+              )}
+            </div>
+            {touristProfile.interests && touristProfile.interests.length > 0 && (
+              <div style={{ marginTop: "16px", paddingTop: "12px", borderTop: "1px solid var(--border)" }}>
+                <span style={{ fontSize: "0.8rem", color: "var(--muted)", display: "block", marginBottom: "6px" }}>{locale === "ar" ? "الاهتمامات السياحية" : "Tour Interests"}</span>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                  {touristProfile.interests.map((it: string) => (
+                    <span key={it} className="badge" style={{ background: "rgba(14, 53, 38, 0.08)", color: "var(--color-primary)", fontWeight: 500 }}>
+                      {it}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </section>
+        )}
 
         {/* Tour Operations (Only active when confirmed or in_progress) */}
         {chatActive && (

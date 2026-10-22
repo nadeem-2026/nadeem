@@ -132,4 +132,21 @@ test("accounts and guide reviews enforce roles, isolation and audited transition
       assert.equal((await db.query("select * from guide_profiles where user_id=$1", [other])).rows.length, 0);
     });
   });
+  await t.test("tourist can update own profile and cannot read other tourists profiles", async () => {
+    await asUser(tourist, async () => {
+      const res = await db.query("select * from tourist_profiles where user_id=$1", [tourist]);
+      assert.equal(res.rows.length, 1);
+      await db.query(`select save_tourist_profile(
+        'Tourist Name', '+966500000000', 'Saudi', 'Saudi Arabia', 'Riyadh',
+        array['ar', 'en'], array['heritage', 'food'], 'family', 'none', 'none',
+        'Emergency Contact', '+966511111111', 'Traveler bio'
+      )`);
+      const updated = await db.query<{ nationality: string; travel_style: string }>("select nationality, travel_style from tourist_profiles where user_id=$1", [tourist]);
+      assert.equal(updated.rows[0].nationality, "Saudi");
+      assert.equal(updated.rows[0].travel_style, "family");
+    });
+    await asUser(guide, async () => {
+      assert.equal((await db.query("select * from tourist_profiles where user_id=$1", [tourist])).rows.length, 0);
+    });
+  });
 });

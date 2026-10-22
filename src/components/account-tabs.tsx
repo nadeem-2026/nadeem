@@ -23,6 +23,7 @@ interface AccountTabsProps {
   confirmedCount?: number;
   availableEarnings?: number;
   profileContent: React.ReactNode;
+  touristProfileContent?: React.ReactNode;
   bookingsContent?: React.ReactNode;
   guideContent?: React.ReactNode;
   earningsContent?: React.ReactNode;
@@ -39,13 +40,14 @@ export function AccountTabs({
   confirmedCount = 0,
   availableEarnings,
   profileContent,
+  touristProfileContent,
   bookingsContent,
   guideContent,
   earningsContent,
   adminContent
 }: AccountTabsProps) {
   const ar = locale === "ar";
-  type TabKey = "profile" | "bookings" | "guide" | "earnings" | "admin";
+  type TabKey = "profile" | "touristProfile" | "bookings" | "guide" | "earnings" | "admin";
   const [activeTab, setActiveTab] = useState<TabKey>("profile");
 
   const getRoleLabel = () => {
@@ -66,6 +68,12 @@ export function AccountTabs({
       label: ar ? "ملخص الحساب" : "Account Summary", 
       icon: <User className="w-5 h-5" />,
       show: true 
+    },
+    { 
+      id: "touristProfile" as const, 
+      label: ar ? "الملف السياحي" : "Traveler Profile", 
+      icon: <Sparkles className="w-5 h-5" />,
+      show: role === "tourist" 
     },
     { 
       id: "bookings" as const, 
@@ -170,6 +178,7 @@ export function AccountTabs({
 
         <section className="account-content fade-in" role="tabpanel">
           {activeTab === "profile" && profileContent}
+          {activeTab === "touristProfile" && touristProfileContent}
           {activeTab === "bookings" && bookingsContent}
           {activeTab === "guide" && guideContent}
           {activeTab === "earnings" && earningsContent}

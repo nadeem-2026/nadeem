@@ -5,7 +5,7 @@ import { authenticate, signInWithGoogle, reviewGuide, saveAvailability, addExcep
 import { authMessages } from "@/content/auth";
 import type { Locale } from "@/lib/i18n";
 import { GuideOnboardingWizard } from "./guide-onboarding-wizard";
-import { Clock, Calendar, Plus, Trash2, CalendarX2, Check, Sparkles, Compass } from "lucide-react";
+import { Clock, Calendar, Plus, Trash2, CalendarX2, Check, Sparkles, Compass, Eye, EyeOff } from "lucide-react";
 
 function GoogleIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
@@ -40,6 +40,7 @@ export function AuthForm({ locale, intent, configured }: { locale: Locale; inten
   const [state, action, pending] = useActionState(authenticate.bind(null, locale, intent), {});
   const [selectedRole, setSelectedRole] = useState<"tourist" | "guide">("tourist");
   const [isGooglePending, startGoogleTransition] = useTransition();
+  const [showPassword, setShowPassword] = useState(false);
   const isAr = locale === "ar";
 
   const handleGoogleClick = () => {
@@ -125,7 +126,34 @@ export function AuthForm({ locale, intent, configured }: { locale: Locale; inten
       )}
 
       {intent !== "update" && <label>{m.email}<input name="email" type="email" dir="ltr" autoComplete="email" maxLength={254} required /></label>}
-      {intent !== "forgot" && <label>{m.password}<input name="password" type="password" dir="ltr" autoComplete={intent === "login" ? "current-password" : "new-password"} minLength={intent === "login" ? 1 : 12} maxLength={128} required aria-describedby="password-hint" /><small id="password-hint">{intent !== "login" && m.passwordHint}</small></label>}
+      {intent !== "forgot" && (
+        <label>
+          {m.password}
+          <div className="password-input-wrap">
+            <input
+              name="password"
+              type={showPassword ? "text" : "password"}
+              dir="ltr"
+              autoComplete={intent === "login" ? "current-password" : "new-password"}
+              minLength={intent === "login" ? 1 : 12}
+              maxLength={128}
+              required
+              aria-describedby="password-hint"
+              className="password-input"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="password-toggle-btn"
+              aria-label={isAr ? (showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور") : (showPassword ? "Hide password" : "Show password")}
+              title={isAr ? (showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور") : (showPassword ? "Hide password" : "Show password")}
+            >
+              {showPassword ? <EyeOff className="w-5 h-5" aria-hidden="true" /> : <Eye className="w-5 h-5" aria-hidden="true" />}
+            </button>
+          </div>
+          <small id="password-hint">{intent !== "login" && m.passwordHint}</small>
+        </label>
+      )}
       <button className="button button-primary" type="submit">{pending ? m.busy : m[intent]}</button>
     </fieldset>
     <Feedback state={state} locale={locale} />

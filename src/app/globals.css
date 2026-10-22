@@ -2700,5 +2700,76 @@ html[data-theme="dark"] .admin-status-pill {
   }
 }
 
+/* Password Visibility Toggle */
+.password-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-input-wrap input {
+  width: 100%;
+}
+
+.password-input-wrap input::-ms-reveal,
+.password-input-wrap input::-ms-clear {
+  display: none;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 8px;
+  color: var(--muted);
+  cursor: pointer;
+  border-radius: 8px;
+  transition: color 0.15s ease, background-color 0.15s ease;
+  z-index: 2;
+}
+
+.password-toggle-btn:hover {
+  color: var(--color-primary);
+  background: rgba(14, 53, 38, 0.06);
+}
+
+.password-toggle-btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* RTL Layout (Arabic) */
+html[dir="rtl"] .password-toggle-btn,
+[dir="rtl"] .password-toggle-btn {
+  left: 10px;
+  right: auto;
+}
+
+html[dir="rtl"] .password-input-wrap input,
+[dir="rtl"] .password-input-wrap input {
+  padding-left: 44px !important;
+  padding-right: 16px !important;
+}
+
+/* LTR Layout (English) */
+html[dir="ltr"] .password-toggle-btn,
+[dir="ltr"] .password-toggle-btn {
+  right: 10px;
+  left: auto;
+}
+
+html[dir="ltr"] .password-input-wrap input,
+[dir="ltr"] .password-input-wrap input {
+  padding-right: 44px !important;
+  padding-left: 16px !important;
+}
+
+
 
 

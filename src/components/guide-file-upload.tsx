@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { createClient } from "@supabase/supabase-js";
+import { createBrowserClient } from "@/lib/auth/client";
 import { 
   UploadCloud, 
   FileCheck2, 
@@ -10,7 +10,6 @@ import {
   Trash2, 
   Loader2
 } from "lucide-react";
-
 
 interface GuideFileUploadProps {
   name: string;
@@ -49,13 +48,33 @@ export function GuideFileUpload({
     setError(null);
 
     try {
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
-      );
-      
+      // 1. Primary: Secure server-side upload endpoint (automatically passes SSR cookies from Google Auth)
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/upload/guide-document", {
+        method: "POST",
+        body: formData,
+      });
+
+      const json = await res.json().catch(() => null);
+
+      if (res.ok && json?.success && json?.path) {
+        setFileUrl(json.path);
+        setFileName(file.name);
+        return;
+      }
+
+      if (res.status === 401) {
+        throw new Error(json?.error || "يجب تسجيل الدخول لإتمام رفع الملفات");
+      }
+
+      // 2. Fallback: Direct upload via createBrowserClient (reads SSR cookies instead of localStorage)
+      const supabase = createBrowserClient();
       const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) throw new Error("يجب تسجيل الدخول لإتمام رفع الملفات");
+      if (!userData.user) {
+        throw new Error(json?.error || "يجب تسجيل الدخول لإتمام رفع الملفات");
+      }
 
       const fileExt = file.name.split('.').pop() || "bin";
       const randomName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
@@ -66,7 +85,7 @@ export function GuideFileUpload({
         .upload(filePath, file, { upsert: true });
 
       if (uploadError) {
-        throw uploadError;
+        throw new Error(json?.error || uploadError.message || "تعذر رفع الملف، يرجى المحاولة مرة أخرى");
       }
 
       setFileUrl(data.path);
@@ -77,7 +96,6 @@ export function GuideFileUpload({
     } finally {
       setUploading(false);
     }
-
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

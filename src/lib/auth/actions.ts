@@ -138,6 +138,7 @@ export async function saveGuide(locale: Locale, _previous: FormState, form: Form
   
   const national_id_url = form.get("national_id_url")?.toString() || "";
   const official_license_url = form.get("official_license_url")?.toString() || "";
+  const personal_photo_url = form.get("personal_photo_url")?.toString() || "";
   const language_certificates_val = form.get("language_certificates")?.toString() || "";
   const language_certificates = language_certificates_val ? { url: language_certificates_val } : {};
 
@@ -156,6 +157,9 @@ export async function saveGuide(locale: Locale, _previous: FormState, form: Form
     p_submit: submit 
   });
   if (error) return { error: "failed" };
+  if (personal_photo_url) {
+    await client.from("profiles").update({ avatar_url: personal_photo_url }).eq("id", profile.id);
+  }
   revalidatePath(`/${locale}/account`);
   return { success: submit ? "submitted" : "saved" };
 }

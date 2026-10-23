@@ -45,7 +45,7 @@ export default async function Account({ params }: { params: Promise<{ locale: st
   let availability: DayAvailability[] = [];
   let exceptions: AvailabilityException[] = [];
   if (profile.role === "guide") {
-    const { data, error } = await client.from("guide_profiles").select("user_id, city, bio, languages, service_areas, hourly_rate, max_participants, inclusions, status, review_reason").eq("user_id", profile.id).single<GuideProfile>();
+    const { data, error } = await client.from("guide_profiles").select("*").eq("user_id", profile.id).single<GuideProfile>();
     if (error) throw new Error("Guide profile could not be loaded");
     guide = data;
     const { data: avData, error: avError } = await client.from("guide_availability_weekly").select("day_of_week, start_time, end_time").eq("guide_id", profile.id);

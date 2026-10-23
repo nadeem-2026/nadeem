@@ -188,35 +188,56 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
   const [addressPostal, setAddressPostal] = useState(initialAddress.postal_code);
   const [addressNotes, setAddressNotes] = useState(initialAddress.notes);
 
+  // Identity & Personal Information states
+  const isEnglishString = (str: string) => /^[\x00-\x7F\s]+$/.test(str);
+  const [firstName, setFirstName] = useState(guide.first_name || "");
+  const [lastName, setLastName] = useState(guide.last_name || "");
+  const [fullNameAr, setFullNameAr] = useState(
+    guide.full_name_ar || (name && !isEnglishString(name) ? name : "")
+  );
+  const [fullNameEn, setFullNameEn] = useState(
+    guide.full_name_en || (name && isEnglishString(name) ? name : "")
+  );
+  const [bio, setBio] = useState(guide.bio || "");
+  const [maxParticipants, setMaxParticipants] = useState(guide.max_participants || 4);
+
+  const handleFirstNameChange = (val: string) => {
+    setFirstName(val);
+    const expectedPrev = `${firstName} ${lastName}`.trim();
+    if (!fullNameAr || fullNameAr === expectedPrev) {
+      setFullNameAr(`${val} ${lastName}`.trim());
+    }
+  };
+
+  const handleLastNameChange = (val: string) => {
+    setLastName(val);
+    const expectedPrev = `${firstName} ${lastName}`.trim();
+    if (!fullNameAr || fullNameAr === expectedPrev) {
+      setFullNameAr(`${firstName} ${val}`.trim());
+    }
+  };
+
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     setClientValidationError(null);
     const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null;
     const isSubmit = submitter?.value === "submit";
 
     if (isSubmit) {
-      const form = e.currentTarget;
-      const formData = new FormData(form);
-      const firstName = formData.get("first_name")?.toString().trim();
-      const lastName = formData.get("last_name")?.toString().trim();
-      const fullNameAr = formData.get("full_name_ar")?.toString().trim();
-      const city = formData.get("city")?.toString().trim();
-      const bio = formData.get("bio")?.toString().trim();
-
-      if (!fullNameAr && (!firstName || !lastName) && !name) {
+      if (!fullNameAr.trim() && (!firstName.trim() || !lastName.trim()) && !name) {
         e.preventDefault();
         setStep(1);
         setClientValidationError(isAr ? "يرجى كتابة اسمك الكامل في الخطوة 1 قبل إرسال الملف للاعتماد." : "Please enter your full name in Step 1.");
         return;
       }
 
-      if (!city) {
+      if (!selectedCity.trim()) {
         e.preventDefault();
         setStep(1);
         setClientValidationError(isAr ? "يرجى تحديد مدينتك الأساسية للإرشاد في الخطوة 1." : "Please select your primary city in Step 1.");
         return;
       }
 
-      if (!bio) {
+      if (!bio.trim()) {
         e.preventDefault();
         setStep(5);
         setClientValidationError(isAr ? "حقل النبذة التعريفية (في الخطوة 5) إلزامي للإرسال للاعتماد الرسمي. نأمل كتابة نبذة توضح خبرتك وجولاتك." : "The Bio field (in Step 5) is required for official submission.");
@@ -460,7 +481,11 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
       </div>
 
       <form action={action} onSubmit={handleFormSubmit} noValidate className="space-y-8">
-        <input type="hidden" name="name" value={name} />
+        <input 
+          type="hidden" 
+          name="name" 
+          value={fullNameAr.trim() || `${firstName} ${lastName}`.trim() || name} 
+        />
 
         {/* Step 1: Identity & Personal Information */}
         <div className={`space-y-6 animate-fadeIn ${step === 1 ? "block" : "hidden"}`}>
@@ -478,7 +503,8 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
                 <label className="text-xs font-bold block mb-2">{isAr ? "الاسم الأول" : "First Name"} *</label>
                 <input 
                   name="first_name" 
-                  defaultValue={guide.first_name || ""} 
+                  value={firstName} 
+                  onChange={(e) => handleFirstNameChange(e.target.value)}
                   placeholder={isAr ? "مثال: عبد الله" : "e.g., Abdullah"}
                   required 
                   maxLength={50}
@@ -489,7 +515,8 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
                 <label className="text-xs font-bold block mb-2">{isAr ? "اسم العائلة" : "Last Name"} *</label>
                 <input 
                   name="last_name" 
-                  defaultValue={guide.last_name || ""} 
+                  value={lastName} 
+                  onChange={(e) => handleLastNameChange(e.target.value)}
                   placeholder={isAr ? "مثال: الغامدي" : "e.g., Alghamdi"}
                   required 
                   maxLength={50}
@@ -502,7 +529,8 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
               <label className="text-xs font-bold block mb-2">{isAr ? "الاسم الكامل (مطابق للهوية باللغة العربية)" : "Full Name (Arabic)"} *</label>
               <input 
                 name="full_name_ar" 
-                defaultValue={guide.full_name_ar || name} 
+                value={fullNameAr} 
+                onChange={(e) => setFullNameAr(e.target.value)}
                 placeholder={isAr ? "الاسم الثلاثي أو الرباعي كما في الهوية الوطنية" : "Full name in Arabic"}
                 required 
                 maxLength={120}
@@ -514,7 +542,8 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
               <label className="text-xs font-bold block mb-2">{isAr ? "الاسم الكامل (مطابق لجواز السفر بالإنجليزية)" : "Full Name (English)"} *</label>
               <input 
                 name="full_name_en" 
-                defaultValue={guide.full_name_en || ""} 
+                value={fullNameEn} 
+                onChange={(e) => setFullNameEn(e.target.value)}
                 placeholder="Full name as written on passport / official license"
                 dir="ltr"
                 required 
@@ -778,8 +807,6 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
                 })} 
               />
             </div>
-
-            <input type="hidden" name="name" value={name} />
           </div>
 
         {/* Step 2: Professional Profile Photo */}
@@ -926,7 +953,8 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
               <label className="text-xs font-bold block mb-2">{isAr ? "نبذة عنك وعن جولتك السياحية" : "Bio & Local Story"} *</label>
               <textarea 
                 name="bio" 
-                defaultValue={guide.bio || ""} 
+                value={bio} 
+                onChange={(e) => setBio(e.target.value)}
                 rows={5}
                 required
                 maxLength={2000}
@@ -992,7 +1020,8 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
                 name="max_participants"
                 min="1"
                 max="50"
-                defaultValue={guide.max_participants || 4}
+                value={maxParticipants}
+                onChange={(e) => setMaxParticipants(parseInt(e.target.value) || 1)}
                 required
                 className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-all"
               />

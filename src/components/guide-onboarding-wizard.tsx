@@ -263,10 +263,11 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
         </ul>
       </div>
 
-      <form action={action} className="space-y-8">
+      <form action={action} noValidate className="space-y-8">
+        <input type="hidden" name="name" value={name} />
+
         {/* Step 1: Identity & Personal Information */}
-        {step === 1 && (
-          <div className="space-y-6 animate-fadeIn">
+        <div className={`space-y-6 animate-fadeIn ${step === 1 ? "block" : "hidden"}`}>
             <div>
               <h3 className="text-xl font-bold text-[var(--color-text)] m-0">
                 {isAr ? "1. البيانات الشخصية ومطابقة الهوية" : "1. Personal Information & Identity"}
@@ -377,11 +378,9 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
 
             <input type="hidden" name="name" value={name} />
           </div>
-        )}
 
         {/* Step 2: Professional Profile Photo */}
-        {step === 2 && (
-          <div className="space-y-6 animate-fadeIn">
+        <div className={`space-y-6 animate-fadeIn ${step === 2 ? "block" : "hidden"}`}>
             <div>
               <h3 className="text-xl font-bold text-[var(--color-text)] m-0">
                 {isAr ? "2. الصورة الشخصية المهنية" : "2. Professional Profile Photo"}
@@ -413,11 +412,9 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
               </div>
             </div>
           </div>
-        )}
 
         {/* Step 3: Official Verification Documents */}
-        {step === 3 && (
-          <div className="space-y-6 animate-fadeIn">
+        <div className={`space-y-6 animate-fadeIn ${step === 3 ? "block" : "hidden"}`}>
             <div>
               <h3 className="text-xl font-bold text-[var(--color-text)] m-0">
                 {isAr ? "3. الوثائق والتراخيص الرسمية" : "3. Official Licensing & Identification"}
@@ -458,11 +455,9 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
               />
             </div>
           </div>
-        )}
 
         {/* Step 4: Languages & Credentials */}
-        {step === 4 && (
-          <div className="space-y-6 animate-fadeIn">
+        <div className={`space-y-6 animate-fadeIn ${step === 4 ? "block" : "hidden"}`}>
             <div>
               <h3 className="text-xl font-bold text-[var(--color-text)] m-0">
                 {isAr ? "4. اللغات والشهادات المعتمدة" : "4. Languages & Certifications"}
@@ -512,11 +507,9 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
               />
             </div>
           </div>
-        )}
 
         {/* Step 5: Bio, Pricing & Inclusions */}
-        {step === 5 && (
-          <div className="space-y-6 animate-fadeIn">
+        <div className={`space-y-6 animate-fadeIn ${step === 5 ? "block" : "hidden"}`}>
             <div>
               <h3 className="text-xl font-bold text-[var(--color-text)] m-0">
                 {isAr ? "5. النبذة التعريفية، الخدمات والتسعير" : "5. Bio, Services & Pricing"}
@@ -633,7 +626,6 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
               />
             </div>
           </div>
-        )}
 
         {/* Form Action Controls & Stepper Navigation */}
         <div className="pt-6 border-t border-[var(--border)] flex items-center justify-between gap-4">

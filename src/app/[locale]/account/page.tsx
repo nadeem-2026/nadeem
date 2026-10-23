@@ -325,6 +325,7 @@ export default async function Account({ params }: { params: Promise<{ locale: st
       <AccountTabs 
         locale={locale} 
         role={profile.role} 
+        guideStatus={guide?.status}
         userName={profile.display_name}
         userEmail={user.email}
         guideCity={guide?.city}

@@ -16,6 +16,7 @@ import {
 interface AccountTabsProps {
   locale: Locale;
   role: "guide" | "tourist" | "admin";
+  guideStatus?: "draft" | "pending_review" | "approved" | "rejected" | "suspended" | null;
   userName?: string;
   userEmail?: string;
   guideCity?: string;
@@ -33,6 +34,7 @@ interface AccountTabsProps {
 export function AccountTabs({
   locale,
   role,
+  guideStatus,
   userName,
   userEmail,
   guideCity,
@@ -50,10 +52,46 @@ export function AccountTabs({
   type TabKey = "profile" | "touristProfile" | "bookings" | "guide" | "earnings" | "admin";
   const [activeTab, setActiveTab] = useState<TabKey>("profile");
 
-  const getRoleLabel = () => {
-    if (role === "admin") return ar ? "مشرف المنصة" : "Platform Administrator";
-    if (role === "guide") return ar ? "مرشد سياحي معتمد" : "Certified Tour Guide";
-    return ar ? "سائح ومستكشف" : "Traveler & Explorer";
+  const getRoleBadge = () => {
+    if (role === "admin") {
+      return {
+        label: ar ? "مشرف المنصة" : "Platform Administrator",
+        className: "badge-status badge-status-completed"
+      };
+    }
+    if (role === "guide") {
+      switch (guideStatus) {
+        case "approved":
+          return {
+            label: ar ? "مرشد سياحي معتمد" : "Certified Tour Guide",
+            className: "badge-status badge-status-completed"
+          };
+        case "pending_review":
+          return {
+            label: ar ? "مرشد (بانتظار الاعتماد)" : "Guide (Under Review)",
+            className: "badge-status badge-status-pending"
+          };
+        case "rejected":
+          return {
+            label: ar ? "مرشد (يتطلب تعديل)" : "Guide (Action Required)",
+            className: "badge-status badge-status-cancelled"
+          };
+        case "suspended":
+          return {
+            label: ar ? "مرشد (حساب معلّق)" : "Guide (Suspended)",
+            className: "badge-status badge-status-cancelled"
+          };
+        default:
+          return {
+            label: ar ? "مرشد (قيد استكمال الملف)" : "Guide (Drafting Profile)",
+            className: "badge-status"
+          };
+      }
+    }
+    return {
+      label: ar ? "سائح ومستكشف" : "Traveler & Explorer",
+      className: "badge-status badge-status-completed"
+    };
   };
 
   const tabs: { 
@@ -103,6 +141,7 @@ export function AccountTabs({
   ].filter(t => t.show);
 
   const initial = (userName || "N").charAt(0).toUpperCase();
+  const roleBadge = getRoleBadge();
 
   return (
     <div className="account-container">
@@ -115,9 +154,9 @@ export function AccountTabs({
           <div className="account-hero-details">
             <h1>
               {userName || (ar ? "حساب نديم" : "Nadeem Account")}
-              <span className="badge-status badge-status-completed" style={{ fontSize: "0.8rem", padding: "4px 10px" }}>
+              <span className={roleBadge.className} style={{ fontSize: "0.8rem", padding: "4px 10px" }}>
                 <Sparkles className="w-3.5 h-3.5" />
-                {getRoleLabel()}
+                {roleBadge.label}
               </span>
             </h1>
             {userEmail && <p className="account-hero-email">{userEmail}</p>}

@@ -32,7 +32,11 @@ npm ci --include=dev && NEXT_PUBLIC_SITE_URL="${NEXT_PUBLIC_SITE_URL:-$RENDER_EX
 أمر التشغيل:
 
 ```sh
-NEXT_PUBLIC_SITE_URL="${NEXT_PUBLIC_SITE_URL:-$RENDER_EXTERNAL_URL}" node node_modules/next/dist/bin/next start --hostname 0.0.0.0 --port "$PORT"
+NEXT_PUBLIC_SITE_URL="${NEXT_PUBLIC_SITE_URL:-$RENDER_EXTERNAL_URL}" npm start
+```
+أو:
+```sh
+NEXT_PUBLIC_SITE_URL="${NEXT_PUBLIC_SITE_URL:-$RENDER_EXTERNAL_URL}" node node_modules/next/dist/bin/next start --hostname 0.0.0.0 --port "${PORT:-10000}"
 ```
 
 يوفر Render متغيرَي `RENDER_EXTERNAL_URL` و`PORT`. يُشتق عنوان التطبيق من عنوان الخدمة الفعلي في البناء والتشغيل، ويمكن تجاوزه لاحقًا بإضافة `NEXT_PUBLIC_SITE_URL` لنطاق مخصص ثم إعادة البناء. يبقى أمر التشغيل المحلي في المشروع مربوطًا بـ`127.0.0.1`.

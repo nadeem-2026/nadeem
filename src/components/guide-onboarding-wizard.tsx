@@ -179,6 +179,7 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
     guide.service_areas && guide.service_areas.length > 0 ? guide.service_areas : []
   );
   const [customAreaInput, setCustomAreaInput] = useState("");
+  const [clientValidationError, setClientValidationError] = useState<string | null>(null);
 
   const initialAddress = parseInitialAddress(guide.address_details);
   const [addressDistrict, setAddressDistrict] = useState(initialAddress.district);
@@ -186,6 +187,43 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
   const [addressBuilding, setAddressBuilding] = useState(initialAddress.building_number);
   const [addressPostal, setAddressPostal] = useState(initialAddress.postal_code);
   const [addressNotes, setAddressNotes] = useState(initialAddress.notes);
+
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    setClientValidationError(null);
+    const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null;
+    const isSubmit = submitter?.value === "submit";
+
+    if (isSubmit) {
+      const form = e.currentTarget;
+      const formData = new FormData(form);
+      const firstName = formData.get("first_name")?.toString().trim();
+      const lastName = formData.get("last_name")?.toString().trim();
+      const fullNameAr = formData.get("full_name_ar")?.toString().trim();
+      const city = formData.get("city")?.toString().trim();
+      const bio = formData.get("bio")?.toString().trim();
+
+      if (!fullNameAr && (!firstName || !lastName) && !name) {
+        e.preventDefault();
+        setStep(1);
+        setClientValidationError(isAr ? "يرجى كتابة اسمك الكامل في الخطوة 1 قبل إرسال الملف للاعتماد." : "Please enter your full name in Step 1.");
+        return;
+      }
+
+      if (!city) {
+        e.preventDefault();
+        setStep(1);
+        setClientValidationError(isAr ? "يرجى تحديد مدينتك الأساسية للإرشاد في الخطوة 1." : "Please select your primary city in Step 1.");
+        return;
+      }
+
+      if (!bio) {
+        e.preventDefault();
+        setStep(5);
+        setClientValidationError(isAr ? "حقل النبذة التعريفية (في الخطوة 5) إلزامي للإرسال للاعتماد الرسمي. نأمل كتابة نبذة توضح خبرتك وجولاتك." : "The Bio field (in Step 5) is required for official submission.");
+        return;
+      }
+    }
+  };
 
   const saudiCities = isAr ? [
     "الرياض", "العلا", "جدة", "أبها", "الدمام", "مكة المكرمة", "المدينة المنورة", "الطائف", "حائل", "تبوك", "جازان"
@@ -421,7 +459,7 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
         </ul>
       </div>
 
-      <form action={action} noValidate className="space-y-8">
+      <form action={action} onSubmit={handleFormSubmit} noValidate className="space-y-8">
         <input type="hidden" name="name" value={name} />
 
         {/* Step 1: Identity & Personal Information */}
@@ -1045,9 +1083,21 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
         </div>
 
         {/* Feedback Alert */}
-        {state.error && (
-          <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm">
-            {m[state.error] || state.error}
+        {(clientValidationError || state.error) && (
+          <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-2.5 animate-fadeIn">
+            <AlertCircle size={18} className="shrink-0 mt-0.5 text-red-600" />
+            <div>
+              <p className="m-0 font-semibold">
+                {clientValidationError || (state.error ? (m[state.error] || state.error) : "")}
+              </p>
+              {!clientValidationError && state.error === "invalid" && (
+                <p className="m-0 mt-1 text-xs text-red-600 leading-relaxed">
+                  {isAr 
+                    ? "تأكد من تعبئة: اسمك الكامل ومدينتك (في الخطوة 1)، والنبذة التعريفية (في الخطوة 5)." 
+                    : "Make sure your name and city (Step 1) and your bio (Step 5) are all filled."}
+                </p>
+              )}
+            </div>
           </div>
         )}
         {state.success && (

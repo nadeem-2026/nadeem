@@ -18,9 +18,30 @@ a { color: inherit; text-decoration: none; }
 button { font: inherit; cursor: pointer; }
 img { max-width: 100%; height: auto; }
 button, a { -webkit-tap-highlight-color: transparent; }
-:focus-visible { outline: 3px solid var(--color-primary); outline-offset: 5px; }
+:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 .site-footer :focus-visible { outline-color: var(--nadeem-sand); }
 main:focus { outline: none; }
+
+/* Form controls focus styling: prevent outward outline-offset collision with labels */
+input, textarea, select {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+input:focus,
+input:focus-visible,
+textarea:focus,
+textarea:focus-visible,
+select:focus,
+select:focus-visible {
+  outline: none !important;
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 18%, transparent) !important;
+}
+
+label {
+  display: inline-block;
+  margin-bottom: 0.4rem;
+}
 ::selection { background: var(--nadeem-sand); color: #24322e; }
 .container { width: min(1200px, calc(100% - 96px)); margin-inline: auto; }
 .skip-link { position: fixed; top: -100px; inset-inline-start: 16px; z-index: 100; padding: 12px 20px; background: var(--color-surface); border: 2px solid var(--nadeem-green); border-radius: 8px; }

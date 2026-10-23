@@ -21,8 +21,133 @@ import {
   AlertCircle, 
   Edit3,
   ExternalLink,
-  Lightbulb
+  Lightbulb,
+  MapPin,
+  Plus,
+  X,
+  Building2,
+  Navigation
 } from "lucide-react";
+
+function parseInitialAddress(raw: unknown) {
+  if (!raw) return { district: "", street: "", building_number: "", postal_code: "", notes: "" };
+  if (typeof raw === "object" && raw !== null) {
+    const obj = raw as Record<string, unknown>;
+    return {
+      district: typeof obj.district === "string" ? obj.district : "",
+      street: typeof obj.street === "string" ? obj.street : "",
+      building_number: typeof obj.building_number === "string" ? obj.building_number : (typeof obj.building === "string" ? obj.building : ""),
+      postal_code: typeof obj.postal_code === "string" ? obj.postal_code : (typeof obj.postal === "string" ? obj.postal : ""),
+      notes: typeof obj.notes === "string" ? obj.notes : (typeof obj.raw === "string" ? obj.raw : ""),
+    };
+  }
+  if (typeof raw === "string") {
+    const trimmed = raw.trim();
+    if (trimmed === "{}" || trimmed === "null" || !trimmed) {
+      return { district: "", street: "", building_number: "", postal_code: "", notes: "" };
+    }
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (typeof parsed === "object" && parsed !== null) {
+        return parseInitialAddress(parsed);
+      }
+    } catch {
+      return { district: trimmed, street: "", building_number: "", postal_code: "", notes: "" };
+    }
+  }
+  return { district: "", street: "", building_number: "", postal_code: "", notes: "" };
+}
+
+const CITY_LANDMARKS: Record<string, { ar: string[]; en: string[] }> = {
+  "الرياض": {
+    ar: ["الدرعية التاريخية", "مطل البجيري", "وادي حنيفة", "قصر المصمك وسوق الزل", "حي السفارات (DQ)", "بوليفارد رياض سيتي", "حافة العالم", "وسط الرياض والمربع", "حي حطين والعقيق", "وادي نمار"],
+    en: ["Historic Diriyah", "Bujairi Terrace", "Wadi Hanifa", "Al-Masmak & Souq Al-Zal", "Diplomatic Quarter (DQ)", "Boulevard City", "Edge of the World", "Historic Murabba", "Al-Aqiq & Hittin", "Wadi Namar"]
+  },
+  "Riyadh": {
+    ar: ["الدرعية التاريخية", "مطل البجيري", "وادي حنيفة", "قصر المصمك وسوق الزل", "حي السفارات (DQ)", "بوليفارد رياض سيتي", "حافة العالم", "وسط الرياض والمربع", "حي حطين والعقيق", "وادي نمار"],
+    en: ["Historic Diriyah", "Bujairi Terrace", "Wadi Hanifa", "Al-Masmak & Souq Al-Zal", "Diplomatic Quarter (DQ)", "Boulevard City", "Edge of the World", "Historic Murabba", "Al-Aqiq & Hittin", "Wadi Namar"]
+  },
+  "جدة": {
+    ar: ["جدة التاريخية (البلد)", "الواجهة البحرية وكورنيش جدة", "شرم أبحر", "نافورة الملك فهد", "حي الروضة والحمراء", "سوق الشاطئ وباب مكة", "حي البساتين"],
+    en: ["Historic Al-Balad", "Jeddah Waterfront & Corniche", "Obhur Creek", "King Fahd's Fountain", "Al-Rawdah & Al-Hamra", "Al-Shati & Bab Makkah", "Al-Basateen"]
+  },
+  "Jeddah": {
+    ar: ["جدة التاريخية (البلد)", "الواجهة البحرية وكورنيش جدة", "شرم أبحر", "نافورة الملك فهد", "حي الروضة والحمراء", "سوق الشاطئ وباب مكة", "حي البساتين"],
+    en: ["Historic Al-Balad", "Jeddah Waterfront & Corniche", "Obhur Creek", "King Fahd's Fountain", "Al-Rawdah & Al-Hamra", "Al-Shati & Bab Makkah", "Al-Basateen"]
+  },
+  "العلا": {
+    ar: ["مدائن صالح (الحجر)", "البلدة القديمة بالعلا", "ديدان وجبل عكمة", "صخرة الفيل", "واحة العلا ومطل حرة عويرض", "قاعة مرايا", "سكة حديد الحجاز"],
+    en: ["Hegra (Madain Saleh)", "AlUla Old Town", "Dadan & Jabal Ikmah", "Elephant Rock", "AlUla Oasis & Harrat Viewpoint", "Maraya Hall", "Hejaz Railway"]
+  },
+  "AlUla": {
+    ar: ["مدائن صالح (الحجر)", "البلدة القديمة بالعلا", "ديدان وجبل عكمة", "صخرة الفيل", "واحة العلا ومطل حرة عويرض", "قاعة مرايا", "سكة حديد الحجاز"],
+    en: ["Hegra (Madain Saleh)", "AlUla Old Town", "Dadan & Jabal Ikmah", "Elephant Rock", "AlUla Oasis & Harrat Viewpoint", "Maraya Hall", "Hejaz Railway"]
+  },
+  "مكة المكرمة": {
+    ar: ["المنطقة المركزية المحيطة بالحرم", "جبل النور وغار حراء", "غار ثور", "المشاعر المقدسة (منى ومزدلفة)", "حي العزيزية", "متحف برج الساعة"],
+    en: ["Central Haram Area", "Jabal Al-Nour & Hira Cave", "Ghar Thawr", "Holy Sites (Mina & Arafat)", "Al-Aziziyah", "Clock Tower Museum"]
+  },
+  "Makkah": {
+    ar: ["المنطقة المركزية المحيطة بالحرم", "جبل النور وغار حراء", "غار ثور", "المشاعر المقدسة (منى ومزدلفة)", "حي العزيزية", "متحف برج الساعة"],
+    en: ["Central Haram Area", "Jabal Al-Nour & Hira Cave", "Ghar Thawr", "Holy Sites (Mina & Arafat)", "Al-Aziziyah", "Clock Tower Museum"]
+  },
+  "المدينة المنورة": {
+    ar: ["المنطقة المركزية والمسجد النبوي", "مسجد وممشى قباء", "جبل أحد وميدان الشهداء", "مسجد القبلتين ومساجد الفتح", "حي العوالي وبساتين النخيل", "سكة حديد الحجاز"],
+    en: ["Central Prophet's Mosque Area", "Quba Mosque & Walkway", "Mount Uhud & Martyrs Square", "Al-Qiblatayn & Seven Mosques", "Al-Awali & Date Farms", "Hejaz Railway Museum"]
+  },
+  "Madinah": {
+    ar: ["المنطقة المركزية والمسجد النبوي", "مسجد وممشى قباء", "جبل أحد وميدان الشهداء", "مسجد القبلتين ومساجد الفتح", "حي العوالي وبساتين النخيل", "سكة حديد الحجاز"],
+    en: ["Central Prophet's Mosque Area", "Quba Mosque & Walkway", "Mount Uhud & Martyrs Square", "Al-Qiblatayn & Seven Mosques", "Al-Awali & Date Farms", "Hejaz Railway Museum"]
+  },
+  "أبها": {
+    ar: ["السودة وجبل تهلل", "قرية رجال ألمع التراثية", "قرية المفتاحة الفنية", "ممشى الضباب وجبل ذرة", "الحبلة ومتنزه السحاب", "أبو خيال وسد أبها"],
+    en: ["Al-Soudah & Mount Tahalal", "Rijal Almaa Heritage Village", "Al-Muftaha Art Village", "Fog Walkway & Green Mountain", "Al-Habala & Al-Sahab", "Abu Kheyal Park"]
+  },
+  "Abha": {
+    ar: ["السودة وجبل تهلل", "قرية رجال ألمع التراثية", "قرية المفتاحة الفنية", "ممشى الضباب وجبل ذرة", "الحبلة ومتنزه السحاب", "أبو خيال وسد أبها"],
+    en: ["Al-Soudah & Mount Tahalal", "Rijal Almaa Heritage Village", "Al-Muftaha Art Village", "Fog Walkway & Green Mountain", "Al-Habala & Al-Sahab", "Abu Kheyal Park"]
+  },
+  "الطائف": {
+    ar: ["الهدا وجبل الهدا", "الشفا ومرتفعات الشفا", "حديقة وقصر الردف", "قصر شبرا التاريخي", "مزارع ومصانع الورد الطائفي", "سوق عكاظ التاريخي"],
+    en: ["Al-Hada", "Al-Shafa Heights", "Al-Rudaf Park", "Shubra Palace", "Taif Rose Farms", "Historic Souq Okaz"]
+  },
+  "Taif": {
+    ar: ["الهدا وجبل الهدا", "الشفا ومرتفعات الشفا", "حديقة وقصر الردف", "قصر شبرا التاريخي", "مزارع ومصانع الورد الطائفي", "سوق عكاظ التاريخي"],
+    en: ["Al-Hada", "Al-Shafa Heights", "Al-Rudaf Park", "Shubra Palace", "Taif Rose Farms", "Historic Souq Okaz"]
+  },
+  "الدمام": {
+    ar: ["كورنيش الخبر والواجهة البحرية", "مركز الملك عبدالعزيز الثقافي (إثراء)", "جزيرة المرجان بالدمام", "شاطئ نصف القمر", "القرية التراثية الشعبية", "واجهة الدمام البحرية"],
+    en: ["Khobar Corniche & Waterfront", "Ithra Cultural Center (Dhahran)", "Murjan Island", "Half Moon Bay", "Heritage Village", "Dammam Seafront"]
+  },
+  "Dammam": {
+    ar: ["كورنيش الخبر والواجهة البحرية", "مركز الملك عبدالعزيز الثقافي (إثراء)", "جزيرة المرجان بالدمام", "شاطئ نصف القمر", "القرية التراثية الشعبية", "واجهة الدمام البحرية"],
+    en: ["Khobar Corniche & Waterfront", "Ithra Cultural Center (Dhahran)", "Murjan Island", "Half Moon Bay", "Heritage Village", "Dammam Seafront"]
+  },
+  "تبوك": {
+    ar: ["وادي الديسة", "قلعة تبوك ومتحفها", "مقنا ورأس الشيخ حميد", "جبال حسمى والزيتة", "جبل اللوز", "عين السكر التاريخية"],
+    en: ["Wadi Al-Disah", "Tabuk Castle", "Magna & Ras Al-Sheikh Hameed", "Hisma Desert & Mountains", "Jabal Al-Lawz", "Ain Al-Sukkar"]
+  },
+  "Tabuk": {
+    ar: ["وادي الديسة", "قلعة تبوك ومتحفها", "مقنا ورأس الشيخ حميد", "جبال حسمى والزيتة", "جبل اللوز", "عين السكر التاريخية"],
+    en: ["Wadi Al-Disah", "Tabuk Castle", "Magna & Ras Al-Sheikh Hameed", "Hisma Desert & Mountains", "Jabal Al-Lawz", "Ain Al-Sukkar"]
+  },
+  "حائل": {
+    ar: ["جبة التاريخية وجبال أم سنمان", "قلعة عيرف التاريخية", "منتزه أجا وسلمى", "قصر القشلة الأثري", "متحف حائل الإقليمي"],
+    en: ["Jubbah Rock Art", "A'arif Fort", "Aja & Salma Peaks", "Al-Qishlah Palace", "Hail Regional Museum"]
+  },
+  "Hail": {
+    ar: ["جبة التاريخية وجبال أم سنمان", "قلعة عيرف التاريخية", "منتزه أجا وسلمى", "قصر القشلة الأثري", "متحف حائل الإقليمي"],
+    en: ["Jubbah Rock Art", "A'arif Fort", "Aja & Salma Peaks", "Al-Qishlah Palace", "Hail Regional Museum"]
+  },
+  "جازان": {
+    ar: ["جزر فرسان ومحمية فرسان", "وادي لجب الخلاب", "جبال فيفاء (جارة القمر)", "القرية التراثية بالكورنيش الجنوبي", "الواجهة البحرية بجازان"],
+    en: ["Farasan Islands", "Wadi Lajab", "Fifa Mountains", "Heritage Village", "Jazan Waterfront"]
+  },
+  "Jazan": {
+    ar: ["جزر فرسان ومحمية فرسان", "وادي لجب الخلاب", "جبال فيفاء (جارة القمر)", "القرية التراثية بالكورنيش الجنوبي", "الواجهة البحرية بجازان"],
+    en: ["Farasan Islands", "Wadi Lajab", "Fifa Mountains", "Heritage Village", "Jazan Waterfront"]
+  }
+};
 
 interface GuideOnboardingWizardProps {
   locale: Locale;
@@ -48,6 +173,19 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
   const [selectedInclusions, setSelectedInclusions] = useState<string[]>(
     guide.inclusions && guide.inclusions.length > 0 ? guide.inclusions : [isAr ? "ضيافة سعودية" : "Saudi hospitality", isAr ? "مياه ومشروبات" : "Water & beverages"]
   );
+
+  // Interactive Service Areas & National Address
+  const [selectedServiceAreas, setSelectedServiceAreas] = useState<string[]>(
+    guide.service_areas && guide.service_areas.length > 0 ? guide.service_areas : []
+  );
+  const [customAreaInput, setCustomAreaInput] = useState("");
+
+  const initialAddress = parseInitialAddress(guide.address_details);
+  const [addressDistrict, setAddressDistrict] = useState(initialAddress.district);
+  const [addressStreet, setAddressStreet] = useState(initialAddress.street);
+  const [addressBuilding, setAddressBuilding] = useState(initialAddress.building_number);
+  const [addressPostal, setAddressPostal] = useState(initialAddress.postal_code);
+  const [addressNotes, setAddressNotes] = useState(initialAddress.notes);
 
   const saudiCities = isAr ? [
     "الرياض", "العلا", "جدة", "أبها", "الدمام", "مكة المكرمة", "المدينة المنورة", "الطائف", "حائل", "تبوك", "جازان"
@@ -77,6 +215,26 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
     setSelectedInclusions(prev => 
       prev.includes(inc) ? prev.filter(i => i !== inc) : [...prev, inc]
     );
+  };
+
+  const suggestedLandmarks = CITY_LANDMARKS[selectedCity]?.[isAr ? "ar" : "en"] || 
+    (isAr 
+      ? ["وسط المدينة والأسواق التاريخية", "المتاحف والمعالم الثقافية", "المتنزهات الطبيعية", "البلدة القديمة", "الواجهة السياحية"] 
+      : ["City Center & Markets", "Cultural Museums", "Nature Parks", "Historic Old Town", "Touristic Waterfront"]);
+
+  const toggleServiceArea = (area: string) => {
+    setSelectedServiceAreas(prev => 
+      prev.includes(area) ? prev.filter(a => a !== area) : [...prev, area]
+    );
+  };
+
+  const addCustomServiceArea = () => {
+    const trimmed = customAreaInput.trim();
+    if (!trimmed) return;
+    if (!selectedServiceAreas.includes(trimmed)) {
+      setSelectedServiceAreas(prev => [...prev, trimmed]);
+    }
+    setCustomAreaInput("");
   };
 
   const stepsMeta = [
@@ -279,43 +437,43 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-bold block mb-1.5">{isAr ? "الاسم الأول" : "First Name"} *</label>
+                <label className="text-xs font-bold block mb-2">{isAr ? "الاسم الأول" : "First Name"} *</label>
                 <input 
                   name="first_name" 
                   defaultValue={guide.first_name || ""} 
                   placeholder={isAr ? "مثال: عبد الله" : "e.g., Abdullah"}
                   required 
                   maxLength={50}
-                  className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)]"
+                  className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-all"
                 />
               </div>
               <div>
-                <label className="text-xs font-bold block mb-1.5">{isAr ? "اسم العائلة" : "Last Name"} *</label>
+                <label className="text-xs font-bold block mb-2">{isAr ? "اسم العائلة" : "Last Name"} *</label>
                 <input 
                   name="last_name" 
                   defaultValue={guide.last_name || ""} 
                   placeholder={isAr ? "مثال: الغامدي" : "e.g., Alghamdi"}
                   required 
                   maxLength={50}
-                  className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)]"
+                  className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-xs font-bold block mb-1.5">{isAr ? "الاسم الكامل (مطابق للهوية باللغة العربية)" : "Full Name (Arabic)"} *</label>
+              <label className="text-xs font-bold block mb-2">{isAr ? "الاسم الكامل (مطابق للهوية باللغة العربية)" : "Full Name (Arabic)"} *</label>
               <input 
                 name="full_name_ar" 
                 defaultValue={guide.full_name_ar || name} 
                 placeholder={isAr ? "الاسم الثلاثي أو الرباعي كما في الهوية الوطنية" : "Full name in Arabic"}
                 required 
                 maxLength={120}
-                className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)]"
+                className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-all"
               />
             </div>
 
             <div>
-              <label className="text-xs font-bold block mb-1.5">{isAr ? "الاسم الكامل (مطابق لجواز السفر بالإنجليزية)" : "Full Name (English)"} *</label>
+              <label className="text-xs font-bold block mb-2">{isAr ? "الاسم الكامل (مطابق لجواز السفر بالإنجليزية)" : "Full Name (English)"} *</label>
               <input 
                 name="full_name_en" 
                 defaultValue={guide.full_name_en || ""} 
@@ -323,7 +481,7 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
                 dir="ltr"
                 required 
                 maxLength={120}
-                className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)] font-sans"
+                className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)] font-sans focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-all"
               />
             </div>
 
@@ -348,31 +506,238 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
                 onChange={(e) => setSelectedCity(e.target.value)}
                 placeholder={isAr ? "أو اكتب مدينتك هنا..." : "Or type city name..."}
                 required 
-                className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)]"
+                className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-all"
               />
             </div>
 
-            <div>
-              <label className="text-xs font-bold block mb-1.5">{isAr ? "مناطق وأحياء الخدمة (مفصولة بفاصلة)" : "Service Areas"} *</label>
+            {/* Service Areas Interactive Component */}
+            <div className="space-y-3 p-5 rounded-2xl bg-[var(--background-alt)] border border-[var(--border)]">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-bold flex items-center gap-2 m-0 text-[var(--color-text)]">
+                  <MapPin size={18} className="text-[var(--color-primary)]" />
+                  <span>{isAr ? "مناطق وأحياء ومعالم الخدمة" : "Service Areas & Landmarks"} *</span>
+                </label>
+                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-[var(--color-surface)] border border-[var(--border)] text-[var(--muted)]">
+                  {selectedServiceAreas.length} {isAr ? "مناطق محددة" : "selected"}
+                </span>
+              </div>
+              <p className="text-xs text-[var(--muted)] m-0">
+                {isAr 
+                  ? "حدد المناطق والمعالم التي تقدم فيها جولاتك بالنقر المباشر على المقترحات، أو أضف أحياء أخرى:" 
+                  : "Pick the areas and landmarks you cover by clicking below, or add custom ones:"}
+              </p>
+
+              {/* Selected Pills */}
+              <div className="p-3 min-h-[50px] rounded-xl bg-[var(--color-surface)] border border-[var(--border)] flex flex-wrap items-center gap-2">
+                {selectedServiceAreas.length === 0 ? (
+                  <span className="text-xs text-[var(--muted)] italic">
+                    {isAr ? "لم تحدد أي منطقة بعد. انقر على المعالم المقترحة أدناه لإضافتها فوراً." : "No areas selected yet. Click landmarks below to add them instantly."}
+                  </span>
+                ) : (
+                  selectedServiceAreas.map((area) => (
+                    <span 
+                      key={area}
+                      className="inline-flex items-center gap-1.5 py-1 px-3 rounded-full text-xs font-bold bg-[var(--color-primary)] text-[var(--color-on-primary)] shadow-xs"
+                    >
+                      <span>{area}</span>
+                      <button
+                        type="button"
+                        onClick={() => toggleServiceArea(area)}
+                        className="hover:opacity-75 rounded-full p-0.5 transition"
+                        aria-label={`Remove ${area}`}
+                      >
+                        <X size={13} />
+                      </button>
+                    </span>
+                  ))
+                )}
+              </div>
+
+              {/* Suggested Landmarks by Selected City */}
+              <div>
+                <span className="text-xs font-bold block mb-2 text-[var(--color-text)]">
+                  {isAr ? `معالم وأحياء مقترحة في (${selectedCity}):` : `Suggested landmarks in (${selectedCity}):`}
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {suggestedLandmarks.map((landmark) => {
+                    const isSelected = selectedServiceAreas.includes(landmark);
+                    return (
+                      <button
+                        key={landmark}
+                        type="button"
+                        onClick={() => toggleServiceArea(landmark)}
+                        className={`py-1.5 px-3 rounded-xl text-xs font-semibold border transition flex items-center gap-1.5 ${
+                          isSelected 
+                            ? "bg-[var(--color-primary)] text-[var(--color-on-primary)] border-[var(--color-primary)] shadow-xs" 
+                            : "bg-[var(--color-surface)] text-[var(--color-text)] border-[var(--border)] hover:border-[var(--color-primary)] hover:bg-[var(--background-alt)]"
+                        }`}
+                      >
+                        {isSelected ? <Check size={12} /> : <Plus size={12} className="text-[var(--muted)]" />}
+                        <span>{landmark}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Custom Area Quick Adder */}
+              <div className="flex gap-2 pt-2">
+                <input 
+                  type="text"
+                  value={customAreaInput}
+                  onChange={(e) => setCustomAreaInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      addCustomServiceArea();
+                    }
+                  }}
+                  placeholder={isAr ? "أو اكتب اسم حي أو معلم آخر واضغط إضافة..." : "Or type another district / landmark..."}
+                  className="flex-1 p-2.5 rounded-xl text-xs border border-[var(--border)] bg-[var(--color-surface)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20"
+                />
+                <button
+                  type="button"
+                  onClick={addCustomServiceArea}
+                  className="py-2.5 px-4 rounded-xl text-xs font-bold bg-[var(--color-surface)] text-[var(--color-primary)] border border-[var(--color-primary)] hover:bg-[var(--background-alt)] transition flex items-center gap-1.5"
+                >
+                  <Plus size={14} />
+                  <span>{isAr ? "إضافة" : "Add"}</span>
+                </button>
+              </div>
+
+              {/* Hidden input bound to form submission */}
               <input 
+                type="hidden" 
                 name="service_areas" 
-                defaultValue={(guide.service_areas || []).join(", ")} 
-                placeholder={isAr ? "مثال: الدرعية، البجيري، وادي حنيفة، وسط الرياض" : "e.g., Diriyah, Bujairi Terrace, Historic Center"}
-                required 
-                maxLength={200}
-                className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)]"
+                value={selectedServiceAreas.join(", ")} 
               />
             </div>
 
-            <div>
-              <label className="text-xs font-bold block mb-1.5">{isAr ? "تفاصيل العنوان الوطني / المدينة والحي" : "National Address"} *</label>
-              <textarea 
+            {/* National Address Structured Card */}
+            <div className="space-y-4 p-5 rounded-2xl bg-[var(--background-alt)] border border-[var(--border)]">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-bold flex items-center gap-2 m-0 text-[var(--color-text)]">
+                  <Building2 size={18} className="text-[var(--color-primary)]" />
+                  <span>{isAr ? "تفاصيل العنوان الوطني السعودي" : "Saudi National Address"} *</span>
+                </label>
+                <span className="text-[11px] font-semibold text-[var(--color-primary)] bg-[var(--color-surface)] px-2.5 py-1 rounded-full border border-[var(--border)]">
+                  {isAr ? "توثيق رسمي" : "Official Verification"}
+                </span>
+              </div>
+              <p className="text-xs text-[var(--muted)] m-0">
+                {isAr 
+                  ? "أدخل بيانات عنوانك الوطني المسجل لتوثيق مقر الإقامة الرسمي للمرشد وفق اشتراطات التراخيص:" 
+                  : "Enter your registered national address to verify your official residency:"}
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {/* District / الحي */}
+                <div>
+                  <label className="text-xs font-bold block mb-2 text-[var(--color-text)]">
+                    {isAr ? "الحي" : "District"} *
+                  </label>
+                  <input 
+                    type="text"
+                    value={addressDistrict}
+                    onChange={(e) => setAddressDistrict(e.target.value)}
+                    placeholder={isAr ? "مثال: حي النخيل، حي الشاطئ" : "e.g., Al-Nakheel"}
+                    required
+                    className="w-full p-2.5 rounded-xl text-sm border border-[var(--border)] bg-[var(--color-surface)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20"
+                  />
+                </div>
+
+                {/* Street / الشارع */}
+                <div>
+                  <label className="text-xs font-bold block mb-2 text-[var(--color-text)]">
+                    {isAr ? "اسم الشارع" : "Street Name"} *
+                  </label>
+                  <input 
+                    type="text"
+                    value={addressStreet}
+                    onChange={(e) => setAddressStreet(e.target.value)}
+                    placeholder={isAr ? "مثال: شارع التخصصي" : "e.g., Takhassusi St."}
+                    required
+                    className="w-full p-2.5 rounded-xl text-sm border border-[var(--border)] bg-[var(--color-surface)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20"
+                  />
+                </div>
+
+                {/* Building Number */}
+                <div>
+                  <label className="text-xs font-bold block mb-2 text-[var(--color-text)]">
+                    {isAr ? "رقم المبنى (4 أرقام)" : "Building Number (4 digits)"} *
+                  </label>
+                  <input 
+                    type="text"
+                    value={addressBuilding}
+                    onChange={(e) => setAddressBuilding(e.target.value)}
+                    placeholder="7234"
+                    maxLength={10}
+                    required
+                    className="w-full p-2.5 rounded-xl text-sm border border-[var(--border)] bg-[var(--color-surface)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20"
+                  />
+                </div>
+
+                {/* Postal Code */}
+                <div>
+                  <label className="text-xs font-bold block mb-2 text-[var(--color-text)]">
+                    {isAr ? "الرمز البريدي (5 أرقام)" : "Postal Code (5 digits)"} *
+                  </label>
+                  <input 
+                    type="text"
+                    value={addressPostal}
+                    onChange={(e) => setAddressPostal(e.target.value)}
+                    placeholder="12345"
+                    maxLength={10}
+                    required
+                    className="w-full p-2.5 rounded-xl text-sm border border-[var(--border)] bg-[var(--color-surface)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20"
+                  />
+                </div>
+              </div>
+
+              {/* Additional notes / landmark */}
+              <div>
+                <label className="text-xs font-bold block mb-2 text-[var(--muted)]">
+                  {isAr ? "ملاحظات إضافية للعنوان أو أقرب معلم (اختياري)" : "Additional Address Notes or Nearby Landmark (Optional)"}
+                </label>
+                <input 
+                  type="text"
+                  value={addressNotes}
+                  onChange={(e) => setAddressNotes(e.target.value)}
+                  placeholder={isAr ? "مثال: بجوار جامع الراجحي، مبنى 3" : "e.g., Near Al-Rajhi Mosque"}
+                  className="w-full p-2.5 rounded-xl text-sm border border-[var(--border)] bg-[var(--color-surface)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20"
+                />
+              </div>
+
+              {/* Live Formatted Address Card */}
+              {(addressDistrict || addressStreet || addressBuilding || addressPostal) && (
+                <div className="p-3 rounded-xl bg-[var(--color-surface)] border border-[var(--border)] text-xs text-[var(--color-text)] flex items-center gap-2">
+                  <Navigation size={14} className="text-[var(--color-primary)] shrink-0" />
+                  <span className="font-semibold text-[var(--color-primary)]">{isAr ? "العنوان الوطني المعتمد:" : "Verified Address:"}</span>
+                  <span className="text-[var(--muted)]">
+                    {[
+                      selectedCity,
+                      addressDistrict && (isAr ? `حي ${addressDistrict}` : `${addressDistrict} Dist.`),
+                      addressStreet && (isAr ? `شارع ${addressStreet}` : `${addressStreet} St.`),
+                      addressBuilding && (isAr ? `مبنى ${addressBuilding}` : `Bldg ${addressBuilding}`),
+                      addressPostal && (isAr ? `الرمز البريدي ${addressPostal}` : `Postal ${addressPostal}`),
+                      addressNotes
+                    ].filter(Boolean).join("، ")}
+                  </span>
+                </div>
+              )}
+
+              {/* Hidden input with JSON serialization */}
+              <input 
+                type="hidden" 
                 name="address_details" 
-                defaultValue={typeof guide.address_details === "string" ? guide.address_details : JSON.stringify(guide.address_details || {})}
-                rows={2}
-                placeholder={isAr ? "المدينة، الحي، اسم الشارع، الرمز البريدي" : "City, District, Street name, Postal code"}
-                required 
-                className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)]"
+                value={JSON.stringify({
+                  city: selectedCity,
+                  district: addressDistrict.trim(),
+                  street: addressStreet.trim(),
+                  building_number: addressBuilding.trim(),
+                  postal_code: addressPostal.trim(),
+                  notes: addressNotes.trim()
+                })} 
               />
             </div>
 
@@ -492,7 +857,7 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
                 onChange={(e) => setSelectedLanguages(e.target.value.split(",").map(s => s.trim()))}
                 required
                 placeholder={isAr ? "أو أضف لغات أخرى مفصولة بفاصلة..." : "Or type other languages..."}
-                className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)]"
+                className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-all"
               />
             </div>
 
@@ -520,7 +885,7 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
             </div>
 
             <div>
-              <label className="text-xs font-bold block mb-1.5">{isAr ? "نبذة عنك وعن جولتك السياحية" : "Bio & Local Story"} *</label>
+              <label className="text-xs font-bold block mb-2">{isAr ? "نبذة عنك وعن جولتك السياحية" : "Bio & Local Story"} *</label>
               <textarea 
                 name="bio" 
                 defaultValue={guide.bio || ""} 
@@ -528,7 +893,7 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
                 required
                 maxLength={2000}
                 placeholder={isAr ? "تحدث عن مسقط رأسك، شغفك بالتاريخ أو الطبيعة، أسلوبك في الإرشاد، وما الذي يجعل تجربتك مميزة عن غيرها..." : "Tell travelers about yourself, your passion for local culture, and what makes your tours unique..."}
-                className="w-full p-3.5 rounded-xl border border-[var(--border)] bg-[var(--color-surface)] leading-relaxed text-sm"
+                className="w-full p-3.5 rounded-xl border border-[var(--border)] bg-[var(--color-surface)] leading-relaxed text-sm focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-all"
               />
               <span className="text-[11px] text-[var(--muted)] block mt-1">
                 {isAr ? "يُنصح بكتابة نبذة مفصلة لا تقل عن 50 كلمة لبناء الثقة." : "Recommended length: 50+ words."}
@@ -539,7 +904,7 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
             <div className="p-5 rounded-2xl bg-[var(--background-alt)] border border-[var(--border)]">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                 <div>
-                  <label className="text-xs font-bold block mb-1.5">
+                  <label className="text-xs font-bold block mb-2">
                     {isAr ? "السعر بالساعة (بالريال السعودي)" : "Hourly Rate (SAR)"} *
                   </label>
                   <div className="relative">
@@ -551,7 +916,7 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
                       value={hourlyRate}
                       onChange={(e) => setHourlyRate(parseFloat(e.target.value) || 0)}
                       required
-                      className="w-full p-3.5 rounded-xl border border-[var(--border)] bg-[var(--color-surface)] font-bold text-lg"
+                      className="w-full p-3.5 rounded-xl border border-[var(--border)] bg-[var(--color-surface)] font-bold text-lg focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-all"
                     />
                     <span className="absolute inset-inline-end-4 top-1/2 -translate-y-1/2 text-xs font-bold text-[var(--muted)]">
                       SAR / hr
@@ -581,7 +946,7 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
 
             {/* Max Participants */}
             <div>
-              <label className="text-xs font-bold block mb-1.5">
+              <label className="text-xs font-bold block mb-2">
                 {isAr ? "الحد الأقصى للمشاركين في الجولة الواحدة" : "Max Participants Per Tour"} *
               </label>
               <input 
@@ -591,7 +956,7 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
                 max="50"
                 defaultValue={guide.max_participants || 4}
                 required
-                className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)]"
+                className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-all"
               />
             </div>
 
@@ -622,7 +987,7 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
                 onChange={(e) => setSelectedInclusions(e.target.value.split(",").map(s => s.trim()))}
                 required
                 placeholder={isAr ? "أو اكتب مشمولات أخرى..." : "Or type other inclusions..."}
-                className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)]"
+                className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)] focus:outline-none focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 transition-all"
               />
             </div>
           </div>

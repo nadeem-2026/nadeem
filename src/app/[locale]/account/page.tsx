@@ -86,7 +86,26 @@ export default async function Account({ params }: { params: Promise<{ locale: st
         .maybeSingle()
     ]);
     if (bookingsRes.data) bookings = bookingsRes.data;
-    if (tpRes.data) touristProfile = tpRes.data;
+    if (tpRes.data) {
+      touristProfile = tpRes.data;
+    } else if (user?.user_metadata?.tourist_profile) {
+      const meta = user.user_metadata.tourist_profile as Partial<TouristProfile>;
+      touristProfile = {
+        user_id: profile.id,
+        phone_number: meta.phone_number || user.phone || "",
+        nationality: meta.nationality || "",
+        country_of_residence: meta.country_of_residence || "",
+        city_of_residence: meta.city_of_residence || "",
+        preferred_languages: Array.isArray(meta.preferred_languages) ? meta.preferred_languages : ["ar"],
+        interests: Array.isArray(meta.interests) ? meta.interests : [],
+        travel_style: meta.travel_style || "solo",
+        dietary_requirements: meta.dietary_requirements || "",
+        mobility_needs: meta.mobility_needs || "",
+        emergency_contact_name: meta.emergency_contact_name || "",
+        emergency_contact_phone: meta.emergency_contact_phone || "",
+        bio: meta.bio || "",
+      };
+    }
   }
 
   const bm = bookingsMessages(locale);

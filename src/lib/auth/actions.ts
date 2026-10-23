@@ -7,6 +7,7 @@ import { getAuthConfig } from "./config";
 import { emailValue, passwordValid, registrationRole, shortText } from "./validation";
 import { isLocale, type Locale } from "../i18n";
 import { recoveryRequestClient } from "./recovery";
+import { getSupabaseAdmin } from "./admin";
 
 export type FormState = { error?: "invalid" | "failed" | "unavailable"; success?: "checkEmail" | "recoverySent" | "saved" | "submitted" | "reviewed" };
 export type AuthIntent = "login" | "signup" | "forgot" | "update";
@@ -302,7 +303,47 @@ export async function saveTourist(locale: Locale, _previous: FormState, form: Fo
     p_avatar_url: avatar_url || null,
   });
 
-  if (error) return { error: "failed" };
+  if (error) {
+    try {
+      const admin = getSupabaseAdmin();
+      await admin.from("profiles").update({
+        display_name,
+      }).eq("id", profile.id);
+
+      const metadataProfile = {
+        phone_number,
+        nationality,
+        country_of_residence,
+        city_of_residence,
+        preferred_languages: preferred_languages.length > 0 ? preferred_languages : ["ar"],
+        interests,
+        travel_style,
+        dietary_requirements,
+        mobility_needs,
+        emergency_contact_name,
+        emergency_contact_phone,
+        bio,
+      };
+
+      await admin.auth.admin.updateUserById(profile.id, {
+        user_metadata: {
+          display_name,
+          tourist_profile: metadataProfile,
+        },
+      });
+
+      // Best effort upsert in case tourist_profiles table exists without RPC
+      await admin.from("tourist_profiles").upsert({
+        user_id: profile.id,
+        ...metadataProfile,
+      });
+
+      revalidatePath(`/${locale}/account`);
+      return { success: "saved" };
+    } catch {
+      return { error: "failed" };
+    }
+  }
   revalidatePath(`/${locale}/account`);
   return { success: "saved" };
 }

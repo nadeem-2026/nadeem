@@ -2770,6 +2770,162 @@ html[dir="ltr"] .password-input-wrap input,
   padding-left: 16px !important;
 }
 
+/* ========================================================
+   Tourist Profile Modern Form & Input Styling
+   ======================================================== */
+.tourist-profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.tourist-field-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--color-surface);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 16px 18px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.tourist-field-card:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(14, 53, 38, 0.08);
+}
+
+.tourist-field-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tourist-field-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tourist-field-helper {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.tourist-input-control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--background-alt);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 10px 14px;
+  transition: all 0.2s ease;
+}
+
+html[data-theme="dark"] .tourist-input-control {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.tourist-input-control:focus-within {
+  background: var(--color-surface);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(14, 53, 38, 0.1);
+}
+
+.tourist-input-control input,
+.tourist-input-control select {
+  width: 100%;
+  border: none !important;
+  background: transparent !important;
+  padding: 4px 0 !important;
+  font-size: 0.95rem;
+  color: var(--color-text);
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.tourist-input-control select {
+  cursor: pointer;
+}
+
+.tourist-quick-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.tourist-chip-btn {
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--background-alt);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1.2;
+}
+
+.tourist-chip-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: rgba(14, 53, 38, 0.05);
+}
+
+.tourist-chip-btn.active {
+  background: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(14, 53, 38, 0.2);
+}
+
+.tourist-chip-btn.active span {
+  color: #ffffff;
+}
+
+.tourist-interactive-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  border: 1.5px solid var(--border);
+  background: var(--color-surface);
+  cursor: pointer;
+  text-align: right;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+html[dir="ltr"] .tourist-interactive-card {
+  text-align: left;
+}
+
+.tourist-interactive-card:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+.tourist-interactive-card.selected {
+  border-color: var(--color-primary);
+  background: rgba(14, 53, 38, 0.04);
+  box-shadow: 0 2px 10px rgba(14, 53, 38, 0.08);
+}
+
+
 
 
 

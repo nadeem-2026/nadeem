@@ -1228,6 +1228,8 @@ html[data-theme="dark"] .site-header .brand-logo { filter: brightness(0) invert(
   display: flex;
   align-items: center;
   gap: 6px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .account-hero-stats {

@@ -132,38 +132,50 @@ export default async function Account({ params }: { params: Promise<{ locale: st
         </h2>
         
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "16px", marginBottom: "24px" }}>
-          <div style={{ padding: "16px", background: "var(--background-alt)", borderRadius: "12px" }}>
+          <div style={{ padding: "16px", background: "var(--background-alt)", borderRadius: "12px", minWidth: 0 }}>
             <span style={{ fontSize: "0.8rem", color: "var(--muted)", display: "block", marginBottom: "4px" }}>
               {m.name || (isAr ? "الاسم الكامل" : "Full Name")}
             </span>
-            <strong style={{ fontSize: "1.05rem", color: "var(--color-text)" }}>
+            <strong style={{ fontSize: "1.05rem", color: "var(--color-text)", display: "block", overflowWrap: "anywhere", wordBreak: "break-word" }}>
               {profile.display_name || "—"}
             </strong>
           </div>
 
-          <div style={{ padding: "16px", background: "var(--background-alt)", borderRadius: "12px" }}>
+          <div style={{ padding: "16px", background: "var(--background-alt)", borderRadius: "12px", minWidth: 0 }}>
             <span style={{ fontSize: "0.8rem", color: "var(--muted)", display: "block", marginBottom: "4px" }}>
               {m.email || (isAr ? "البريد الإلكتروني" : "Email Address")}
             </span>
-            <strong style={{ fontSize: "1rem", color: "var(--color-text)" }}>
+            <strong 
+              dir="ltr"
+              style={{ 
+                fontSize: "0.95rem", 
+                color: "var(--color-text)", 
+                display: "block", 
+                overflowWrap: "anywhere", 
+                wordBreak: "break-word",
+                textAlign: isAr ? "right" : "left",
+                lineHeight: "1.4"
+              }}
+              title={user.email || ""}
+            >
               {user.email || "—"}
             </strong>
           </div>
 
-          <div style={{ padding: "16px", background: "var(--background-alt)", borderRadius: "12px" }}>
+          <div style={{ padding: "16px", background: "var(--background-alt)", borderRadius: "12px", minWidth: 0 }}>
             <span style={{ fontSize: "0.8rem", color: "var(--muted)", display: "block", marginBottom: "4px" }}>
               {m.role || (isAr ? "نوع الحساب" : "Account Role")}
             </span>
-            <span className="badge-status badge-status-completed" style={{ fontSize: "0.85rem", padding: "4px 10px" }}>
+            <span className="badge-status badge-status-completed" style={{ fontSize: "0.85rem", padding: "4px 10px", display: "inline-block" }}>
               {m[profile.role]}
             </span>
           </div>
 
-          <div style={{ padding: "16px", background: "var(--background-alt)", borderRadius: "12px" }}>
+          <div style={{ padding: "16px", background: "var(--background-alt)", borderRadius: "12px", minWidth: 0 }}>
             <span style={{ fontSize: "0.8rem", color: "var(--muted)", display: "block", marginBottom: "4px" }}>
               {isAr ? "حالة الحساب" : "Account Status"}
             </span>
-            <span className="badge-status badge-status-confirmed" style={{ fontSize: "0.85rem", padding: "4px 10px" }}>
+            <span className="badge-status badge-status-confirmed" style={{ fontSize: "0.85rem", padding: "4px 10px", display: "inline-flex", alignItems: "center", gap: "4px" }}>
               <CheckCircle2 className="w-3.5 h-3.5" />
               {isAr ? "نشط ومفعل" : "Active"}
             </span>

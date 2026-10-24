@@ -26,7 +26,8 @@ import {
   Plus,
   X,
   Building2,
-  Navigation
+  Navigation,
+  MessageSquare
 } from "lucide-react";
 
 function parseInitialAddress(raw: unknown) {
@@ -417,7 +418,7 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
   }
 
   // If approved
-  if (!isEditing && guide.status === "approved") {
+  if (guide.status === "approved") {
     return (
       <div className="status-hub-card">
         <div className="status-hub-badge-wrap approved">
@@ -433,15 +434,60 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
             : "You are now an officially certified tour guide on Nadeem. Travelers from all over the world can book your tours."}
         </p>
 
+        {/* Summary of Approved Credentials */}
+        <div className="p-5 rounded-2xl bg-[var(--background-alt)] border border-[var(--border)] max-w-lg mx-auto text-start mb-6">
+          <h4 className="font-bold text-sm mb-3 flex items-center gap-2 text-emerald-700">
+            <ShieldCheck size={18} />
+            <span>{isAr ? "بيانات الاعتماد الرسمية الموثقة:" : "Verified Guide Credentials:"}</span>
+          </h4>
+          <div className="space-y-2 text-xs">
+            <div className="flex justify-between py-1 border-b border-[var(--border)]">
+              <span className="text-[var(--muted)]">{isAr ? "الاسم المعتمد:" : "Verified Name:"}</span>
+              <span className="font-semibold">{guide.full_name_ar || name}</span>
+            </div>
+            <div className="flex justify-between py-1 border-b border-[var(--border)]">
+              <span className="text-[var(--muted)]">{isAr ? "المدينة ومناطق الجولات:" : "City & Coverage:"}</span>
+              <span className="font-semibold">{guide.city || "—"} ({guide.service_areas?.join("، ") || "—"})</span>
+            </div>
+            <div className="flex justify-between py-1 border-b border-[var(--border)]">
+              <span className="text-[var(--muted)]">{isAr ? "السعر بالساعة:" : "Hourly Rate:"}</span>
+              <span className="font-semibold">{guide.hourly_rate} SAR</span>
+            </div>
+            <div className="flex justify-between py-1 border-b border-[var(--border)]">
+              <span className="text-[var(--muted)]">{isAr ? "رخصة الإرشاد السياحي:" : "Tour Guide License:"}</span>
+              <span className="text-emerald-700 font-semibold">{isAr ? "موثقة ومعتمدة رسمياً ✓" : "Verified & Active ✓"}</span>
+            </div>
+            <div className="flex justify-between py-1">
+              <span className="text-[var(--muted)]">{isAr ? "اللغات المعتمدة:" : "Approved Languages:"}</span>
+              <span className="font-semibold">{guide.languages?.join("، ") || "—"}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Official Lock Notice */}
+        <div className="p-4 mb-6 rounded-2xl bg-[var(--color-surface)] border border-[var(--border)] text-xs flex items-start gap-3 max-w-lg mx-auto text-start">
+          <ShieldCheck size={18} className="flex-shrink-0 mt-0.5 text-[var(--color-primary)]" />
+          <div>
+            <span className="font-bold block mb-1 text-[var(--color-text)]">
+              {isAr ? "الملف مؤمّن وموثق رسمياً" : "Profile Certified & Locked"}
+            </span>
+            <p className="m-0 leading-relaxed text-[var(--muted)]">
+              {isAr
+                ? "للحفاظ على الامتثال لمعايير وزارة السياحة ومصداقية الحجوزات، يبقى ملفك مقفلاً بعد الاعتماد. إذا كنت ترغب في تحديث أي بيانات أو أسعار أو وثائق، يُرجى التواصل مع إدارة المنصة لطلب التعديل."
+                : "To maintain compliance with tourism regulations and booking reliability, your certified profile is protected. If you wish to update any details, rates, or documents, please contact administration."}
+            </p>
+          </div>
+        </div>
+
         <div className="flex flex-wrap items-center justify-center gap-4">
           <Link href={`/${locale}/guides/${guide.user_id}`} className="button button-primary">
             <ExternalLink size={16} />
             <span>{isAr ? "عرض ملفك كما يراه السياح" : "View Public Profile"}</span>
           </Link>
-          <button onClick={() => setIsEditing(true)} className="button">
-            <Edit3 size={16} />
-            <span>{isAr ? "تحديث بيانات الملف" : "Update Profile"}</span>
-          </button>
+          <Link href={`/${locale}/contact`} className="button">
+            <MessageSquare size={16} />
+            <span>{isAr ? "تواصل مع الإدارة لطلب تعديل" : "Contact Admin to Update"}</span>
+          </Link>
         </div>
       </div>
     );

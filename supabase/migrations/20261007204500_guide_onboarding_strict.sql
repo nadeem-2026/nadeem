@@ -11,25 +11,7 @@ alter table public.guide_profiles
   add column if not exists official_license_url text,
   add column if not exists language_certificates jsonb not null default '{}'::jsonb;
 
--- Ensure storage schema and mock definitions exist for local/test environments
-create schema if not exists storage;
-create table if not exists storage.buckets (
-  id text primary key,
-  name text not null,
-  public boolean default false,
-  file_size_limit bigint,
-  allowed_mime_types text[]
-);
-create table if not exists storage.objects (
-  id uuid default gen_random_uuid() primary key,
-  bucket_id text references storage.buckets(id),
-  name text,
-  owner uuid
-);
-create or replace function storage.foldername(name text) returns text[] language sql immutable as $$
-  select string_to_array(name, '/');
-$$;
-alter table storage.objects enable row level security;
+-- Create secure private bucket for guide documents (storage schema is pre-installed in Supabase)
 
 -- Create secure private bucket for guide documents
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)

@@ -14,6 +14,24 @@ export async function createDatabase() {
     $$ select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
     grant usage on schema auth to authenticated, anon;
     grant execute on function auth.uid() to authenticated, anon;
+    create schema storage;
+    create table storage.buckets (
+      id text primary key,
+      name text not null,
+      public boolean default false,
+      file_size_limit bigint,
+      allowed_mime_types text[]
+    );
+    create table storage.objects (
+      id uuid default gen_random_uuid() primary key,
+      bucket_id text references storage.buckets(id),
+      name text,
+      owner uuid
+    );
+    create or replace function storage.foldername(name text) returns text[] language sql immutable as $$
+      select string_to_array(name, '/');
+    $$;
+    alter table storage.objects enable row level security;
   `);
   const directory = new URL("../../supabase/migrations/", import.meta.url);
   for (const file of (await readdir(directory)).filter((f) => /^\d+.*\.sql$/.test(f)).sort()) {

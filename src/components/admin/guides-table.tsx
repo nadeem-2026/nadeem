@@ -14,7 +14,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 
-type ReviewedGuide = GuideProfile & { profiles: { display_name: string } | null };
+type ReviewedGuide = GuideProfile & { profiles: { display_name: string; avatar_url?: string | null } | null };
 
 interface GuidesTableProps {
   guides: ReviewedGuide[];

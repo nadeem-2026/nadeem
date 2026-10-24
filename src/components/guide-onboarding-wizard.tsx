@@ -377,21 +377,37 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
               <span className="text-[var(--muted)]">{isAr ? "رخصة الإرشاد السياحي:" : "Tourism License:"}</span>
               <span className="text-emerald-700 font-semibold">{guide.official_license_url ? (isAr ? "مرفقة ومؤمنة ✓" : "Attached ✓") : "—"}</span>
             </div>
-            <div className="flex justify-between py-1">
+            <div className="flex justify-between py-1 border-b border-[var(--border)]">
               <span className="text-[var(--muted)]">{isAr ? "الهوية الوطنية:" : "National ID:"}</span>
               <span className="text-emerald-700 font-semibold">{guide.national_id_url ? (isAr ? "مرفقة ومؤمنة ✓" : "Attached ✓") : "—"}</span>
+            </div>
+            <div className="flex justify-between py-1 border-b border-[var(--border)]">
+              <span className="text-[var(--muted)]">{isAr ? "شهادة إتقان اللغة:" : "Language Certificate:"}</span>
+              <span className="text-emerald-700 font-semibold">{guide.language_certificates ? (isAr ? "مرفقة ومؤمنة ✓" : "Attached ✓") : (isAr ? "غير مدرجة (اختياري)" : "None (Optional)")}</span>
+            </div>
+            <div className="flex justify-between py-1">
+              <span className="text-[var(--muted)]">{isAr ? "الصورة الشخصية (بورتريه):" : "Profile Photo:"}</span>
+              <span className="text-emerald-700 font-semibold">{(guide.personal_photo_url || guide.avatar_url) ? (isAr ? "مرفقة ومؤمنة ✓" : "Attached ✓") : (isAr ? "غير مرفقة" : "Not uploaded")}</span>
             </div>
           </div>
         </div>
 
+        {/* Notice on Profile Lock During Pending Review */}
+        <div className="p-4 mb-6 rounded-2xl bg-amber-50/80 border border-amber-200 text-amber-900 text-xs flex items-start gap-3 max-w-lg mx-auto text-start">
+          <AlertCircle size={18} className="flex-shrink-0 mt-0.5 text-amber-700" />
+          <div>
+            <span className="font-bold block mb-1">
+              {isAr ? "الملف مؤمّن ومقفل مؤقتاً أثناء التدقيق الرسمي" : "Application locked during official audit"}
+            </span>
+            <p className="m-0 leading-relaxed text-amber-800">
+              {isAr
+                ? "لضمان مصداقية الفحص وتطابق السجلات، لا يمكن تعديل البيانات بينما يقوم المشرف بمراجعة طلبك. في حال وجود أي ملاحظات أو طلب استكمال، سيصلك إشعار فوري وتُتاح إمكانية التعديل وإعادة الإرسال."
+                : "To maintain audit integrity, details cannot be modified while under review. If revisions or additional documents are requested, you will be notified immediately to update and resubmit."}
+            </p>
+          </div>
+        </div>
+
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <button
-            onClick={() => setIsEditing(true)}
-            className="button"
-          >
-            <Edit3 size={16} />
-            <span>{isAr ? "تعديل البيانات وإعادة الإرسال" : "Edit Application"}</span>
-          </button>
           <Link href={`/${locale}`} className="button button-primary">
             {isAr ? "العودة للرئيسية" : "Back to Home"}
           </Link>

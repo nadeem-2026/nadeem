@@ -14,11 +14,13 @@ import {
   Eye, 
   ShieldCheck, 
   Award,
-  Loader2
+  Loader2,
+  GraduationCap,
+  User
 } from "lucide-react";
 import Image from "next/image";
 
-type ReviewedGuide = GuideProfile & { profiles: { display_name: string } | null };
+type ReviewedGuide = GuideProfile & { profiles: { display_name: string; avatar_url?: string | null } | null };
 
 interface GuideInspectorModalProps {
   guide: ReviewedGuide;
@@ -58,6 +60,10 @@ export function GuideInspectorModal({
 
   const handleFetchDocument = async (fieldKey: string, filePath?: string) => {
     if (!filePath) return;
+    if (filePath.startsWith("http://") || filePath.startsWith("https://")) {
+      window.open(filePath, "_blank");
+      return;
+    }
     if (docUrls[fieldKey]) {
       // Already fetched, open directly
       window.open(docUrls[fieldKey], "_blank");
@@ -107,7 +113,11 @@ export function GuideInspectorModal({
     }
   };
 
-  const avatarUrl = guide.personal_photo_url || guide.avatar_url;
+  const avatarUrl = guide.personal_photo_url || guide.avatar_url || guide.profiles?.avatar_url;
+  const langCertPath = typeof guide.language_certificates === "string"
+    ? guide.language_certificates
+    : (guide.language_certificates as { url?: string; path?: string } | null | undefined)?.url ||
+      (guide.language_certificates as { url?: string; path?: string } | null | undefined)?.path;
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
@@ -273,6 +283,92 @@ export function GuideInspectorModal({
                   </button>
                 )}
                 {docErrors["national_id"] && <p className="text-xs text-red-600 m-0">{docErrors["national_id"]}</p>}
+              </div>
+
+              {/* Language Proficiency Certificate */}
+              <div className="p-4 bg-[var(--color-surface)] rounded-xl border border-[var(--border)] flex flex-col justify-between gap-3">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h5 className="font-bold text-sm m-0 flex items-center gap-1.5">
+                      <GraduationCap size={16} className="text-[var(--color-primary)]" />
+                      {isAr ? "شهادة إثبات إتقان اللغة" : "Language Proficiency Certificate"}
+                    </h5>
+                    <span className="text-xs text-[var(--muted)] mt-1 block">
+                      {langCertPath ? (isAr ? "ملف مرفوع ومتاح" : "Document attached") : (isAr ? "غير مرفق (اختياري)" : "Not provided (Optional)")}
+                    </span>
+                  </div>
+                  {langCertPath ? (
+                    <span className="text-xs bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full">✓ {isAr ? "مرفوع" : "Uploaded"}</span>
+                  ) : (
+                    <span className="text-xs bg-gray-100 text-gray-600 font-semibold px-2 py-0.5 rounded-full">{isAr ? "غير مدرج" : "None"}</span>
+                  )}
+                </div>
+
+                {langCertPath && (
+                  <button
+                    onClick={() => handleFetchDocument("lang_cert", langCertPath)}
+                    disabled={loadingDoc === "lang_cert"}
+                    className="w-full flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold rounded-lg bg-[var(--background-alt)] text-[var(--color-primary)] hover:bg-[var(--border)] transition"
+                  >
+                    {loadingDoc === "lang_cert" ? (
+                      <><Loader2 size={14} className="animate-spin" /> {isAr ? "جارٍ تجهيز الرابط..." : "Generating link..."}</>
+                    ) : (
+                      <><Eye size={14} /> {isAr ? "معاينة / فتح شهادة اللغة" : "Inspect Certificate"} <ExternalLink size={12} /></>
+                    )}
+                  </button>
+                )}
+                {docErrors["lang_cert"] && <p className="text-xs text-red-600 m-0">{docErrors["lang_cert"]}</p>}
+              </div>
+
+              {/* Personal Portrait Photo */}
+              <div className="p-4 bg-[var(--color-surface)] rounded-xl border border-[var(--border)] flex flex-col justify-between gap-3">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg overflow-hidden border border-[var(--border)] bg-[var(--background-alt)] flex items-center justify-center flex-shrink-0 relative">
+                      {avatarUrl ? (
+                        <Image
+                          src={avatarUrl}
+                          alt="Profile Portrait"
+                          width={40}
+                          height={40}
+                          unoptimized
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <User size={20} className="text-[var(--muted)]" />
+                      )}
+                    </div>
+                    <div>
+                      <h5 className="font-bold text-sm m-0 flex items-center gap-1.5">
+                        <User size={16} className="text-[var(--color-primary)]" />
+                        {isAr ? "الصورة الشخصية الرسمية (بورتريه)" : "Personal Portrait Photo"}
+                      </h5>
+                      <span className="text-xs text-[var(--muted)] mt-1 block">
+                        {avatarUrl ? (isAr ? "صورة مخصصة مرفوعة" : "Photo uploaded") : (isAr ? "غير محددة" : "None")}
+                      </span>
+                    </div>
+                  </div>
+                  {avatarUrl ? (
+                    <span className="text-xs bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full">✓ {isAr ? "مرفوع" : "Uploaded"}</span>
+                  ) : (
+                    <span className="text-xs bg-amber-100 text-amber-800 font-semibold px-2 py-0.5 rounded-full">! {isAr ? "غير مرفقة" : "Missing"}</span>
+                  )}
+                </div>
+
+                {avatarUrl && (
+                  <button
+                    onClick={() => handleFetchDocument("avatar", avatarUrl)}
+                    disabled={loadingDoc === "avatar"}
+                    className="w-full flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold rounded-lg bg-[var(--background-alt)] text-[var(--color-primary)] hover:bg-[var(--border)] transition"
+                  >
+                    {loadingDoc === "avatar" ? (
+                      <><Loader2 size={14} className="animate-spin" /> {isAr ? "جارٍ تجهيز الرابط..." : "Generating link..."}</>
+                    ) : (
+                      <><Eye size={14} /> {isAr ? "معاينة الصورة بالحجم الكامل" : "View Full Portrait"} <ExternalLink size={12} /></>
+                    )}
+                  </button>
+                )}
+                {docErrors["avatar"] && <p className="text-xs text-red-600 m-0">{docErrors["avatar"]}</p>}
               </div>
             </div>
           </div>

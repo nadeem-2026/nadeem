@@ -158,12 +158,10 @@ export async function saveGuide(locale: Locale, _previous: FormState, form: Form
     p_address_details: address_details, 
     p_national_id_url: national_id_url, p_official_license_url: official_license_url, 
     p_language_certificates: language_certificates,
+    p_personal_photo_url: personal_photo_url,
     p_submit: submit 
   });
   if (error) return { error: "failed" };
-  if (personal_photo_url) {
-    await client.from("profiles").update({ avatar_url: personal_photo_url }).eq("id", profile.id);
-  }
   revalidatePath(`/${locale}/account`);
   return { success: submit ? "submitted" : "saved" };
 }

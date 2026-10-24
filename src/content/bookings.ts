@@ -29,7 +29,6 @@ const ar = {
   declineBooking: "رفض",
   cancelBooking: "إلغاء",
   payNow: "دفع الآن",
-  paymentSoon: "بوابة الدفع قادمة في المرحلة القادمة!",
   confirmAction: "هل أنت متأكد من هذا الإجراء؟",
   status: {
     pending: "قيد الانتظار",
@@ -116,7 +115,6 @@ const en = {
   declineBooking: "Decline",
   cancelBooking: "Cancel",
   payNow: "Pay Now",
-  paymentSoon: "Payment gateway coming in the next phase!",
   confirmAction: "Are you sure you want to perform this action?",
   status: {
     pending: "Pending",

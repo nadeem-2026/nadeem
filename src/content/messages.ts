@@ -33,9 +33,9 @@ const ar = {
   // Services
   servicesTitle: "خدماتنا",
   services: [
-    { title: "جولات سياحية مخصصة", text: "استمتع بجولات مصممة خصيصاً لتناسب اهتماماتك وجدولك الزمني.", icon: "🗺️" },
-    { title: "مرشدون محليون معتمدون", text: "نوفر لك نخبة من المرشدين المرخصين والموثوقين لضمان تجربة آمنة.", icon: "🏅" },
-    { title: "دعم على مدار الساعة", text: "فريق دعم فني لخدمتك في أي وقت خلال رحلتك.", icon: "🎧" }
+    { title: "جولات سياحية مخصصة", text: "استمتع بجولات ثقافية وتاريخية ومغامرات مصممة خصيصاً لتناسب اهتماماتك وجدولك الزمني.", icon: "🗺️" },
+    { title: "مرشدون محليون معتمدون", text: "نخبة من المرشدين المرخصين رسمياً من وزارة السياحة لضمان تجربة آمنة وأصيلة.", icon: "🏅" },
+    { title: "دعم على مدار الساعة", text: "فريق دعم فني متكامل لخدمتك ومتابعة رحلتك في أي وقت.", icon: "🎧" }
   ],
 
   // Contact
@@ -44,14 +44,6 @@ const ar = {
   contactEmailPlaceholder: "البريد الإلكتروني",
   contactMessagePlaceholder: "كيف يمكننا مساعدتك؟",
   contactBtn: "إرسال رسالة",
-
-  // Interests
-  interestsTitle: "تجارب تناسب اهتماماتك",
-  interests: [
-    { title: "تراث وثقافة", icon: "🏛️" },
-    { title: "طبيعة ومغامرة", icon: "⛰️" },
-    { title: "تجارب محلية", icon: "☕" }
-  ],
   
   // How it works
   howTitle: "كيف تحجز جولتك؟",
@@ -64,9 +56,9 @@ const ar = {
   // Trust
   trustTitle: "لماذا نديم؟",
   trustFeatures: [
-    { title: "مرشدون موثوقون", text: "تظهر ملفات المرشدين بعد مراجعتها واعتمادها في المنصة." },
-    { title: "دفع آمن وموثوق", text: "خيارات دفع متنوعة وآمنة لضمان حماية معاملاتك المالية." },
-    { title: "تجربة ضيافة حقيقية", text: "تعرّف على السعودية بعيون أهلها من خلال تجارب محلية أصيلة." }
+    { title: "ترخيص رسمي وموثق", text: "مراجعة وتدقيق رخص الإرشاد السياحي والهويات لضمان الأمان والمصداقية." },
+    { title: "دفع آمن بنظام الضمان", text: "حماية أموالك بالكامل، ولا يتم تحويل المستحقات للمرشد إلا بعد إتمام الجولة بنجاح." },
+    { title: "حكايات محلية أصيلة", text: "تعرّف على كنوز السعودية وتاريخها العريق بعيون أبنائها المرخصين." }
   ],
 
   footer: "منصة حجز المرشدين السياحيين",
@@ -79,23 +71,6 @@ const ar = {
   errorTitle: "تعذّر عرض الصفحة",
   errorText: "حاول تحميل الصفحة مرة أخرى.",
   retry: "إعادة المحاولة",
-  
-  // Platform Status
-  platformStatusTitle: "حالة المنصة",
-  platformStatus: {
-    ready: {
-      title: "✅ الميزات الجاهزة",
-      items: ["البحث عن مرشدين واستعراض ملفاتهم", "حجز الجولات السياحية", "الدفع الإلكتروني (بيئة تجريبية)", "الوضع الداكن واللغتين"]
-    },
-    inProgress: {
-      title: "🔄 قيد التطوير",
-      items: ["لوحة تحكم المشرفين (Admin)", "توثيق حسابات المرشدين", "صفحات الدخول والتسجيل المحسنة"]
-    },
-    upcoming: {
-      title: "📋 الميزات القادمة",
-      items: ["نظام التقييمات والمراجعات", "المحادثات المباشرة (Chat)", "إدارة الجداول والأوقات للمرشد"]
-    }
-  },
   
   // General
   emptyStateGuides: "لا يوجد مرشدين متاحين حالياً في هذا البحث",
@@ -132,9 +107,9 @@ const en: Messages = {
   
   servicesTitle: "Our Services",
   services: [
-    { title: "Customized Tours", text: "Enjoy tours tailored specifically to your interests and schedule.", icon: "🗺️" },
-    { title: "Certified Local Guides", text: "We provide elite licensed guides to ensure a safe experience.", icon: "🏅" },
-    { title: "24/7 Support", text: "Technical support team to serve you anytime during your trip.", icon: "🎧" }
+    { title: "Customized Tours", text: "Enjoy cultural, historic, and adventure tours tailored specifically to your interests and schedule.", icon: "🗺️" },
+    { title: "Certified Local Guides", text: "We provide elite guides officially licensed by the Ministry of Tourism for a safe and authentic journey.", icon: "🏅" },
+    { title: "24/7 Dedicated Support", text: "Our specialized support team is here to assist you anytime throughout your trip.", icon: "🎧" }
   ],
   
   contactTitle: "Contact Us",
@@ -142,13 +117,6 @@ const en: Messages = {
   contactEmailPlaceholder: "Email address",
   contactMessagePlaceholder: "How can we help you?",
   contactBtn: "Send Message",
-  
-  interestsTitle: "Experiences for your interests",
-  interests: [
-    { title: "Heritage & Culture", icon: "🏛️" },
-    { title: "Nature & Adventure", icon: "⛰️" },
-    { title: "Local Experiences", icon: "☕" }
-  ],
   
   howTitle: "How to book your tour?",
   howSteps: [
@@ -159,9 +127,9 @@ const en: Messages = {
   
   trustTitle: "Why Nadeem?",
   trustFeatures: [
-    { title: "Verified Guides", text: "Guide profiles appear after review and approval on the platform." },
-    { title: "Secure & Reliable Payment", text: "Various secure payment options to ensure your financial transactions are protected." },
-    { title: "Authentic Hospitality", text: "Discover Saudi Arabia through the eyes of its locals." }
+    { title: "Official Accreditation", text: "Rigorous verification of official tourism licenses and IDs to ensure total credibility." },
+    { title: "Protected Escrow System", text: "Bank-grade financial escrow protects your funds until your tour concludes successfully." },
+    { title: "Authentic Storytelling", text: "Discover Saudi Arabia's heritage through the eyes of proud local narrators." }
   ],
 
   footer: "A platform for booking local tour guides",
@@ -174,21 +142,6 @@ const en: Messages = {
   errorTitle: "This page could not be displayed",
   errorText: "Please try loading the page again.",
   retry: "Try again",
-  platformStatusTitle: "Platform Status",
-  platformStatus: {
-    ready: {
-      title: "✅ Ready Features",
-      items: ["Search & view guide profiles", "Book tours", "Online payment (Test mode)", "Dark mode & localization"]
-    },
-    inProgress: {
-      title: "🔄 In Progress",
-      items: ["Admin dashboard", "Guide verification", "Enhanced Auth pages"]
-    },
-    upcoming: {
-      title: "📋 Upcoming Features",
-      items: ["Reviews & Ratings system", "Live chat", "Guide availability management"]
-    }
-  },
   
   emptyStateGuides: "No guides are currently available matching your search",
 };

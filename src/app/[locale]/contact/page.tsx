@@ -10,10 +10,8 @@ import {
   Clock, 
   MessageSquare, 
   MessageCircle, 
-  ShieldCheck, 
   Sparkles,
   HelpCircle,
-  Compass,
   ArrowRight,
   ArrowLeft
 } from "lucide-react";
@@ -80,51 +78,6 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
               ? "سواء كنت زائرًا يخطط لرحلته القادمة، أو مرشدًا ترغب بالانضمام لعائلة نديم، فريقنا متواجد للإجابة على جميع استفساراتك وتسهيل تجربتك."
               : "Whether you're a traveler planning your next Saudi journey or a licensed guide eager to join Nadeem, we are always here to assist."}
           </p>
-        </div>
-
-        {/* Quick Highlights Strip */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12">
-          <div className="p-4 rounded-xl bg-[var(--color-surface)] border border-[var(--border)] flex items-center gap-3 shadow-xs">
-            <div className="w-10 h-10 rounded-lg bg-[var(--background-alt)] text-[var(--color-primary)] flex items-center justify-center shrink-0">
-              <Clock size={20} />
-            </div>
-            <div>
-              <h4 className="text-sm font-bold text-[var(--color-text)]">
-                {isAr ? "استجابة سريعة" : "Rapid Response"}
-              </h4>
-              <p className="text-xs text-[var(--muted)]">
-                {isAr ? "رد على الاستفسارات خلال ساعات قليلة" : "Replies within a few business hours"}
-              </p>
-            </div>
-          </div>
-
-          <div className="p-4 rounded-xl bg-[var(--color-surface)] border border-[var(--border)] flex items-center gap-3 shadow-xs">
-            <div className="w-10 h-10 rounded-lg bg-[var(--background-alt)] text-[var(--color-primary)] flex items-center justify-center shrink-0">
-              <ShieldCheck size={20} />
-            </div>
-            <div>
-              <h4 className="text-sm font-bold text-[var(--color-text)]">
-                {isAr ? "دعم موثوق ومحلي" : "Trusted Local Team"}
-              </h4>
-              <p className="text-xs text-[var(--muted)]">
-                {isAr ? "فريق عمل سعودي خبير بالوجهات" : "Saudi team specialized in destinations"}
-              </p>
-            </div>
-          </div>
-
-          <div className="p-4 rounded-xl bg-[var(--color-surface)] border border-[var(--border)] flex items-center gap-3 shadow-xs">
-            <div className="w-10 h-10 rounded-lg bg-[var(--background-alt)] text-[var(--color-primary)] flex items-center justify-center shrink-0">
-              <Compass size={20} />
-            </div>
-            <div>
-              <h4 className="text-sm font-bold text-[var(--color-text)]">
-                {isAr ? "تغطية شاملة للمملكة" : "Kingdom-wide Coverage"}
-              </h4>
-              <p className="text-xs text-[var(--muted)]">
-                {isAr ? "خدمة تغطي كافة مناطق ومدن السعودية" : "Covering all regions across Saudi Arabia"}
-              </p>
-            </div>
-          </div>
         </div>
 
         {/* Main 2-Column Section: Form + Channels */}

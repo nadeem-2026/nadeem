@@ -1,21 +1,27 @@
 "use client";
 
 import type { BookingMessages } from "@/lib/bookings/types";
-import { useState, useTransition } from "react";
+import type { PublicGuide } from "@/lib/guides/public";
+import { useState, useTransition, useMemo } from "react";
 import { createBooking } from "@/lib/bookings/actions";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
 import { 
   Calendar, Clock, Users, MapPin, CheckCircle2, 
-  ShieldCheck, AlertCircle, ArrowLeft, ArrowRight, Loader2, Sparkles 
+  ShieldCheck, AlertCircle, ArrowLeft, ArrowRight, Loader2, Sparkles,
+  Languages, MessageSquare, Compass, Check
 } from "lucide-react";
 
 export function BookingForm({ 
+  guide,
   guideId, 
   hourlyRate, 
   m,
   locale 
 }: { 
-  guideId: string; 
+  guide?: PublicGuide;
+  guideId?: string; 
   hourlyRate: number; 
   m: BookingMessages;
   locale: string;
@@ -29,20 +35,57 @@ export function BookingForm({
   // Step state: 1 = Details, 2 = Review
   const [step, setStep] = useState<1 | 2>(1);
 
+  const effectiveGuideId = guide?.id || guideId || "";
+  const maxParticipants = guide?.max_participants || 10;
+  const serviceAreas = guide?.service_areas || [];
+  const inclusions = guide?.inclusions || [];
+
+  // Minimum booking date: 24 hours ahead (enforcing minimum notice)
+  const minBookingDate = useMemo(() => {
+    const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    return tomorrow.toISOString().split("T")[0];
+  }, []);
+
   // Form states
   const [duration, setDuration] = useState(2);
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(minBookingDate);
   const [time, setTime] = useState("10:00");
   const [participants, setParticipants] = useState(1);
   const [meetingPoint, setMeetingPoint] = useState("");
+  const [specialNotes, setSpecialNotes] = useState("");
 
   const total = duration * hourlyRate;
-  const today = new Date().toISOString().split("T")[0];
+
+  // Format start and end time previews
+  const getEndTimeString = (timeStr: string, durationHours: number) => {
+    if (!timeStr) return "";
+    const [hours, minutes] = timeStr.split(":").map(Number);
+    if (isNaN(hours) || isNaN(minutes)) return "";
+    const endHours = (hours + durationHours) % 24;
+    const pad = (n: number) => n.toString().padStart(2, "0");
+    const period = endHours >= 12 ? (isAr ? "م" : "PM") : (isAr ? "ص" : "AM");
+    const displayHours = endHours % 12 || 12;
+    return `${displayHours}:${pad(minutes)} ${period}`;
+  };
+
+  const getStartTimeFormatted = (timeStr: string) => {
+    if (!timeStr) return "";
+    const [hours, minutes] = timeStr.split(":").map(Number);
+    if (isNaN(hours) || isNaN(minutes)) return "";
+    const period = hours >= 12 ? (isAr ? "م" : "PM") : (isAr ? "ص" : "AM");
+    const displayHours = hours % 12 || 12;
+    const pad = (n: number) => n.toString().padStart(2, "0");
+    return `${displayHours}:${pad(minutes)} ${period}`;
+  };
 
   const handleNextStep = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!date || !time || !meetingPoint) {
-      setError(m.invalidDate || (isAr ? "يرجى تعبئة جميع الحقول المطلوبة." : "Please fill all required fields."));
+    if (!date || !time || !meetingPoint.trim()) {
+      setError(m.invalidDate || (isAr ? "يرجى تعبئة جميع الحقول المطلوبة بما في ذلك نقطة اللقاء." : "Please fill all required fields."));
+      return;
+    }
+    if (participants > maxParticipants) {
+      setError(isAr ? `تنبيه: الحد الأقصى للمشاركين لدى هذا المرشد هو ${maxParticipants} أفراد.` : `Max participants for this guide is ${maxParticipants}.`);
       return;
     }
     setError(null);
@@ -51,13 +94,17 @@ export function BookingForm({
 
   const handleSubmit = async () => {
     setError(null);
+    const finalMeetingPoint = specialNotes.trim()
+      ? `${meetingPoint.trim()} | ${isAr ? "ملاحظات" : "Notes"}: ${specialNotes.trim()}`
+      : meetingPoint.trim();
+
     const startTimeStr = `${date}T${time}:00+03:00`;
     const formData = new FormData();
     formData.set("start_time", startTimeStr);
-    formData.set("guide_id", guideId);
+    formData.set("guide_id", effectiveGuideId);
     formData.set("duration_hours", duration.toString());
     formData.set("participants", participants.toString());
-    formData.set("meeting_point", meetingPoint);
+    formData.set("meeting_point", finalMeetingPoint.slice(0, 480));
 
     startTransition(async () => {
       const res = await createBooking(formData);
@@ -72,7 +119,7 @@ export function BookingForm({
 
   if (isSuccess) {
     return (
-      <div className="dashboard-card text-center" style={{ maxWidth: "600px", margin: "2rem auto", padding: "3rem 2rem" }}>
+      <div className="dashboard-card text-center" style={{ maxWidth: "640px", margin: "2rem auto", padding: "3rem 2rem" }}>
         <div 
           style={{ 
             width: "72px", 
@@ -92,17 +139,33 @@ export function BookingForm({
         <h2 style={{ fontSize: "1.8rem", color: "var(--foreground)", margin: "0 0 10px", fontWeight: 800 }}>
           {isAr ? "تم إرسال طلب الحجز بنجاح!" : "Booking Request Sent!"}
         </h2>
-        <p style={{ color: "var(--muted)", maxWidth: "440px", margin: "0 auto 2rem", lineHeight: 1.7, fontSize: "0.95rem" }}>
+        <p style={{ color: "var(--muted)", maxWidth: "480px", margin: "0 auto 2rem", lineHeight: 1.7, fontSize: "0.95rem" }}>
           {isAr 
-            ? "تم إشعار المرشد بطلبك بنجاح. سيقوم المرشد بمراجعة التوفر والموافقة على موعد الجولة. يمكنك متابعة حالة طلبك وتفاصيله من خلال صفحة حسابك."
-            : "Your request has been delivered to the guide. The guide will review their schedule and confirm. You can monitor the request status in your account."}
+            ? "تم إشعار المرشد بطلبك بنجاح. سيقوم المرشد بمراجعة التوفر والموافقة على موعد الجولة. يمكنك متابعة حالة طلبك والتواصل عبر المحادثة من صفحة حسابك."
+            : "Your request has been delivered to the guide. The guide will review schedule and confirm. You can monitor the request and chat in your account."}
         </p>
 
         {/* Request Summary Receipt */}
         <div style={{ background: "var(--background-alt)", border: "1px solid var(--border)", borderRadius: "16px", padding: "1.5rem", textAlign: isAr ? "right" : "left", marginBottom: "2rem" }}>
+          {guide && (
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px", paddingBottom: "12px", borderBottom: "1px solid var(--border)" }}>
+              <div style={{ width: "36px", height: "36px", borderRadius: "50%", overflow: "hidden", background: "var(--color-primary)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "0.85rem" }}>
+                {guide.avatar_url ? (
+                  <Image src={guide.avatar_url} alt={guide.display_name} width={36} height={36} unoptimized style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                ) : (
+                  guide.display_name[0]
+                )}
+              </div>
+              <div>
+                <strong style={{ fontSize: "0.95rem", display: "block" }}>{guide.display_name}</strong>
+                <span style={{ fontSize: "0.8rem", color: "var(--muted)" }}>{guide.city}</span>
+              </div>
+            </div>
+          )}
+
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px", fontSize: "0.9rem" }}>
             <span style={{ color: "var(--muted)" }}>{isAr ? "الموعد المقترح:" : "Scheduled Time:"}</span>
-            <strong>{date} @ {time}</strong>
+            <strong>{date} ({getStartTimeFormatted(time)} - {getEndTimeString(time, duration)})</strong>
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px", fontSize: "0.9rem" }}>
             <span style={{ color: "var(--muted)" }}>{isAr ? "المدة وعدد الأفراد:" : "Duration & Guests:"}</span>
@@ -110,31 +173,109 @@ export function BookingForm({
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px", fontSize: "0.9rem" }}>
             <span style={{ color: "var(--muted)" }}>{isAr ? "نقطة اللقاء:" : "Meeting Point:"}</span>
-            <strong style={{ maxWidth: "240px", textAlign: isAr ? "left" : "right" }}>{meetingPoint}</strong>
+            <strong style={{ maxWidth: "260px", textAlign: isAr ? "left" : "right" }}>{meetingPoint}</strong>
           </div>
+          {specialNotes.trim() && (
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px", fontSize: "0.9rem" }}>
+              <span style={{ color: "var(--muted)" }}>{isAr ? "طلبات خاصة:" : "Special Requests:"}</span>
+              <span style={{ maxWidth: "260px", textAlign: isAr ? "left" : "right", color: "var(--muted)" }}>{specialNotes}</span>
+            </div>
+          )}
           <div style={{ height: "1px", background: "var(--border)", margin: "12px 0" }} />
           <div style={{ display: "flex", justifyContent: "space-between", fontSize: "1.1rem", fontWeight: 700, color: "var(--color-primary)" }}>
             <span>{m.totalPrice}</span>
-            <span>{total} ر.س</span>
+            <span>{total} SAR</span>
           </div>
         </div>
 
-        <button 
-          onClick={() => router.push(`/${locale}/account`)} 
-          className="button button-primary"
-          style={{ width: "100%", justifyContent: "center", padding: "16px", fontSize: "1.05rem" }}
-        >
-          <span>{isAr ? "الانتقال إلى حجوزاتي في حسابي" : "Go to My Bookings"}</span>
-          {isAr ? <ArrowLeft size={18} /> : <ArrowRight size={18} />}
-        </button>
+        <div style={{ display: "flex", gap: "1rem", flexDirection: "column" }}>
+          <button 
+            onClick={() => router.push(`/${locale}/account`)} 
+            className="button button-primary"
+            style={{ width: "100%", justifyContent: "center", padding: "16px", fontSize: "1.05rem" }}
+          >
+            <span>{isAr ? "الانتقال إلى حجوزاتي في حسابي" : "Go to My Bookings"}</span>
+            {isAr ? <ArrowLeft size={18} /> : <ArrowRight size={18} />}
+          </button>
+          <Link 
+            href={`/${locale}/guides`}
+            className="button"
+            style={{ width: "100%", justifyContent: "center", padding: "12px", fontSize: "0.95rem" }}
+          >
+            <span>{isAr ? "استعراض المزيد من المرشدين" : "Browse More Guides"}</span>
+          </Link>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="account-form dashboard-card" style={{ maxWidth: "640px", margin: "0 auto", padding: "2.5rem" }}>
+    <div className="account-form dashboard-card" style={{ maxWidth: "680px", margin: "0 auto", padding: "2.5rem 2rem" }}>
+      {/* Guide Snapshot Card */}
+      {guide && (
+        <div style={{ padding: "1.25rem", marginBottom: "2rem", borderRadius: "16px", background: "var(--background-alt)", border: "1px solid var(--border)" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "1rem" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <div style={{ width: "56px", height: "56px", borderRadius: "16px", background: "var(--color-primary)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "1.2rem", overflow: "hidden", flexShrink: 0, position: "relative" }}>
+                {guide.avatar_url ? (
+                  <Image src={guide.avatar_url} alt={guide.display_name} width={56} height={56} unoptimized style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                ) : (
+                  guide.display_name[0]
+                )}
+              </div>
+              <div>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+                  <h3 style={{ margin: 0, fontSize: "1.1rem", fontWeight: 700 }}>{guide.display_name}</h3>
+                  <span style={{ fontSize: "0.75rem", background: "rgba(14, 53, 38, 0.1)", color: "var(--color-primary)", padding: "2px 8px", borderRadius: "999px", fontWeight: 600, display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                    <ShieldCheck size={12} />
+                    <span>{isAr ? "مرشد مرخص" : "Licensed Guide"}</span>
+                  </span>
+                </div>
+                <p style={{ margin: "4px 0 0", fontSize: "0.8rem", color: "var(--muted)", display: "flex", alignItems: "center", gap: "4px" }}>
+                  <MapPin size={12} style={{ color: "var(--color-primary)" }} />
+                  <span>{guide.city}</span>
+                  {guide.service_areas?.length > 0 && (
+                    <span>• ({guide.service_areas.slice(0, 3).join("، ")})</span>
+                  )}
+                </p>
+                {guide.languages?.length > 0 && (
+                  <p style={{ margin: "2px 0 0", fontSize: "0.75rem", color: "var(--muted)", display: "flex", alignItems: "center", gap: "4px" }}>
+                    <Languages size={12} />
+                    <span>{guide.languages.join(" • ")}</span>
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div style={{ textAlign: isAr ? "left" : "right" }}>
+              <span style={{ fontSize: "0.75rem", color: "var(--muted)", display: "block" }}>{isAr ? "سعر الساعة" : "Rate"}</span>
+              <strong style={{ fontSize: "1.4rem", color: "var(--color-primary)" }}>{guide.hourly_rate}</strong>
+              <span style={{ fontSize: "0.8rem", color: "var(--muted)", marginInlineStart: "4px" }}>SAR / {isAr ? "ساعة" : "hr"}</span>
+              <span style={{ display: "block", fontSize: "0.75rem", color: "var(--color-primary)", fontWeight: 500 }}>
+                {isAr ? `سعة الجولة: حتى ${maxParticipants} أفراد` : `Capacity: up to ${maxParticipants}`}
+              </span>
+            </div>
+          </div>
+
+          {/* Inclusions tags */}
+          {inclusions.length > 0 && (
+            <div style={{ marginTop: "12px", paddingTop: "10px", borderTop: "1px solid var(--border)", display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+              <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--color-primary)", display: "flex", alignItems: "center", gap: "4px" }}>
+                <Sparkles size={13} />
+                <span>{isAr ? "تشمل الجولة:" : "Includes:"}</span>
+              </span>
+              {inclusions.map((inc, i) => (
+                <span key={i} style={{ fontSize: "0.75rem", padding: "3px 8px", borderRadius: "6px", background: "var(--color-surface)", border: "1px solid var(--border)", color: "var(--foreground)" }}>
+                  ✓ {inc}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Steps Stepper Header */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2.5rem", borderBottom: "1px solid var(--border)", paddingBottom: "1.25rem" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2rem", borderBottom: "1px solid var(--border)", paddingBottom: "1rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <div 
             style={{ 
@@ -145,9 +286,9 @@ export function BookingForm({
               color: step === 1 ? "white" : "var(--muted)",
               display: "flex", 
               alignItems: "center", 
-              justifyContent: "center",
-              fontWeight: 700,
-              fontSize: "0.9rem"
+              justifyContent: "center", 
+              fontWeight: 700, 
+              fontSize: "0.9rem" 
             }}
           >
             1
@@ -169,9 +310,9 @@ export function BookingForm({
               color: step === 2 ? "white" : "var(--muted)",
               display: "flex", 
               alignItems: "center", 
-              justifyContent: "center",
-              fontWeight: 700,
-              fontSize: "0.9rem"
+              justifyContent: "center", 
+              fontWeight: 700, 
+              fontSize: "0.9rem" 
             }}
           >
             2
@@ -192,27 +333,41 @@ export function BookingForm({
       {step === 1 && (
         <form onSubmit={handleNextStep} style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
           
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
+          {/* Date & Time with Live Time Range */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1.25rem" }}>
             <div>
-              <label style={{ display: "flex", alignItems: "center", gap: "6px", fontWeight: 600, fontSize: "0.85rem", marginBottom: "8px" }}>
-                <Calendar size={15} style={{ color: "var(--color-primary)" }} />
-                <span>{m.dateLabel} *</span>
-              </label>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "6px", fontWeight: 600, fontSize: "0.85rem", margin: 0 }}>
+                  <Calendar size={15} style={{ color: "var(--color-primary)" }} />
+                  <span>{m.dateLabel} *</span>
+                </label>
+                <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>{isAr ? "قبل 24 ساعة كحد أدنى" : "24h notice"}</span>
+              </div>
               <input 
                 type="date" 
                 value={date} 
-                min={today} 
-                onChange={e => setDate(e.target.value)} 
+                min={minBookingDate} 
+                onChange={e => {
+                  setError(null);
+                  setDate(e.target.value);
+                }} 
                 required 
                 className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)] text-sm"
               />
             </div>
 
             <div>
-              <label style={{ display: "flex", alignItems: "center", gap: "6px", fontWeight: 600, fontSize: "0.85rem", marginBottom: "8px" }}>
-                <Clock size={15} style={{ color: "var(--color-primary)" }} />
-                <span>{m.startTimeLabel} *</span>
-              </label>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "6px", fontWeight: 600, fontSize: "0.85rem", margin: 0 }}>
+                  <Clock size={15} style={{ color: "var(--color-primary)" }} />
+                  <span>{m.startTimeLabel} *</span>
+                </label>
+                {date && time && (
+                  <span style={{ fontSize: "0.75rem", color: "var(--color-primary)", fontWeight: 600 }}>
+                    {getStartTimeFormatted(time)} - {getEndTimeString(time, duration)}
+                  </span>
+                )}
+              </div>
               <input 
                 type="time" 
                 value={time} 
@@ -223,44 +378,139 @@ export function BookingForm({
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
+          {/* Duration & Participants with Stepper buttons */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1.25rem" }}>
             <div>
-              <label style={{ display: "flex", alignItems: "center", gap: "6px", fontWeight: 600, fontSize: "0.85rem", marginBottom: "8px" }}>
-                <Clock size={15} style={{ color: "var(--color-primary)" }} />
-                <span>{m.durationLabel} ({m.hours}) *</span>
-              </label>
-              <input 
-                type="number" 
-                min="1" 
-                max="12" 
-                value={duration} 
-                onChange={e => setDuration(parseInt(e.target.value) || 1)} 
-                required 
-                className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)] text-sm"
-              />
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "6px", fontWeight: 600, fontSize: "0.85rem", margin: 0 }}>
+                  <Clock size={15} style={{ color: "var(--color-primary)" }} />
+                  <span>{m.durationLabel} ({m.hours}) *</span>
+                </label>
+                <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>{isAr ? "1 إلى 12 ساعة" : "1 to 12 hrs"}</span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <button
+                  type="button"
+                  onClick={() => setDuration(Math.max(1, duration - 1))}
+                  style={{ width: "42px", height: "42px", borderRadius: "10px", border: "1px solid var(--border)", background: "var(--background-alt)", fontSize: "1.2rem", fontWeight: 700, cursor: "pointer" }}
+                >
+                  -
+                </button>
+                <input 
+                  type="number" 
+                  min="1" 
+                  max="12" 
+                  value={duration} 
+                  onChange={e => setDuration(Math.min(12, Math.max(1, parseInt(e.target.value) || 1)))} 
+                  required 
+                  style={{ textAlign: "center", fontWeight: 700 }}
+                  className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)] text-sm"
+                />
+                <button
+                  type="button"
+                  onClick={() => setDuration(Math.min(12, duration + 1))}
+                  style={{ width: "42px", height: "42px", borderRadius: "10px", border: "1px solid var(--border)", background: "var(--background-alt)", fontSize: "1.2rem", fontWeight: 700, cursor: "pointer" }}
+                >
+                  +
+                </button>
+              </div>
             </div>
 
             <div>
-              <label style={{ display: "flex", alignItems: "center", gap: "6px", fontWeight: 600, fontSize: "0.85rem", marginBottom: "8px" }}>
-                <Users size={15} style={{ color: "var(--color-primary)" }} />
-                <span>{m.participantsLabel} *</span>
-              </label>
-              <input 
-                type="number" 
-                min="1" 
-                value={participants} 
-                onChange={e => setParticipants(parseInt(e.target.value) || 1)} 
-                required 
-                className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)] text-sm"
-              />
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "6px", fontWeight: 600, fontSize: "0.85rem", margin: 0 }}>
+                  <Users size={15} style={{ color: "var(--color-primary)" }} />
+                  <span>{m.participantsLabel} *</span>
+                </label>
+                <span style={{ fontSize: "0.75rem", color: "var(--color-primary)", fontWeight: 600 }}>
+                  {isAr ? `الحد الأقصى: ${maxParticipants} أفراد` : `Max: ${maxParticipants}`}
+                </span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <button
+                  type="button"
+                  onClick={() => setParticipants(Math.max(1, participants - 1))}
+                  style={{ width: "42px", height: "42px", borderRadius: "10px", border: "1px solid var(--border)", background: "var(--background-alt)", fontSize: "1.2rem", fontWeight: 700, cursor: "pointer" }}
+                >
+                  -
+                </button>
+                <input 
+                  type="number" 
+                  min="1" 
+                  max={maxParticipants}
+                  value={participants} 
+                  onChange={e => {
+                    const val = parseInt(e.target.value) || 1;
+                    if (val > maxParticipants) {
+                      setError(isAr ? `تنبيه: الحد الأقصى للمشاركين لدى هذا المرشد هو ${maxParticipants} أفراد.` : `Max participants for this guide is ${maxParticipants}.`);
+                    } else {
+                      setError(null);
+                    }
+                    setParticipants(Math.min(maxParticipants, Math.max(1, val)));
+                  }} 
+                  required 
+                  style={{ textAlign: "center", fontWeight: 700 }}
+                  className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)] text-sm"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (participants >= maxParticipants) {
+                      setError(isAr ? `لقد وصلت للحد الأقصى المسموح لدى هذا المرشد (${maxParticipants} أفراد).` : `Reached maximum participants allowed (${maxParticipants}).`);
+                      return;
+                    }
+                    setError(null);
+                    setParticipants(participants + 1);
+                  }}
+                  style={{ width: "42px", height: "42px", borderRadius: "10px", border: "1px solid var(--border)", background: "var(--background-alt)", fontSize: "1.2rem", fontWeight: 700, cursor: "pointer" }}
+                >
+                  +
+                </button>
+              </div>
             </div>
           </div>
 
+          {/* Meeting Point with Quick Suggestions */}
           <div>
-            <label style={{ display: "flex", alignItems: "center", gap: "6px", fontWeight: 600, fontSize: "0.85rem", marginBottom: "8px" }}>
-              <MapPin size={15} style={{ color: "var(--color-primary)" }} />
-              <span>{m.meetingPointLabel} *</span>
-            </label>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+              <label style={{ display: "flex", alignItems: "center", gap: "6px", fontWeight: 600, fontSize: "0.85rem", margin: 0 }}>
+                <MapPin size={15} style={{ color: "var(--color-primary)" }} />
+                <span>{m.meetingPointLabel} *</span>
+              </label>
+              <span style={{ fontSize: "0.75rem", color: "var(--muted)" }}>{meetingPoint.length}/200</span>
+            </div>
+
+            {/* Quick tags from guide service areas */}
+            {serviceAreas.length > 0 && (
+              <div style={{ marginBottom: "10px" }}>
+                <span style={{ fontSize: "0.75rem", color: "var(--muted)", display: "block", marginBottom: "6px" }}>
+                  {isAr ? "اقتراحات سريعة لنقاط الالتقاء يفضلها المرشد:" : "Quick suggestions from guide's areas:"}
+                </span>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                  {serviceAreas.map((area, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => setMeetingPoint(area)}
+                      style={{ 
+                        fontSize: "0.8rem", 
+                        padding: "5px 12px", 
+                        borderRadius: "8px", 
+                        border: "1px solid", 
+                        borderColor: meetingPoint === area ? "var(--color-primary)" : "var(--border)",
+                        background: meetingPoint === area ? "var(--color-primary)" : "var(--background-alt)",
+                        color: meetingPoint === area ? "#fff" : "var(--foreground)",
+                        cursor: "pointer",
+                        fontWeight: meetingPoint === area ? 600 : 400
+                      }}
+                    >
+                      📍 {area}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <input 
               type="text" 
               placeholder={m.meetingPointPlaceholder} 
@@ -272,14 +522,36 @@ export function BookingForm({
             />
           </div>
 
+          {/* Optional Special Requests */}
+          <div>
+            <label style={{ display: "flex", alignItems: "center", gap: "6px", fontWeight: 600, fontSize: "0.85rem", marginBottom: "6px" }}>
+              <MessageSquare size={15} style={{ color: "var(--color-primary)" }} />
+              <span>{isAr ? "ملاحظات أو رغبات خاصة (اختياري)" : "Special Requests or Preferences (Optional)"}</span>
+            </label>
+            <textarea
+              rows={2}
+              placeholder={isAr ? "مثال: معنا أطفال / نفضل التركيز على التصوير المعماري / تفضيل سيارة دفع رباعي..." : "e.g. Traveling with kids, interested in photography, hotel pickup..."}
+              value={specialNotes}
+              onChange={e => setSpecialNotes(e.target.value)}
+              maxLength={200}
+              className="w-full p-3 rounded-xl border border-[var(--border)] bg-[var(--color-surface)] text-sm"
+              style={{ resize: "none" }}
+            />
+          </div>
+
           {/* Real-time estimate banner */}
-          <div style={{ background: "var(--background-alt)", border: "1px solid var(--border)", borderRadius: "12px", padding: "1rem 1.25rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontSize: "0.9rem", color: "var(--muted)" }}>
-              {isAr ? "التكلفة التقديرية للجولة:" : "Estimated Total:"}
-            </span>
+          <div style={{ background: "var(--background-alt)", border: "1px solid var(--border)", borderRadius: "14px", padding: "1.2rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div>
+              <span style={{ fontSize: "0.8rem", color: "var(--muted)", display: "block" }}>
+                {isAr ? "تفصيل التكلفة التقديرية:" : "Estimated Breakdown:"}
+              </span>
+              <span style={{ fontSize: "0.9rem", fontWeight: 600, color: "var(--foreground)" }}>
+                {duration} {isAr ? "ساعات" : "hours"} × {hourlyRate} SAR
+              </span>
+            </div>
             <div style={{ display: "flex", alignItems: "baseline", gap: "4px" }}>
-              <strong style={{ fontSize: "1.4rem", color: "var(--color-primary)" }}>{total}</strong>
-              <span style={{ fontSize: "0.85rem", color: "var(--muted)" }}>ر.س</span>
+              <strong style={{ fontSize: "1.6rem", color: "var(--color-primary)", fontWeight: 800 }}>{total}</strong>
+              <span style={{ fontSize: "0.9rem", color: "var(--muted)" }}>SAR</span>
             </div>
           </div>
 
@@ -302,14 +574,26 @@ export function BookingForm({
               <span>{m.summaryTitle}</span>
             </h3>
             
+            {guide && (
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px", fontSize: "0.95rem" }}>
+                <span style={{ color: "var(--muted)" }}>{m.guideName}</span>
+                <strong>{guide.display_name} ({guide.city})</strong>
+              </div>
+            )}
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px", fontSize: "0.95rem" }}>
               <span style={{ color: "var(--muted)" }}>{m.dateLabel}</span>
-              <strong>{date} @ {time}</strong>
+              <strong>{date} ({getStartTimeFormatted(time)} - {getEndTimeString(time, duration)})</strong>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px", fontSize: "0.95rem" }}>
               <span style={{ color: "var(--muted)" }}>{m.meetingPointLabel}</span>
-              <strong style={{ maxWidth: "250px", textAlign: isAr ? "left" : "right" }}>{meetingPoint}</strong>
+              <strong style={{ maxWidth: "260px", textAlign: isAr ? "left" : "right" }}>{meetingPoint}</strong>
             </div>
+            {specialNotes.trim() && (
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px", fontSize: "0.95rem" }}>
+                <span style={{ color: "var(--muted)" }}>{isAr ? "طلبات خاصة:" : "Special Requests:"}</span>
+                <span style={{ maxWidth: "260px", textAlign: isAr ? "left" : "right", color: "var(--muted)" }}>{specialNotes}</span>
+              </div>
+            )}
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px", fontSize: "0.95rem" }}>
               <span style={{ color: "var(--muted)" }}>{m.durationLabel}</span>
               <strong>{duration} {m.hours}</strong>
@@ -325,12 +609,12 @@ export function BookingForm({
               <span style={{ fontWeight: 700, fontSize: "1.1rem" }}>{m.totalPrice}</span>
               <div>
                 <span style={{ fontSize: "1.6rem", fontWeight: 800, color: "var(--color-primary)" }}>{total}</span>
-                <span style={{ fontSize: "0.9rem", color: "var(--muted)", marginInlineStart: "4px" }}>ر.س</span>
+                <span style={{ fontSize: "0.9rem", color: "var(--muted)", marginInlineStart: "4px" }}>SAR</span>
               </div>
             </div>
           </div>
 
-          <div style={{ background: "rgba(14, 53, 38, 0.05)", border: "1px solid rgba(14, 53, 38, 0.15)", borderRadius: "12px", padding: "1rem", display: "flex", gap: "10px", alignItems: "start" }}>
+          <div style={{ background: "rgba(14, 53, 38, 0.05)", border: "1px solid rgba(14, 53, 38, 0.15)", borderRadius: "12px", padding: "1.2rem", display: "flex", gap: "10px", alignItems: "start" }}>
             <ShieldCheck size={20} className="text-emerald-700 flex-shrink-0 mt-0.5" />
             <p style={{ fontSize: "0.85rem", color: "var(--foreground)", lineHeight: 1.6, margin: 0 }}>
               {isAr 

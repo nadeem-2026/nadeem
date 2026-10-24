@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import type { Metadata } from "next";
-import { SiteFooter, SiteHeader } from "@/components/site-shell";
+import { SiteHeader } from "@/components/site-shell";
+import { ConditionalFooter } from "@/components/conditional-footer";
 import { getRequestLocale } from "@/lib/request-locale";
 import { direction } from "@/lib/i18n";
 import { getMessages } from "@/content/messages";
@@ -46,6 +47,6 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const savedTheme = (await cookies()).get("nadeem-theme")?.value;
   const theme: Theme = savedTheme === "dark" ? "dark" : "light";
   return <html lang={locale} dir={direction(locale)} data-theme={theme} className={`${alexandria.variable} ${inter.variable}`} suppressHydrationWarning>
-    <body suppressHydrationWarning><SiteHeader locale={locale} theme={theme} />{children}<SiteFooter locale={locale} /></body>
+    <body suppressHydrationWarning><SiteHeader locale={locale} theme={theme} />{children}<ConditionalFooter locale={locale} /></body>
   </html>;
 }

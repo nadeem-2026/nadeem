@@ -253,12 +253,12 @@ export default async function BecomeAGuidePage({ params }: { params: Promise<{ l
 
       {/* Bottom CTA Banner */}
       <section className="container mt-20">
-        <div className="p-10 md:p-16 rounded-3xl bg-[var(--color-primary)] text-white text-center space-y-6 shadow-2xl relative overflow-hidden">
+        <div className="cta-banner-primary p-10 md:p-16 rounded-3xl text-center space-y-6 shadow-2xl relative overflow-hidden">
           <div className="relative z-10 max-w-2xl mx-auto space-y-4">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-white m-0">
+            <h2 className="text-3xl md:text-4xl font-extrabold m-0">
               {isAr ? "مستعد لمشاركة قصص مدينتك مع العالم؟" : "Ready to share your city with the world?"}
             </h2>
-            <p className="text-white/80 text-sm md:text-base leading-relaxed">
+            <p className="text-sm md:text-base leading-relaxed">
               {isAr 
                 ? "انضم اليوم إلى عائلة مرشدي نديم وكن سفيراً لتراث وحضارة المملكة العربية السعودية."
                 : "Join the Nadeem family of guides today and be an ambassador for Saudi hospitality."}
@@ -266,7 +266,7 @@ export default async function BecomeAGuidePage({ params }: { params: Promise<{ l
             <div className="pt-4">
               <Link
                 href={`/${locale}/signup?role=guide`}
-                className="py-4 px-10 rounded-full bg-[var(--nadeem-sand)] hover:bg-[#c9b88b] text-[#0e3526] font-bold text-base shadow-xl inline-flex items-center gap-2 transition"
+                className="btn-sand-cta py-4 px-10 rounded-full font-bold text-base shadow-xl inline-flex items-center gap-2 transition"
               >
                 <span>{isAr ? "انضم كمرشد سياحي الآن" : "Join as a Guide Now"}</span>
                 <ArrowIcon size={18} />

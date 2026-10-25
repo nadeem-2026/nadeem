@@ -103,7 +103,7 @@ export function GuideEarningsCalculator({ locale }: { locale: Locale }) {
 
           <Link
             href={`/${locale}/signup?role=guide`}
-            className="py-3 px-6 rounded-xl bg-[var(--nadeem-sand)] hover:bg-[#c9b88b] text-[#0e3526] font-bold text-sm shadow-md transition whitespace-nowrap"
+            className="btn-sand-cta py-3 px-6 rounded-xl font-bold text-sm shadow-md transition whitespace-nowrap"
           >
             {isAr ? "ابدأ التسجيل الآن" : "Sign Up to Earn"}
           </Link>

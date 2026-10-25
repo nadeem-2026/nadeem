@@ -10,7 +10,7 @@
   --color-ink: var(--nadeem-ink);
 }
 
-:root { --muted: #6B7280; --border: rgba(14, 53, 38, 0.08); }
+:root { --muted: #525b6a; --border: rgba(14, 53, 38, 0.08); }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 5rem; max-width: 100vw; overflow-x: clip; }
 body { margin: 0; background: var(--color-page); color: var(--color-text); font-size: 1rem; -webkit-font-smoothing: antialiased; max-width: 100vw; overflow-x: clip; }
@@ -583,7 +583,7 @@ h3 { font-size: 1.08rem; line-height: 1.6; margin-bottom: 10px; }
   --btn-primary-hover-bg: light-dark(#17523c, #bbf0de);
   --btn-primary-hover-text: light-dark(#ffffff, #101c19);
   --nadeem-green-hover: light-dark(#17523c, #bbf0de);
-  --muted: light-dark(#6b7280, #b4c6bd);
+  --muted: light-dark(#525b6a, #b4c6bd);
   --border: light-dark(rgba(14, 53, 38, 0.08), rgba(158, 217, 197, 0.15));
   --background-alt: light-dark(#eceee5, #243831);
   --section-accent: light-dark(#e9dcc4, #20332d);
@@ -609,7 +609,7 @@ html[data-theme="light"] {
   --btn-primary-hover-bg: #17523c;
   --btn-primary-hover-text: #ffffff;
   --nadeem-green-hover: #17523c;
-  --muted: #6b7280;
+  --muted: #525b6a;
   --border: rgba(14, 53, 38, 0.08);
   --background-alt: #eceee5;
   --section-accent: #e9dcc4;
@@ -637,6 +637,30 @@ html[data-theme="dark"] {
   --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.4);
   --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.3);
   --shadow-float: 0 10px 25px rgba(0, 0, 0, 0.45);
+}
+
+/* CTA Banners with guaranteed high contrast */
+.cta-banner-primary {
+  background: linear-gradient(135deg, #0e3526 0%, #164e3b 100%);
+  color: #ffffff !important;
+}
+html[data-theme="dark"] .cta-banner-primary {
+  background: linear-gradient(135deg, #1b2c27 0%, #243831 100%);
+  border: 1px solid var(--border);
+}
+.cta-banner-primary h2 {
+  color: #ffffff !important;
+}
+.cta-banner-primary p {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+.btn-sand-cta {
+  background: var(--nadeem-sand) !important;
+  color: #0e3526 !important;
+}
+.btn-sand-cta:hover {
+  background: #c9b88b !important;
+  color: #0e3526 !important;
 }
 
 @media(prefers-color-scheme:dark) {

@@ -228,9 +228,9 @@ export function GuideInspectorModal({
                     </span>
                   </div>
                   {guide.official_license_url ? (
-                    <span className="text-xs bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full">✓ {isAr ? "مرفوع" : "Uploaded"}</span>
+                    <span className="inline-flex items-center gap-1 text-xs bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full"><CheckCircle2 size={12} /> {isAr ? "مرفوع" : "Uploaded"}</span>
                   ) : (
-                    <span className="text-xs bg-red-100 text-red-800 font-semibold px-2 py-0.5 rounded-full">✗ {isAr ? "مفقود" : "Missing"}</span>
+                    <span className="inline-flex items-center gap-1 text-xs bg-red-100 text-red-800 font-semibold px-2 py-0.5 rounded-full"><XCircle size={12} /> {isAr ? "مفقود" : "Missing"}</span>
                   )}
                 </div>
 
@@ -263,9 +263,9 @@ export function GuideInspectorModal({
                     </span>
                   </div>
                   {guide.national_id_url ? (
-                    <span className="text-xs bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full">✓ {isAr ? "مرفوع" : "Uploaded"}</span>
+                    <span className="inline-flex items-center gap-1 text-xs bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full"><CheckCircle2 size={12} /> {isAr ? "مرفوع" : "Uploaded"}</span>
                   ) : (
-                    <span className="text-xs bg-red-100 text-red-800 font-semibold px-2 py-0.5 rounded-full">✗ {isAr ? "مفقود" : "Missing"}</span>
+                    <span className="inline-flex items-center gap-1 text-xs bg-red-100 text-red-800 font-semibold px-2 py-0.5 rounded-full"><XCircle size={12} /> {isAr ? "مفقود" : "Missing"}</span>
                   )}
                 </div>
 
@@ -298,7 +298,7 @@ export function GuideInspectorModal({
                     </span>
                   </div>
                   {langCertPath ? (
-                    <span className="text-xs bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full">✓ {isAr ? "مرفوع" : "Uploaded"}</span>
+                    <span className="inline-flex items-center gap-1 text-xs bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full"><CheckCircle2 size={12} /> {isAr ? "مرفوع" : "Uploaded"}</span>
                   ) : (
                     <span className="text-xs bg-gray-100 text-gray-600 font-semibold px-2 py-0.5 rounded-full">{isAr ? "غير مدرج" : "None"}</span>
                   )}
@@ -349,9 +349,9 @@ export function GuideInspectorModal({
                     </div>
                   </div>
                   {avatarUrl ? (
-                    <span className="text-xs bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full">✓ {isAr ? "مرفوع" : "Uploaded"}</span>
+                    <span className="inline-flex items-center gap-1 text-xs bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full"><CheckCircle2 size={12} /> {isAr ? "مرفوع" : "Uploaded"}</span>
                   ) : (
-                    <span className="text-xs bg-amber-100 text-amber-800 font-semibold px-2 py-0.5 rounded-full">! {isAr ? "غير مرفقة" : "Missing"}</span>
+                    <span className="inline-flex items-center gap-1 text-xs bg-amber-100 text-amber-800 font-semibold px-2 py-0.5 rounded-full"><AlertOctagon size={12} /> {isAr ? "غير مرفقة" : "Missing"}</span>
                   )}
                 </div>
 

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { resolveComplaint } from "@/lib/admin/actions";
 import type { Complaint } from "@/lib/bookings/types";
 import type { Locale } from "@/lib/i18n";
-import { CheckCircle2, Check, Loader2 } from "lucide-react";
+import { CheckCircle2, Check, Loader2, Clock } from "lucide-react";
 
 export function ComplaintsTable({ complaints, locale }: { complaints: Complaint[], locale: Locale }) {
   const [loadingId, setLoadingId] = useState<string | null>(null);
@@ -99,8 +99,18 @@ export function ComplaintsTable({ complaints, locale }: { complaints: Complaint[
                       {c.bookings ? new Date(c.bookings.start_time).toLocaleDateString(locale, { timeZone: "Asia/Riyadh" }) : "—"}
                     </td>
                     <td>
-                      <span className={`status-pill ${isResolved ? "approved" : "rejected"}`}>
-                        {isResolved ? (isAr ? "تم الحل ✓" : "Resolved") : (isAr ? "قيد الانتظار ⏳" : "Pending")}
+                      <span className={`status-pill inline-flex items-center gap-1 ${isResolved ? "approved" : "rejected"}`}>
+                        {isResolved ? (
+                          <>
+                            <CheckCircle2 size={12} />
+                            {isAr ? "تم الحل" : "Resolved"}
+                          </>
+                        ) : (
+                          <>
+                            <Clock size={12} />
+                            {isAr ? "قيد الانتظار" : "Pending"}
+                          </>
+                        )}
                       </span>
                     </td>
                     <td className="text-end">

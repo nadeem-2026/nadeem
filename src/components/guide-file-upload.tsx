@@ -8,7 +8,8 @@ import {
   Image as ImageIcon, 
   AlertCircle, 
   Trash2, 
-  Loader2
+  Loader2,
+  CheckCircle2
 } from "lucide-react";
 
 interface GuideFileUploadProps {
@@ -158,8 +159,9 @@ export function GuideFileUpload({
                 <span className="font-bold text-sm text-emerald-950 truncate block">
                   {fileName || label}
                 </span>
-                <span className="text-[11px] bg-emerald-200 text-emerald-900 font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
-                  ✓ تم الرفع بنجاح
+                <span className="text-[11px] bg-emerald-200 text-emerald-900 font-bold px-2 py-0.5 rounded-full whitespace-nowrap inline-flex items-center gap-1">
+                  <CheckCircle2 size={12} />
+                  <span>تم الرفع بنجاح</span>
                 </span>
               </div>
               <p className="text-xs text-emerald-700 m-0 mt-0.5">

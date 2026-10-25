@@ -8,7 +8,9 @@ import {
   Search, 
   Eye, 
   MapPin, 
-  Users
+  Users,
+  Check,
+  X
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -199,15 +201,17 @@ export function GuidesTable({ guides, locale }: GuidesTableProps) {
                       <div className="flex items-center gap-2">
                         <span 
                           title={isAr ? "رخصة السياحة" : "License"}
-                          className={`text-xs px-2 py-0.5 rounded font-semibold ${hasLicense ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-red-50 text-red-700 border border-red-200"}`}
+                          className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded font-semibold ${hasLicense ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-red-50 text-red-700 border border-red-200"}`}
                         >
-                          {hasLicense ? (isAr ? "الرخصة ✓" : "License ✓") : (isAr ? "الرخصة ✗" : "License ✗")}
+                          {hasLicense ? <Check size={11} /> : <X size={11} />}
+                          {isAr ? "الرخصة" : "License"}
                         </span>
                         <span 
                           title={isAr ? "الهوية الوطنية" : "ID"}
-                          className={`text-xs px-2 py-0.5 rounded font-semibold ${hasID ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-red-50 text-red-700 border border-red-200"}`}
+                          className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded font-semibold ${hasID ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-red-50 text-red-700 border border-red-200"}`}
                         >
-                          {hasID ? (isAr ? "الهوية ✓" : "ID ✓") : (isAr ? "الهوية ✗" : "ID ✗")}
+                          {hasID ? <Check size={11} /> : <X size={11} />}
+                          {isAr ? "الهوية" : "ID"}
                         </span>
                       </div>
                     </td>

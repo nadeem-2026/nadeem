@@ -265,8 +265,9 @@ export function BookingForm({
                 <span>{isAr ? "تشمل الجولة:" : "Includes:"}</span>
               </span>
               {inclusions.map((inc, i) => (
-                <span key={i} style={{ fontSize: "0.75rem", padding: "3px 8px", borderRadius: "6px", background: "var(--color-surface)", border: "1px solid var(--border)", color: "var(--foreground)" }}>
-                  ✓ {inc}
+                <span key={i} className="inline-flex items-center gap-1" style={{ fontSize: "0.75rem", padding: "3px 8px", borderRadius: "6px", background: "var(--color-surface)", border: "1px solid var(--border)", color: "var(--foreground)" }}>
+                  <Check size={11} className="text-emerald-700" />
+                  <span>{inc}</span>
                 </span>
               ))}
             </div>
@@ -503,8 +504,10 @@ export function BookingForm({
                         cursor: "pointer",
                         fontWeight: meetingPoint === area ? 600 : 400
                       }}
+                      className="inline-flex items-center gap-1.5"
                     >
-                      📍 {area}
+                      <MapPin size={13} />
+                      <span>{area}</span>
                     </button>
                   ))}
                 </div>

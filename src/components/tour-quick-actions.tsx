@@ -72,7 +72,7 @@ export function TourQuickActions({ meetingPoint, tourCode, locale }: TourQuickAc
           className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-[var(--background-alt)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--foreground)] transition cursor-pointer"
         >
           {copiedCode ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
-          <span>{copiedCode ? (isAr ? "تم نسخ الرمز ✓" : "Code Copied ✓") : (isAr ? "نسخ رمز البدء" : "Copy OTP")}</span>
+          <span>{copiedCode ? (isAr ? "تم نسخ الرمز" : "Code Copied") : (isAr ? "نسخ رمز البدء" : "Copy OTP")}</span>
         </button>
       )}
 
@@ -93,7 +93,7 @@ export function TourQuickActions({ meetingPoint, tourCode, locale }: TourQuickAc
         className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-[var(--background-alt)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--foreground)] transition cursor-pointer"
       >
         {copiedLink ? <Check size={14} className="text-emerald-600" /> : <Share2 size={14} />}
-        <span>{copiedLink ? (isAr ? "تم نسخ الرابط ✓" : "Link Copied ✓") : (isAr ? "مشاركة الرحلة" : "Share")}</span>
+        <span>{copiedLink ? (isAr ? "تم نسخ الرابط" : "Link Copied") : (isAr ? "مشاركة الرحلة" : "Share")}</span>
       </button>
     </div>
   );

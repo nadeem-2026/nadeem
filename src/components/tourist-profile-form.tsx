@@ -24,7 +24,28 @@ import {
   PhoneCall,
   UtensilsCrossed,
   Activity,
-  ShieldCheck
+  ShieldCheck,
+  Wheat,
+  Milk,
+  Salad,
+  Leaf,
+  Fish,
+  Egg,
+  Footprints,
+  Clock,
+  Accessibility,
+  Ban,
+  Luggage,
+  Users,
+  Baby,
+  HeartHandshake,
+  Landmark,
+  Mountain,
+  Coffee,
+  Palette,
+  ShoppingBag,
+  Waves,
+  Tent
 } from "lucide-react";
 
 interface TouristProfileFormProps {
@@ -36,46 +57,46 @@ interface TouristProfileFormProps {
 }
 
 const COUNTRY_DIAL_CODES = [
-  { code: "+966", countryAr: "السعودية", countryEn: "Saudi Arabia", flag: "🇸🇦" },
-  { code: "+971", countryAr: "الإمارات", countryEn: "UAE", flag: "🇦🇪" },
-  { code: "+965", countryAr: "الكويت", countryEn: "Kuwait", flag: "🇰🇼" },
-  { code: "+974", countryAr: "قطر", countryEn: "Qatar", flag: "🇶🇦" },
-  { code: "+973", countryAr: "البحرين", countryEn: "Bahrain", flag: "🇧🇭" },
-  { code: "+968", countryAr: "عُمان", countryEn: "Oman", flag: "🇴🇲" },
-  { code: "+20", countryAr: "مصر", countryEn: "Egypt", flag: "🇪🇬" },
-  { code: "+962", countryAr: "الأردن", countryEn: "Jordan", flag: "🇯🇴" },
-  { code: "+44", countryAr: "بريطانيا", countryEn: "UK", flag: "🇬🇧" },
-  { code: "+1", countryAr: "أمريكا/كندا", countryEn: "USA/Canada", flag: "🇺🇸" },
-  { code: "+33", countryAr: "فرنسا", countryEn: "France", flag: "🇫🇷" },
-  { code: "+49", countryAr: "ألمانيا", countryEn: "Germany", flag: "🇩🇪" }
+  { code: "+966", countryAr: "السعودية", countryEn: "Saudi Arabia" },
+  { code: "+971", countryAr: "الإمارات", countryEn: "UAE" },
+  { code: "+965", countryAr: "الكويت", countryEn: "Kuwait" },
+  { code: "+974", countryAr: "قطر", countryEn: "Qatar" },
+  { code: "+973", countryAr: "البحرين", countryEn: "Bahrain" },
+  { code: "+968", countryAr: "عُمان", countryEn: "Oman" },
+  { code: "+20", countryAr: "مصر", countryEn: "Egypt" },
+  { code: "+962", countryAr: "الأردن", countryEn: "Jordan" },
+  { code: "+44", countryAr: "بريطانيا", countryEn: "UK" },
+  { code: "+1", countryAr: "أمريكا/كندا", countryEn: "USA/Canada" },
+  { code: "+33", countryAr: "فرنسا", countryEn: "France" },
+  { code: "+49", countryAr: "ألمانيا", countryEn: "Germany" }
 ];
 
 const POPULAR_NATIONALITIES = [
-  { ar: "سعودي", en: "Saudi", flag: "🇸🇦" },
-  { ar: "إماراتي", en: "Emirati", flag: "🇦🇪" },
-  { ar: "كويتي", en: "Kuwaiti", flag: "🇰🇼" },
-  { ar: "قطري", en: "Qatari", flag: "🇶🇦" },
-  { ar: "بحريني", en: "Bahraini", flag: "🇧🇭" },
-  { ar: "عماني", en: "Omani", flag: "🇴🇲" },
-  { ar: "مصري", en: "Egyptian", flag: "🇪🇬" },
-  { ar: "أردني", en: "Jordanian", flag: "🇯🇴" },
-  { ar: "بريطاني", en: "British", flag: "🇬🇧" },
-  { ar: "أمريكي", en: "American", flag: "🇺🇸" },
-  { ar: "فرنسي", en: "French", flag: "🇫🇷" },
-  { ar: "ألماني", en: "German", flag: "🇩🇪" }
+  { ar: "سعودي", en: "Saudi" },
+  { ar: "إماراتي", en: "Emirati" },
+  { ar: "كويتي", en: "Kuwaiti" },
+  { ar: "قطري", en: "Qatari" },
+  { ar: "بحريني", en: "Bahraini" },
+  { ar: "عماني", en: "Omani" },
+  { ar: "مصري", en: "Egyptian" },
+  { ar: "أردني", en: "Jordanian" },
+  { ar: "بريطاني", en: "British" },
+  { ar: "أمريكي", en: "American" },
+  { ar: "فرنسي", en: "French" },
+  { ar: "ألماني", en: "German" }
 ];
 
 const POPULAR_COUNTRIES = [
-  { ar: "المملكة العربية السعودية", en: "Saudi Arabia", flag: "🇸🇦" },
-  { ar: "الإمارات العربية المتحدة", en: "United Arab Emirates", flag: "🇦🇪" },
-  { ar: "الكويت", en: "Kuwait", flag: "🇰🇼" },
-  { ar: "قطر", en: "Qatar", flag: "🇶🇦" },
-  { ar: "البحرين", en: "Bahrain", flag: "🇧🇭" },
-  { ar: "سلطنة عمان", en: "Oman", flag: "🇴🇲" },
-  { ar: "مصر", en: "Egypt", flag: "🇪🇬" },
-  { ar: "الأردن", en: "Jordan", flag: "🇯🇴" },
-  { ar: "المملكة المتحدة", en: "United Kingdom", flag: "🇬🇧" },
-  { ar: "الولايات المتحدة", en: "United States", flag: "🇺🇸" }
+  { ar: "المملكة العربية السعودية", en: "Saudi Arabia" },
+  { ar: "الإمارات العربية المتحدة", en: "United Arab Emirates" },
+  { ar: "الكويت", en: "Kuwait" },
+  { ar: "قطر", en: "Qatar" },
+  { ar: "البحرين", en: "Bahrain" },
+  { ar: "سلطنة عمان", en: "Oman" },
+  { ar: "مصر", en: "Egypt" },
+  { ar: "الأردن", en: "Jordan" },
+  { ar: "المملكة المتحدة", en: "United Kingdom" },
+  { ar: "الولايات المتحدة", en: "United States" }
 ];
 
 const POPULAR_CITIES = [
@@ -94,59 +115,59 @@ const POPULAR_CITIES = [
 ];
 
 const DIETARY_OPTIONS = [
-  { id: "none", ar: "لا توجد قيود أو حساسية", en: "No dietary restrictions", icon: "🟢" },
-  { id: "nuts", ar: "حساسية مكسرات", en: "Nut allergy", icon: "🥜" },
-  { id: "gluten", ar: "خالي من الغلوتين / سيلياك", en: "Gluten-free / Celiac", icon: "🌾" },
-  { id: "lactose", ar: "حساسية لاكتوز / مشتقات حليب", en: "Lactose-free", icon: "🥛" },
-  { id: "vegetarian", ar: "نباتي (Vegetarian)", en: "Vegetarian", icon: "🥗" },
-  { id: "vegan", ar: "نباتي صرف (Vegan)", en: "Vegan", icon: "🥑" },
-  { id: "halal", ar: "لحوم حلال فقط", en: "Halal only", icon: "🥩" },
-  { id: "seafood", ar: "حساسية مأكولات بحرية", en: "Seafood allergy", icon: "🦐" },
-  { id: "eggs", ar: "حساسية بيض", en: "Egg allergy", icon: "🥚" }
+  { id: "none", ar: "لا توجد قيود أو حساسية", en: "No dietary restrictions", icon: ShieldCheck },
+  { id: "nuts", ar: "حساسية مكسرات", en: "Nut allergy", icon: AlertCircle },
+  { id: "gluten", ar: "خالي من الغلوتين / سيلياك", en: "Gluten-free / Celiac", icon: Wheat },
+  { id: "lactose", ar: "حساسية لاكتوز / مشتقات حليب", en: "Lactose-free", icon: Milk },
+  { id: "vegetarian", ar: "نباتي (Vegetarian)", en: "Vegetarian", icon: Salad },
+  { id: "vegan", ar: "نباتي صرف (Vegan)", en: "Vegan", icon: Leaf },
+  { id: "halal", ar: "لحوم حلال فقط", en: "Halal only", icon: CheckCircle2 },
+  { id: "seafood", ar: "حساسية مأكولات بحرية", en: "Seafood allergy", icon: Fish },
+  { id: "eggs", ar: "حساسية بيض", en: "Egg allergy", icon: Egg }
 ];
 
 const MOBILITY_OPTIONS = [
-  { id: "standard", ar: "حركة طبيعية ونشطة", en: "Standard & Active Mobility", descAr: "مستعد للمشي والمسارات التراثية وصعود السلالم والدرج", descEn: "Comfortable with walking, stairs, and active itineraries", icon: "🚶‍♂️" },
-  { id: "gentle", ar: "وتيرة هادئة ومسافات قصيرة", en: "Gentle Pace & Short Walks", descAr: "تفضيل مسافات مشي خفيفة مع فترات راحة منتظمة", descEn: "Prefer leisurely walks with relaxing breaks", icon: "🐢" },
-  { id: "seniors", ar: "كبار سن / راحة مستمرة", en: "Seniors / Frequent Rest", descAr: "تفضيل سيارة قريبة وتجنب الوقوف لفترات طويلة", descEn: "Easy-access stops avoiding prolonged standing", icon: "👨‍🦳" },
-  { id: "wheelchair", ar: "مستخدم كرسي متحرك", en: "Wheelchair Accessible", descAr: "يلزم مسارات ممهدة بالكامل ومصاعد ومنحدرات مهيأة", descEn: "Requires fully paved routes, ramps, and elevator access", icon: "♿" },
-  { id: "avoid_steep", ar: "تجنب المرتفعات أو الصعود الشاق", en: "Avoid Steep Terrain & Hikes", descAr: "أفضل المسارات المستوية بدون صعود جبلي وعر", descEn: "Flat terrain preferred, avoid rugged hiking trails", icon: "🚫" }
+  { id: "standard", ar: "حركة طبيعية ونشطة", en: "Standard & Active Mobility", descAr: "مستعد للمشي والمسارات التراثية وصعود السلالم والدرج", descEn: "Comfortable with walking, stairs, and active itineraries", icon: Footprints },
+  { id: "gentle", ar: "وتيرة هادئة ومسافات قصيرة", en: "Gentle Pace & Short Walks", descAr: "تفضيل مسافات مشي خفيفة مع فترات راحة منتظمة", descEn: "Prefer leisurely walks with relaxing breaks", icon: Clock },
+  { id: "seniors", ar: "كبار سن / راحة مستمرة", en: "Seniors / Frequent Rest", descAr: "تفضيل سيارة قريبة وتجنب الوقوف لفترات طويلة", descEn: "Easy-access stops avoiding prolonged standing", icon: User },
+  { id: "wheelchair", ar: "مستخدم كرسي متحرك", en: "Wheelchair Accessible", descAr: "يلزم مسارات ممهدة بالكامل ومصاعد ومنحدرات مهيأة", descEn: "Requires fully paved routes, ramps, and elevator access", icon: Accessibility },
+  { id: "avoid_steep", ar: "تجنب المرتفعات أو الصعود الشاق", en: "Avoid Steep Terrain & Hikes", descAr: "أفضل المسارات المستوية بدون صعود جبلي وعر", descEn: "Flat terrain preferred, avoid rugged hiking trails", icon: Ban }
 ];
 
 const EMERGENCY_RELATIONS = [
-  { id: "parent", ar: "أحد الوالدين", en: "Parent", icon: "👨‍👩‍👧" },
-  { id: "spouse", ar: "الزوج / الزوجة", en: "Spouse", icon: "💍" },
-  { id: "sibling", ar: "أخ / أخت", en: "Sibling", icon: "👥" },
-  { id: "friend", ar: "صديق مقرب", en: "Friend", icon: "🤝" },
-  { id: "other", ar: "أخرى", en: "Other", icon: "📋" }
+  { id: "parent", ar: "أحد الوالدين", en: "Parent", icon: Users },
+  { id: "spouse", ar: "الزوج / الزوجة", en: "Spouse", icon: Heart },
+  { id: "sibling", ar: "أخ / أخت", en: "Sibling", icon: User },
+  { id: "friend", ar: "صديق مقرب", en: "Friend", icon: HeartHandshake },
+  { id: "other", ar: "أخرى", en: "Other", icon: FileText }
 ];
 
 const INTERESTS_OPTIONS = [
-  { id: "heritage", ar: "آثار وتاريخ", en: "History & Heritage", icon: "🏛️" },
-  { id: "adventure", ar: "طبيعة ومغامرات وهايكنج", en: "Nature & Adventure", icon: "⛰️" },
-  { id: "culinary", ar: "تجارب طهي وأكلات شعبية", en: "Culinary & Local Food", icon: "☕" },
-  { id: "culture", ar: "فنون وثقافة وحرف", en: "Culture & Arts", icon: "🎨" },
-  { id: "shopping", ar: "أسواق تقليدية ومراكز تسوق", en: "Traditional Souks & Shopping", icon: "🛍️" },
-  { id: "entertainment", ar: "فعاليات ومواسم ترفيهية", en: "Festivals & Entertainment", icon: "🎪" },
-  { id: "marine", ar: "شواطئ وجزر وأنشطة بحرية", en: "Coastal & Marine Activities", icon: "🌊" },
-  { id: "camping", ar: "تخييم ورحلات برية وصحراوية", en: "Desert Camping & Safari", icon: "⛺" }
+  { id: "heritage", ar: "آثار وتاريخ", en: "History & Heritage", icon: Landmark },
+  { id: "adventure", ar: "طبيعة ومغامرات وهايكنج", en: "Nature & Adventure", icon: Mountain },
+  { id: "culinary", ar: "تجارب طهي وأكلات شعبية", en: "Culinary & Local Food", icon: Coffee },
+  { id: "culture", ar: "فنون وثقافة وحرف", en: "Culture & Arts", icon: Palette },
+  { id: "shopping", ar: "أسواق تقليدية ومراكز تسوق", en: "Traditional Souks & Shopping", icon: ShoppingBag },
+  { id: "entertainment", ar: "فعاليات ومواسم ترفيهية", en: "Festivals & Entertainment", icon: Sparkles },
+  { id: "marine", ar: "شواطئ وجزر وأنشطة بحرية", en: "Coastal & Marine Activities", icon: Waves },
+  { id: "camping", ar: "تخييم ورحلات برية وصحراوية", en: "Desert Camping & Safari", icon: Tent }
 ];
 
 const LANGUAGE_OPTIONS = [
-  { id: "ar", ar: "العربية", en: "Arabic", flag: "🇸🇦" },
-  { id: "en", ar: "الإنجليزية", en: "English", flag: "🇬🇧" },
-  { id: "fr", ar: "الفرنسية", en: "French", flag: "🇫🇷" },
-  { id: "de", ar: "الألمانية", en: "German", flag: "🇩🇪" },
-  { id: "es", ar: "الإسبانية", en: "Spanish", flag: "🇪🇸" },
-  { id: "zh", ar: "الصينية", en: "Chinese", flag: "🇨🇳" },
-  { id: "ru", ar: "الروسية", en: "Russian", flag: "🇷🇺" }
+  { id: "ar", ar: "العربية", en: "Arabic" },
+  { id: "en", ar: "الإنجليزية", en: "English" },
+  { id: "fr", ar: "الفرنسية", en: "French" },
+  { id: "de", ar: "الألمانية", en: "German" },
+  { id: "es", ar: "الإسبانية", en: "Spanish" },
+  { id: "zh", ar: "الصينية", en: "Chinese" },
+  { id: "ru", ar: "الروسية", en: "Russian" }
 ];
 
 const TRAVEL_STYLES = [
-  { id: "solo", ar: "مسافر فردي", en: "Solo Traveler", descAr: "أستكشف الوجهات بمفردي وبمرونة تامة", descEn: "Exploring independently with full flexibility", icon: "🎒" },
-  { id: "family", ar: "عائلي مع أطفال", en: "Family with Kids", descAr: "أفضل وجهات مريحة وتناسب كل أفراد العائلة", descEn: "Comfortable, family-friendly spots and activities", icon: "👨‍👩‍👧‍👦" },
-  { id: "couples", ar: "أزواج", en: "Couples", descAr: "تجارب هادئة وفاخرة وأمسيات خاصة", descEn: "Scenic, romantic and tailored unique experiences", icon: "💑" },
-  { id: "friends", ar: "مجموعة أصدقاء", en: "Friends Group", descAr: "حماس وأنشطة جماعية وتحديات ممتعة", descEn: "High-energy, fun group adventures and memories", icon: "👥" }
+  { id: "solo", ar: "مسافر فردي", en: "Solo Traveler", descAr: "أستكشف الوجهات بمفردي وبمرونة تامة", descEn: "Exploring independently with full flexibility", icon: Luggage },
+  { id: "family", ar: "عائلي مع أطفال", en: "Family with Kids", descAr: "أفضل وجهات مريحة وتناسب كل أفراد العائلة", descEn: "Comfortable, family-friendly spots and activities", icon: Baby },
+  { id: "couples", ar: "أزواج", en: "Couples", descAr: "تجارب هادئة وفاخرة وأمسيات خاصة", descEn: "Scenic, romantic and tailored unique experiences", icon: Heart },
+  { id: "friends", ar: "مجموعة أصدقاء", en: "Friends Group", descAr: "حماس وأنشطة جماعية وتحديات ممتعة", descEn: "High-energy, fun group adventures and memories", icon: Users }
 ];
 
 function splitPhone(fullPhone: string) {
@@ -505,7 +526,7 @@ export function TouristProfileForm({
                     >
                       {COUNTRY_DIAL_CODES.map(c => (
                         <option key={c.code} value={c.code}>
-                          {c.flag} {c.code} ({isAr ? c.countryAr : c.countryEn})
+                          {c.code} ({isAr ? c.countryAr : c.countryEn})
                         </option>
                       ))}
                     </select>
@@ -552,7 +573,7 @@ export function TouristProfileForm({
                         onClick={() => setNationality(isAr ? item.ar : item.en)}
                         className={`tourist-chip-btn ${active ? "active" : ""}`}
                       >
-                        <span>{item.flag}</span>
+                        <Globe className="w-3.5 h-3.5 opacity-70" />
                         <span>{isAr ? item.ar : item.en}</span>
                       </button>
                     );
@@ -589,7 +610,7 @@ export function TouristProfileForm({
                         onClick={() => setCountry(isAr ? item.ar : item.en)}
                         className={`tourist-chip-btn ${active ? "active" : ""}`}
                       >
-                        <span>{item.flag}</span>
+                        <MapPin className="w-3.5 h-3.5 opacity-70" />
                         <span>{isAr ? item.ar : item.en}</span>
                       </button>
                     );
@@ -626,7 +647,7 @@ export function TouristProfileForm({
                         onClick={() => setCity(isAr ? c.ar : c.en)}
                         className={`tourist-chip-btn ${active ? "active" : ""}`}
                       >
-                        <span>🏙️</span>
+                        <Building2 className="w-3.5 h-3.5 opacity-70" />
                         <span>{isAr ? c.ar : c.en}</span>
                       </button>
                     );
@@ -652,6 +673,7 @@ export function TouristProfileForm({
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: "14px" }}>
               {TRAVEL_STYLES.map(style => {
                 const isSelected = travelStyle === style.id;
+                const StyleIcon = style.icon;
                 return (
                   <button
                     key={style.id}
@@ -659,7 +681,17 @@ export function TouristProfileForm({
                     onClick={() => setTravelStyle(style.id)}
                     className={`tourist-interactive-card ${isSelected ? "selected" : ""}`}
                   >
-                    <div style={{ fontSize: "1.8rem" }}>{style.icon}</div>
+                    <div style={{ 
+                      padding: "10px", 
+                      borderRadius: "12px", 
+                      background: isSelected ? "var(--color-primary)" : "var(--background-alt)", 
+                      color: isSelected ? "#fff" : "var(--color-primary)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center"
+                    }}>
+                      <StyleIcon size={24} />
+                    </div>
                     <div style={{ flex: 1 }}>
                       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "6px" }}>
                         <strong style={{ fontSize: "0.95rem", color: isSelected ? "var(--color-primary)" : "var(--color-text)" }}>
@@ -705,6 +737,7 @@ export function TouristProfileForm({
             <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
               {INTERESTS_OPTIONS.map(interest => {
                 const isSelected = selectedInterests.includes(interest.id);
+                const InterestIcon = interest.icon;
                 return (
                   <button
                     key={interest.id}
@@ -726,7 +759,7 @@ export function TouristProfileForm({
                       boxShadow: isSelected ? "var(--shadow-sm)" : "none"
                     }}
                   >
-                    <span>{interest.icon}</span>
+                    <InterestIcon size={16} />
                     <span>{isAr ? interest.ar : interest.en}</span>
                     {isSelected && <Check className="w-4 h-4" />}
                   </button>
@@ -770,7 +803,7 @@ export function TouristProfileForm({
                       transition: "all 0.15s ease"
                     }}
                   >
-                    <span>{lang.flag}</span>
+                    <Globe className="w-4 h-4 text-emerald-800 shrink-0 opacity-80" />
                     <span>{isAr ? lang.ar : lang.en}</span>
                     {isSelected && <Check className="w-4 h-4 text-emerald-700" />}
                   </button>
@@ -806,6 +839,7 @@ export function TouristProfileForm({
                 <div className="tourist-quick-chips">
                   {DIETARY_OPTIONS.map(opt => {
                     const isSelected = selectedDietary.includes(opt.id);
+                    const OptIcon = opt.icon;
                     return (
                       <button
                         key={opt.id}
@@ -814,7 +848,7 @@ export function TouristProfileForm({
                         className={`tourist-chip-btn ${isSelected ? "active" : ""}`}
                         style={{ padding: "8px 14px", fontSize: "0.85rem" }}
                       >
-                        <span>{opt.icon}</span>
+                        <OptIcon size={14} className={isSelected ? "text-white" : "text-emerald-700"} />
                         <span>{isAr ? opt.ar : opt.en}</span>
                         {isSelected && <Check className="w-3.5 h-3.5" />}
                       </button>
@@ -849,6 +883,7 @@ export function TouristProfileForm({
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "10px", marginTop: "4px" }}>
                   {MOBILITY_OPTIONS.map(opt => {
                     const isSelected = selectedMobility === opt.id;
+                    const OptIcon = opt.icon;
                     return (
                       <button
                         key={opt.id}
@@ -857,7 +892,17 @@ export function TouristProfileForm({
                         className={`tourist-interactive-card ${isSelected ? "selected" : ""}`}
                         style={{ padding: "12px 14px" }}
                       >
-                        <div style={{ fontSize: "1.5rem" }}>{opt.icon}</div>
+                        <div style={{ 
+                          padding: "8px", 
+                          borderRadius: "10px", 
+                          background: isSelected ? "var(--color-primary)" : "var(--background-alt)", 
+                          color: isSelected ? "#fff" : "var(--color-primary)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center"
+                        }}>
+                          <OptIcon size={20} />
+                        </div>
                         <div style={{ flex: 1 }}>
                           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "6px" }}>
                             <strong style={{ fontSize: "0.88rem", color: isSelected ? "var(--color-primary)" : "var(--color-text)" }}>
@@ -915,6 +960,7 @@ export function TouristProfileForm({
                   <div className="tourist-quick-chips">
                     {EMERGENCY_RELATIONS.map(rel => {
                       const isSelected = emergencyRelation === rel.id;
+                      const RelIcon = rel.icon;
                       return (
                         <button
                           key={rel.id}
@@ -922,7 +968,7 @@ export function TouristProfileForm({
                           onClick={() => setEmergencyRelation(rel.id)}
                           className={`tourist-chip-btn ${isSelected ? "active" : ""}`}
                         >
-                          <span>{rel.icon}</span>
+                          <RelIcon size={13} className={isSelected ? "text-white" : "text-[var(--muted)]"} />
                           <span>{isAr ? rel.ar : rel.en}</span>
                         </button>
                       );
@@ -964,7 +1010,7 @@ export function TouristProfileForm({
                         >
                           {COUNTRY_DIAL_CODES.map(c => (
                             <option key={c.code} value={c.code}>
-                              {c.flag} {c.code}
+                              {c.code} ({isAr ? c.countryAr : c.countryEn})
                             </option>
                           ))}
                         </select>

@@ -342,8 +342,9 @@ export default async function BookingDetail({ params }: { params: Promise<{ loca
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                   <strong style={{ fontSize: "0.95rem" }}>{booking.guide?.display_name || (isAr ? "المرشد السياحي" : "Tour Guide")}</strong>
-                  <span className="badge" style={{ background: "rgba(14, 53, 38, 0.08)", color: "var(--color-primary)", fontSize: "0.7rem", padding: "2px 6px" }}>
-                    {isAr ? "مرشد مرخص ✓" : "Certified ✓"}
+                  <span className="badge inline-flex items-center gap-1" style={{ background: "rgba(14, 53, 38, 0.08)", color: "var(--color-primary)", fontSize: "0.7rem", padding: "2px 6px" }}>
+                    <ShieldCheck size={12} />
+                    <span>{isAr ? "مرشد مرخص" : "Certified"}</span>
                   </span>
                 </div>
                 <span style={{ fontSize: "0.8rem", color: "var(--muted)", display: "block" }}>
@@ -399,7 +400,7 @@ export default async function BookingDetail({ params }: { params: Promise<{ loca
         {(isGuide || profile.role === "admin") && touristProfile && (
           <section className="card" style={{ border: "1px solid rgba(14, 53, 38, 0.15)", background: "linear-gradient(135deg, rgba(14, 53, 38, 0.02) 0%, rgba(197, 160, 89, 0.05) 100%)" }}>
             <h2 style={{ fontSize: "1.15rem", marginBottom: "1rem", color: "var(--color-primary)", display: "flex", alignItems: "center", gap: "8px" }}>
-              <span>🎒</span>
+              <Compass size={18} className="text-[var(--color-primary)]" />
               {isAr ? "تفضيلات ورعاية السائح" : "Tourist Preferences & Care"}
             </h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px" }}>

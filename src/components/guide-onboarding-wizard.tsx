@@ -376,19 +376,35 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
             </div>
             <div className="flex justify-between py-1 border-b border-[var(--border)]">
               <span className="text-[var(--muted)]">{isAr ? "رخصة الإرشاد السياحي:" : "Tourism License:"}</span>
-              <span className="text-emerald-700 font-semibold">{guide.official_license_url ? (isAr ? "مرفقة ومؤمنة ✓" : "Attached ✓") : "—"}</span>
+              <span className="text-emerald-700 font-semibold inline-flex items-center gap-1">
+                {guide.official_license_url ? (
+                  <><Check size={13} /> {isAr ? "مرفقة ومؤمنة" : "Attached"}</>
+                ) : "—"}
+              </span>
             </div>
             <div className="flex justify-between py-1 border-b border-[var(--border)]">
               <span className="text-[var(--muted)]">{isAr ? "الهوية الوطنية:" : "National ID:"}</span>
-              <span className="text-emerald-700 font-semibold">{guide.national_id_url ? (isAr ? "مرفقة ومؤمنة ✓" : "Attached ✓") : "—"}</span>
+              <span className="text-emerald-700 font-semibold inline-flex items-center gap-1">
+                {guide.national_id_url ? (
+                  <><Check size={13} /> {isAr ? "مرفقة ومؤمنة" : "Attached"}</>
+                ) : "—"}
+              </span>
             </div>
             <div className="flex justify-between py-1 border-b border-[var(--border)]">
               <span className="text-[var(--muted)]">{isAr ? "شهادة إتقان اللغة:" : "Language Certificate:"}</span>
-              <span className="text-emerald-700 font-semibold">{guide.language_certificates ? (isAr ? "مرفقة ومؤمنة ✓" : "Attached ✓") : (isAr ? "غير مدرجة (اختياري)" : "None (Optional)")}</span>
+              <span className="text-emerald-700 font-semibold inline-flex items-center gap-1">
+                {guide.language_certificates ? (
+                  <><Check size={13} /> {isAr ? "مرفقة ومؤمنة" : "Attached"}</>
+                ) : (isAr ? "غير مدرجة (اختياري)" : "None (Optional)")}
+              </span>
             </div>
             <div className="flex justify-between py-1">
               <span className="text-[var(--muted)]">{isAr ? "الصورة الشخصية (بورتريه):" : "Profile Photo:"}</span>
-              <span className="text-emerald-700 font-semibold">{(guide.personal_photo_url || guide.avatar_url) ? (isAr ? "مرفقة ومؤمنة ✓" : "Attached ✓") : (isAr ? "غير مرفقة" : "Not uploaded")}</span>
+              <span className="text-emerald-700 font-semibold inline-flex items-center gap-1">
+                {(guide.personal_photo_url || guide.avatar_url) ? (
+                  <><Check size={13} /> {isAr ? "مرفقة ومؤمنة" : "Attached"}</>
+                ) : (isAr ? "غير مرفقة" : "Not uploaded")}
+              </span>
             </div>
           </div>
         </div>
@@ -425,8 +441,9 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
           <Check size={40} />
         </div>
 
-        <h2 className="text-2xl font-bold text-[var(--color-text)] mb-2">
-          {isAr ? "تهانينا! حسابك معتمد رسمياً في نديم 🎉" : "Congratulations! Your Profile is Approved 🎉"}
+        <h2 className="text-2xl font-bold text-[var(--color-text)] mb-2 inline-flex items-center justify-center gap-2">
+          <span>{isAr ? "تهانينا! حسابك معتمد رسمياً في نديم" : "Congratulations! Your Profile is Approved"}</span>
+          <Sparkles size={22} className="text-amber-500 inline-block" />
         </h2>
         <p className="text-sm text-[var(--muted)] max-w-lg mx-auto leading-relaxed mb-6">
           {isAr 
@@ -455,7 +472,10 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
             </div>
             <div className="flex justify-between py-1 border-b border-[var(--border)]">
               <span className="text-[var(--muted)]">{isAr ? "رخصة الإرشاد السياحي:" : "Tour Guide License:"}</span>
-              <span className="text-emerald-700 font-semibold">{isAr ? "موثقة ومعتمدة رسمياً ✓" : "Verified & Active ✓"}</span>
+              <span className="text-emerald-700 font-semibold inline-flex items-center gap-1">
+                <Check size={13} />
+                {isAr ? "موثقة ومعتمدة رسمياً" : "Verified & Active"}
+              </span>
             </div>
             <div className="flex justify-between py-1">
               <span className="text-[var(--muted)]">{isAr ? "اللغات المعتمدة:" : "Approved Languages:"}</span>

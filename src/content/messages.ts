@@ -33,9 +33,9 @@ const ar = {
   // Services
   servicesTitle: "خدماتنا",
   services: [
-    { title: "جولات سياحية مخصصة", text: "استمتع بجولات ثقافية وتاريخية ومغامرات مصممة خصيصاً لتناسب اهتماماتك وجدولك الزمني.", icon: "🗺️" },
-    { title: "مرشدون محليون معتمدون", text: "نخبة من المرشدين المرخصين رسمياً من وزارة السياحة لضمان تجربة آمنة وأصيلة.", icon: "🏅" },
-    { title: "دعم على مدار الساعة", text: "فريق دعم فني متكامل لخدمتك ومتابعة رحلتك في أي وقت.", icon: "🎧" }
+    { title: "جولات سياحية مخصصة", text: "استمتع بجولات ثقافية وتاريخية ومغامرات مصممة خصيصاً لتناسب اهتماماتك وجدولك الزمني.", icon: "map" },
+    { title: "مرشدون محليون معتمدون", text: "نخبة من المرشدين المرخصين رسمياً من وزارة السياحة لضمان تجربة آمنة وأصيلة.", icon: "shield" },
+    { title: "دعم على مدار الساعة", text: "فريق دعم فني متكامل لخدمتك ومتابعة رحلتك في أي وقت.", icon: "headphones" }
   ],
 
   // Contact
@@ -107,9 +107,9 @@ const en: Messages = {
   
   servicesTitle: "Our Services",
   services: [
-    { title: "Customized Tours", text: "Enjoy cultural, historic, and adventure tours tailored specifically to your interests and schedule.", icon: "🗺️" },
-    { title: "Certified Local Guides", text: "We provide elite guides officially licensed by the Ministry of Tourism for a safe and authentic journey.", icon: "🏅" },
-    { title: "24/7 Dedicated Support", text: "Our specialized support team is here to assist you anytime throughout your trip.", icon: "🎧" }
+    { title: "Customized Tours", text: "Enjoy cultural, historic, and adventure tours tailored specifically to your interests and schedule.", icon: "map" },
+    { title: "Certified Local Guides", text: "We provide elite guides officially licensed by the Ministry of Tourism for a safe and authentic journey.", icon: "shield" },
+    { title: "24/7 Dedicated Support", text: "Our specialized support team is here to assist you anytime throughout your trip.", icon: "headphones" }
   ],
   
   contactTitle: "Contact Us",

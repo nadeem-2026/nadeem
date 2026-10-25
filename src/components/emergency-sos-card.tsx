@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { Locale } from "@/lib/i18n";
-import { Phone, ShieldAlert, ChevronDown, ChevronUp, LifeBuoy, HeartPulse } from "lucide-react";
+import { Phone, ShieldAlert, ChevronDown, ChevronUp, LifeBuoy, HeartPulse, ShieldCheck, Siren } from "lucide-react";
 
 interface EmergencySosCardProps {
   locale: Locale;
@@ -19,10 +19,10 @@ export function EmergencySosCard({
   const [isOpen, setIsOpen] = useState(false);
 
   const emergencyServices = [
-    { number: "997", name: isAr ? "الإسعاف (الهلال الأحمر)" : "Ambulance", icon: "🚑" },
-    { number: "999", name: isAr ? "الشرطة" : "Police", icon: "🚓" },
-    { number: "996", name: isAr ? "أمن الطرق" : "Highway Patrol", icon: "🛡️" },
-    { number: "930", name: isAr ? "رعاية السياح (وزارة السياحة)" : "Tourism Care (Ministry)", icon: "📞" },
+    { number: "997", name: isAr ? "الإسعاف (الهلال الأحمر)" : "Ambulance", icon: <HeartPulse size={22} className="text-rose-600 mb-1" /> },
+    { number: "999", name: isAr ? "الشرطة" : "Police", icon: <ShieldAlert size={22} className="text-blue-600 mb-1" /> },
+    { number: "996", name: isAr ? "أمن الطرق" : "Highway Patrol", icon: <ShieldCheck size={22} className="text-emerald-700 mb-1" /> },
+    { number: "930", name: isAr ? "رعاية السياح (وزارة السياحة)" : "Tourism Care (Ministry)", icon: <Phone size={22} className="text-amber-600 mb-1" /> },
   ];
 
   return (
@@ -57,7 +57,7 @@ export function EmergencySosCard({
                 href={`tel:${service.number}`}
                 className="p-2.5 rounded-xl bg-[var(--color-surface)] border border-[var(--border)] hover:border-red-400 flex flex-col items-center justify-center text-center transition group shadow-2xs no-underline"
               >
-                <span className="text-lg mb-1">{service.icon}</span>
+                <div className="flex items-center justify-center">{service.icon}</div>
                 <span className="text-[11px] font-semibold text-[var(--foreground)] line-clamp-1">{service.name}</span>
                 <strong className="text-sm font-mono text-red-600 dark:text-red-400 mt-0.5 group-hover:scale-105 transition-transform">{service.number}</strong>
               </a>

@@ -1,83 +1,86 @@
-# 🧭 منصة نديم | Nadeem
+# 🧭 Nadeem | نديم
 
-> **المنصة الرقمية المتكاملة لحجز وتنسيق جولات المرشدين السياحيين المرخصين في المملكة العربية السعودية.**
+> **The digital platform for discovering, booking, and managing licensed tour guides across Saudi Arabia.**
 
-نديم هي منصة سياحية تربط الزوار والسياح بنخبة من المرشدين السياحيين المحليين المعتمدين من وزارة السياحة، لتقديم تجارب وجولات أصيلة في مختلف مناطق ومدن المملكة، بواجهة عصرية ثنائية اللغة (عربي RTL / إنجليزي LTR).
-
----
-
-## ✨ أبرز المزايا والوظائف
-
-- **🏛️ استكشاف وحجز الجولات:** استعراض المرشدين المرخصين، والبحث بالمدينة واللغات ومجال الجولة، وتحديد المواعيد مع حساب تلقائي للأسعار بالريال السعودي.
-- **🛡️ الاعتماد والتوثيق الرسمي:** مسار فحص وتدقيق وثائق المرشدين (رخصة الإرشاد السياحي، الهوية، شهادات اللغات) عبر لوحة تحكم الإدارة قبل التفعيل.
-- **📍 إدارة الجولة الميدانية والتواصل:** 
-  - محادثة فورية مشفرة بين السائح والمرشد.
-  - رمز بدء الجولة (OTP Verification) لتأكيد انطلاق الرحلة بأمان.
-  - بطاقة طوارئ واستجابة سريعة (SOS) تشمل أرقام الهلال الأحمر والجهات الرسمية وموقع اللقاء.
-- **💳 نظام المدفوعات والأرباح:** محاكاة تدفق الدفع الإلكتروني، وتوزيع العوائد وحساب عمولة المنصة ومحفظة المرشد.
-- **🌓 تصميم رسمي متجاوب:** يدعم الوضعين الداكن والفاتح (Dark / Light Mode)، ومتوافق 100% مع جميع أحجام الشاشات، مع أيقونات فيكتور رسمية موحدة.
+Nadeem connects travelers with certified, licensed local tour guides across the Kingdom of Saudi Arabia. The platform delivers authentic cultural, heritage, and adventure experiences through a modern, responsive, bilingual interface (Arabic RTL & English LTR).
 
 ---
 
-## 🛠️ التقنيات المستخدمة (Tech Stack)
+## ✨ Key Features
 
-| المجال | التقنية |
+- **🏛️ Tour Discovery & Booking:** Browse verified guides, search by city, spoken languages, and tour specialties, with real-time rate calculations in Saudi Riyal (SAR).
+- **🛡️ Official Accreditation & Verification:** Administrative audit workflow reviewing official Ministry of Tourism licenses, national identity documents, and language certificates prior to public listing.
+- **📍 Field Operations & Real-Time Coordination:**
+  - Secure real-time chat between travelers and assigned guides.
+  - Tour Start OTP verification ensuring authenticated check-in.
+  - Official Emergency SOS card with Saudi emergency hotlines (Red Crescent, Police, Tourism Support) and direct meeting point navigation.
+- **💳 Payments & Guide Earnings:** End-to-end simulated electronic checkout, automatic booking confirmation, fee breakdown, and dedicated guide earnings ledger.
+- **🌓 Enterprise-Grade Responsive UI:** Native Dark & Light modes, 100% responsive across mobile, tablet, and desktop form factors, styled with curated typography and Lucide vector icons.
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technologies |
 | :--- | :--- |
-| **إطار العمل (Frontend)** | [Next.js 16](https://nextjs.org/) (App Router & Turbopack) + React 19 |
-| **التصميم والواجهات** | Tailwind CSS v4 + Vanilla CSS Tokens + Lucide Vector Icons |
-| **قاعدة البيانات والمصادقة** | [Supabase](https://supabase.com/) (PostgreSQL + RLS + Storage + Auth) |
-| **الاختبارات وضمان الجودة** | Node Native Test Runner + PGlite (اختبارات أمنية معزولة) + Playwright |
+| **Frontend Framework** | [Next.js 16](https://nextjs.org/) (App Router & Turbopack) + React 19 |
+| **Styling & Icons** | Tailwind CSS v4 + Vanilla CSS Design Tokens + Lucide Icons |
+| **Backend & Database** | [Supabase](https://supabase.com/) (PostgreSQL + Row-Level Security + Storage + Auth) |
+| **Testing & Quality Assurance** | Node Native Test Runner + PGlite (isolated local database suite) + Playwright |
 
 ---
 
-## 🚀 البدء السريع والتشغيل المحلي
+## 🚀 Quick Start & Local Setup
 
-### 1. المتطلبات:
-- Node.js 22 أو أحدث.
-- مدير الحزم npm.
+### 1. Prerequisites
+- **Node.js** 22.0.0 or later (Node 24 recommended, managed via `.nvmrc`)
+- **npm** package manager
 
-### 2. التثبيت والتشغيل:
+### 2. Installation & Running
 ```bash
-# استنساخ المستودع وتثبيت التبعيات
+# Clone the repository
 git clone https://github.com/nadeem-2026/nadeem.git
 cd nadeem
+
+# Install dependencies
 npm ci
 
-# إعداد متغيرات البيئة
+# Configure environment variables
 cp .env.example .env.local
 
-# تشغيل خادم التطوير
+# Launch the development server
 npm run dev
 ```
 
-افتح المتصفح على: `http://localhost:3000` (التحويل التلقائي للغة العربية: `/ar` أو الإنجليزية `/en`).
+Open [http://localhost:3000](http://localhost:3000) in your browser (automatically routes to `/ar` or `/en`).
 
-### 3. الأوامر المتاحة:
+### 3. Available Scripts
 ```bash
-npm run dev        # تشغيل خادم التطوير
-npm run build      # بناء نسخة الإنتاج
-npm run start      # تشغيل خادم الإنتاج
-npm test           # تشغيل الاختبارات المؤتمتة (43 اختباراً)
-npm run lint       # فحص جودة الكود
-npm run typecheck  # فحص تطابق أنواع TypeScript
+npm run dev        # Starts local development server
+npm run build      # Creates production bundle with Turbopack
+npm run start      # Serves production build
+npm test           # Executes automated test suite (43 unit & database tests)
+npm run lint       # Runs ESLint code quality checks
+npm run typecheck  # Validates TypeScript types
+npm run check      # Full CI pipeline: lint + typecheck + test + build
 ```
 
 ---
 
-## 📁 هيكلية المشروع
+## 📁 Repository Structure
 
 ```text
 src/
-├── app/              # مسارات الصفحات ومزودات الحالة (App Router)
-├── components/       # مكونات الواجهة وتفاعلات النماذج واللوحات
-├── content/          # نصوص الترجمة المعتمدة (AR / EN)
-└── lib/              # دوال الربط والأمان والمدفوعات والمصادقة
-supabase/             # ترحيلات قاعدة البيانات والسياسات الأمنية (RLS)
-tests/                # حزمة اختبارات الأمان والتحقق والواجهات
-nadeem-brand-kit/     # حزمة الهوية البصرية الرسمية والأصول
+├── app/              # Next.js App Router pages, layouts, and API routes
+├── components/       # Reusable UI components, modals, and interactive forms
+├── content/          # Bilingual content dictionaries (Arabic / English)
+└── lib/              # Core business logic, auth utilities, and Supabase client
+supabase/             # SQL database migrations, security policies (RLS), and configurations
+tests/                # Unit, integration, database constraint, and E2E specs
+nadeem-brand-kit/     # Official brand assets, logos, tokens, and verification checksums
 ```
 
 ---
 
-## 📜 الترخيص والاعتماد
-تم بناء المنصة وفق معايير الهوية الوطنية السياحية ولوائح تمكين المرشدين السياحيين في المملكة العربية السعودية.
+## 📜 Compliance & Standards
+Designed and developed in alignment with Saudi tourism accreditation standards, Ministry of Tourism regulations, and national digital identity guidelines.

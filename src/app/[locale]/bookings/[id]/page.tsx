@@ -13,11 +13,11 @@ import { LiveTourTimer } from "@/components/live-tour-timer";
 import { EmergencySosCard } from "@/components/emergency-sos-card";
 import { TourQuickActions } from "@/components/tour-quick-actions";
 import Link from "next/link";
-import Image from "next/image";
 import { 
   Calendar, Clock, MapPin, Users, DollarSign, ShieldCheck, 
   ArrowRight, ArrowLeft, KeyRound, Sparkles, Info, Compass, CheckCircle2 
 } from "lucide-react";
+import { UserAvatar } from "@/components/user-avatar";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -38,7 +38,7 @@ export default async function BookingDetail({ params }: { params: Promise<{ loca
   // Fetch booking with tourist and guide basic relations
   const { data: booking, error } = await client
     .from("bookings")
-    .select("*, tourist:tourist_id(display_name), guide:guide_id(display_name)")
+    .select("*, tourist:tourist_id(display_name, avatar_url), guide:guide_id(display_name, avatar_url)")
     .eq("id", id)
     .single();
 
@@ -325,20 +325,12 @@ export default async function BookingDetail({ params }: { params: Promise<{ loca
           {/* Guide Snapshot details */}
           <div style={{ marginTop: "1.25rem", paddingTop: "1.25rem", borderTop: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-              {guideProfile?.personal_photo_url ? (
-                <div style={{ width: "48px", height: "48px", borderRadius: "50%", overflow: "hidden", position: "relative", border: "2px solid var(--color-primary)" }}>
-                  <Image 
-                    src={guideProfile.personal_photo_url} 
-                    alt={booking.guide?.display_name || "Guide"} 
-                    fill 
-                    style={{ objectFit: "cover" }} 
-                  />
-                </div>
-              ) : (
-                <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "var(--color-primary)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "1.2rem" }}>
-                  {(booking.guide?.display_name || "G")[0]}
-                </div>
-              )}
+              <UserAvatar 
+                src={guideProfile?.personal_photo_url || booking.guide?.avatar_url} 
+                name={booking.guide?.display_name || "Guide"} 
+                size={48} 
+                role="guide" 
+              />
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                   <strong style={{ fontSize: "0.95rem" }}>{booking.guide?.display_name || (isAr ? "المرشد السياحي" : "Tour Guide")}</strong>
@@ -403,6 +395,22 @@ export default async function BookingDetail({ params }: { params: Promise<{ loca
               <Compass size={18} className="text-[var(--color-primary)]" />
               {isAr ? "تفضيلات ورعاية السائح" : "Tourist Preferences & Care"}
             </h2>
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px", paddingBottom: "12px", borderBottom: "1px solid var(--border)" }}>
+              <UserAvatar
+                src={booking.tourist?.avatar_url}
+                name={booking.tourist?.display_name || "Tourist"}
+                size={44}
+                role="tourist"
+              />
+              <div>
+                <strong style={{ fontSize: "1rem", color: "var(--color-text)", display: "block" }}>
+                  {booking.tourist?.display_name || (isAr ? "السائح" : "Tourist")}
+                </strong>
+                <span style={{ fontSize: "0.8rem", color: "var(--muted)" }}>
+                  {isAr ? "صاحب الحجز والرحلة" : "Traveler & Booking Holder"}
+                </span>
+              </div>
+            </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px" }}>
               {touristProfile.phone_number && (
                 <div>

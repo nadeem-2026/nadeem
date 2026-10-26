@@ -314,6 +314,7 @@ export async function saveTourist(locale: Locale, _previous: FormState, form: Fo
       const admin = getSupabaseAdmin();
       await admin.from("profiles").update({
         display_name,
+        ...(avatar_url ? { avatar_url } : {}),
       }).eq("id", profile.id);
 
       const metadataProfile = {

@@ -1,10 +1,15 @@
 "use client";
 
-import { useActionState, useState, useMemo } from "react";
+import { useActionState, useState, useMemo, useRef } from "react";
 import type { Locale } from "@/lib/i18n";
 import { saveTourist, type TouristProfile } from "@/lib/auth/actions";
+import { processAvatarFile } from "@/lib/image-process";
+import { UserAvatar } from "./user-avatar";
 import { 
   User, 
+  Camera,
+  UploadCloud,
+  Trash2,
   Heart, 
   Languages, 
   ShieldAlert, 
@@ -260,6 +265,61 @@ export function TouristProfileForm({
   // Bio
   const [bio, setBio] = useState(profile?.bio || "");
 
+  // Avatar Photo Management State
+  const [currentAvatarUrl, setCurrentAvatarUrl] = useState<string | null>(avatarUrl || null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
+  const [avatarSuccess, setAvatarSuccess] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleAvatarFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 10 * 1024 * 1024) {
+      setAvatarError(isAr ? "حجم الصورة يتجاوز الحد الأقصى (10 ميجابايت)" : "File exceeds maximum size of 10MB");
+      return;
+    }
+
+    setUploadingAvatar(true);
+    setAvatarError(null);
+    setAvatarSuccess(null);
+
+    try {
+      const processed = await processAvatarFile(file, { targetSize: 800, quality: 0.9 });
+      const fileToUpload = processed.file || file;
+
+      const formData = new FormData();
+      formData.append("file", fileToUpload);
+
+      const res = await fetch("/api/upload/avatar", {
+        method: "POST",
+        body: formData,
+      });
+
+      const json = await res.json().catch(() => null);
+
+      if (res.ok && json?.success && json?.url) {
+        setCurrentAvatarUrl(json.url);
+        setAvatarSuccess(isAr ? "تم تجهيز وتحديث صورتك الشخصية بنجاح" : "Profile photo uploaded and processed successfully");
+      } else {
+        throw new Error(json?.error || (isAr ? "تعذر رفع الصورة الشخصية" : "Failed to upload photo"));
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : (isAr ? "حدث خطأ أثناء رفع الصورة" : "Error uploading avatar");
+      setAvatarError(msg);
+    } finally {
+      setUploadingAvatar(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const handleRemoveAvatar = () => {
+    setCurrentAvatarUrl(null);
+    setAvatarSuccess(isAr ? "تمت إزالة الصورة الشخصية (سيتم استخدام الحروف الأولى)" : "Photo removed");
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
   // Computed full phone strings for form submission
   const fullPhoneNumber = phoneNumberOnly.trim() ? `${phoneDialCode} ${phoneNumberOnly.trim()}` : "";
   const fullEmergencyPhone = emergencyPhoneOnly.trim() ? `${emergencyDialCode} ${emergencyPhoneOnly.trim()}` : "";
@@ -432,7 +492,7 @@ export function TouristProfileForm({
 
       {/* Main Profile Form */}
       <form action={formAction}>
-        <input type="hidden" name="avatar_url" value={avatarUrl || ""} />
+        <input type="hidden" name="avatar_url" value={currentAvatarUrl || ""} />
         <input type="hidden" name="phone_number" value={fullPhoneNumber} />
         <input type="hidden" name="emergency_contact_phone" value={fullEmergencyPhone} />
         <input type="hidden" name="dietary_requirements" value={computedDietaryRequirements} />
@@ -458,6 +518,103 @@ export function TouristProfileForm({
             <p style={{ margin: "-12px 0 20px", fontSize: "0.86rem", color: "var(--muted)" }}>
               {isAr ? "تستخدم هذه البيانات للتنسيق مع المرشد السياحي والتحقق من هوية الحجز." : "Used for tour guide coordination and booking identity verification."}
             </p>
+
+            {/* Avatar Photo Section */}
+            <div className="tourist-avatar-section" style={{ padding: "20px", background: "var(--background-alt)", borderRadius: "16px", border: "1px solid var(--border)", marginBottom: "24px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "20px", flexWrap: "wrap" }}>
+                <div style={{ position: "relative", flexShrink: 0 }}>
+                  <UserAvatar
+                    src={currentAvatarUrl}
+                    name={name || displayName}
+                    size={96}
+                    role="tourist"
+                    className="shadow-sm"
+                  />
+                  {uploadingAvatar && (
+                    <div style={{ position: "absolute", inset: 0, borderRadius: "50%", background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" }}>
+                      <Loader2 size={24} className="animate-spin" />
+                    </div>
+                  )}
+                </div>
+
+                <div style={{ flex: 1, minWidth: "240px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+                    <Camera className="w-4 h-4 text-emerald-800" />
+                    <strong style={{ fontSize: "1rem", color: "var(--color-text)" }}>
+                      {isAr ? "الصورة الشخصية للبروفايل" : "Profile Portrait"}
+                    </strong>
+                    {currentAvatarUrl && (
+                      <span className="badge-status badge-status-confirmed" style={{ fontSize: "0.75rem", padding: "2px 8px" }}>
+                        <CheckCircle2 size={12} />
+                        {isAr ? "نشطة ومعتمدة" : "Active"}
+                      </span>
+                    )}
+                  </div>
+                  <p style={{ margin: "0 0 12px 0", fontSize: "0.82rem", color: "var(--muted)", lineHeight: 1.5 }}>
+                    {isAr 
+                      ? "تساعد صورتك الشخصية المرشد على التعرف عليك واستقبالك بسلاسة عند نقطة التجمع. نقوم بمعالجة الصورة وقصها مربعاً تلقائياً بأعلى دقة." 
+                      : "Helps your guide identify and welcome you smoothly at the meeting point. Photos are auto-cropped to square with optimal clarity."}
+                  </p>
+
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      onChange={handleAvatarFile}
+                      className="hidden"
+                      id="tourist-avatar-input"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploadingAvatar}
+                      className="button button-primary text-xs"
+                      style={{ display: "inline-flex", alignItems: "center", gap: "6px", padding: "8px 14px" }}
+                    >
+                      {uploadingAvatar ? (
+                        <>
+                          <Loader2 size={14} className="animate-spin" />
+                          <span>{isAr ? "جارٍ الضبط والرفع..." : "Processing & Uploading..."}</span>
+                        </>
+                      ) : (
+                        <>
+                          <UploadCloud size={14} />
+                          <span>{currentAvatarUrl ? (isAr ? "تغيير الصورة" : "Change Photo") : (isAr ? "رفع صورة شخصية" : "Upload Photo")}</span>
+                        </>
+                      )}
+                    </button>
+
+                    {currentAvatarUrl && (
+                      <button
+                        type="button"
+                        onClick={handleRemoveAvatar}
+                        disabled={uploadingAvatar}
+                        className="button button-outline text-xs text-red-600 hover:bg-red-50"
+                        style={{ display: "inline-flex", alignItems: "center", gap: "6px", padding: "8px 14px", borderColor: "rgba(220, 38, 38, 0.3)" }}
+                      >
+                        <Trash2 size={14} />
+                        <span>{isAr ? "حذف الصورة" : "Remove"}</span>
+                      </button>
+                    )}
+                  </div>
+
+                  {avatarSuccess && (
+                    <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "10px", fontSize: "0.8rem", color: "#065f46" }}>
+                      <CheckCircle2 size={14} className="text-emerald-600 flex-shrink-0" />
+                      <span>{avatarSuccess}</span>
+                    </div>
+                  )}
+
+                  {avatarError && (
+                    <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "10px", fontSize: "0.8rem", color: "#b91c1c" }}>
+                      <AlertCircle size={14} className="text-red-600 flex-shrink-0" />
+                      <span>{avatarError}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
 
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "20px" }}>
               

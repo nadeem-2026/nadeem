@@ -12,6 +12,7 @@ import type { TouristProfile } from "@/lib/auth/actions";
 import { BookingsList } from "@/components/bookings-list";
 import { EarningsSummary } from "@/components/earnings-summary";
 import { AccountTabs } from "@/components/account-tabs";
+import { UserAvatar } from "@/components/user-avatar";
 import { 
   User, 
   CalendarDays, 
@@ -61,7 +62,7 @@ export default async function Account({ params }: { params: Promise<{ locale: st
   if (profile.role === "guide") {
     const { data } = await client
       .from("bookings")
-      .select("*, tourist:tourist_id(display_name)")
+      .select("*, tourist:tourist_id(display_name, avatar_url)")
       .eq("guide_id", profile.id)
       .order("start_time", { ascending: false });
     if (data) bookings = data;
@@ -76,7 +77,7 @@ export default async function Account({ params }: { params: Promise<{ locale: st
     const [bookingsRes, tpRes] = await Promise.all([
       client
         .from("bookings")
-        .select("*, guide:guide_id(display_name)")
+        .select("*, guide:guide_id(display_name, avatar_url)")
         .eq("tourist_id", profile.id)
         .order("start_time", { ascending: false }),
       client
@@ -131,6 +132,14 @@ export default async function Account({ params }: { params: Promise<{ locale: st
           {isAr ? "بيانات الحساب الشخصي" : "Personal Account Details"}
         </h2>
         
+        <div style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px", background: "var(--background-alt)", borderRadius: "14px", border: "1px solid var(--border)", marginBottom: "20px" }}>
+          <UserAvatar src={profile.avatar_url} name={profile.display_name} size={64} role={profile.role} />
+          <div>
+            <strong style={{ fontSize: "1.1rem", display: "block", color: "var(--color-text)" }}>{profile.display_name || "—"}</strong>
+            <span style={{ fontSize: "0.82rem", color: "var(--muted)" }}>{user.email || ""}</span>
+          </div>
+        </div>
+
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "16px", marginBottom: "24px" }}>
           <div style={{ padding: "16px", background: "var(--background-alt)", borderRadius: "12px", minWidth: 0 }}>
             <span style={{ fontSize: "0.8rem", color: "var(--muted)", display: "block", marginBottom: "4px" }}>
@@ -340,6 +349,7 @@ export default async function Account({ params }: { params: Promise<{ locale: st
         guideStatus={guide?.status}
         userName={profile.display_name}
         userEmail={user.email}
+        avatarUrl={profile.avatar_url || undefined}
         guideCity={guide?.city}
         pendingActionCount={pendingCount}
         confirmedCount={confirmedCount}

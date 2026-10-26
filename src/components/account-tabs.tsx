@@ -12,6 +12,7 @@ import {
   MapPin,
   Clock
 } from "lucide-react";
+import { UserAvatar } from "./user-avatar";
 
 interface AccountTabsProps {
   locale: Locale;
@@ -19,6 +20,7 @@ interface AccountTabsProps {
   guideStatus?: "draft" | "pending_review" | "approved" | "rejected" | "suspended" | null;
   userName?: string;
   userEmail?: string;
+  avatarUrl?: string | null;
   guideCity?: string;
   pendingActionCount?: number;
   confirmedCount?: number;
@@ -37,6 +39,7 @@ export function AccountTabs({
   guideStatus,
   userName,
   userEmail,
+  avatarUrl,
   guideCity,
   pendingActionCount = 0,
   confirmedCount = 0,
@@ -148,9 +151,12 @@ export function AccountTabs({
       {/* Luxury User Header Banner */}
       <section className="account-hero-banner" aria-label={ar ? "معلومات الحساب" : "Account Info"}>
         <div className="account-hero-user">
-          <div className="account-avatar" aria-hidden="true">
-            {initial}
-          </div>
+          <UserAvatar
+            src={avatarUrl}
+            name={userName || (ar ? "حساب نديم" : "Nadeem Account")}
+            size={68}
+            role={role}
+          />
           <div className="account-hero-details">
             <h1>
               {userName || (ar ? "حساب نديم" : "Nadeem Account")}

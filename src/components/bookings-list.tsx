@@ -7,6 +7,7 @@ import { updateBookingStatus } from "@/lib/bookings/actions";
 import { createPaymentCharge } from "@/lib/payments/actions";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { UserAvatar } from "./user-avatar";
 import {
   Calendar,
   Clock,
@@ -221,8 +222,9 @@ export function BookingsList({
       ) : (
         <div className="tour-tickets-grid">
           {filteredBookings.map((booking) => {
-            const otherPartyName = role === "guide" ? booking.tourist?.display_name : booking.guide?.display_name;
-            const otherInitial = (otherPartyName || (role === "guide" ? "T" : "G")).charAt(0).toUpperCase();
+            const otherParty = role === "guide" ? booking.tourist : booking.guide;
+            const otherPartyName = otherParty?.display_name;
+            const otherAvatar = otherParty?.avatar_url;
             const dateObj = new Date(booking.start_time);
             const dateStr = dateObj.toLocaleDateString(locale, {
               weekday: "long",
@@ -255,9 +257,12 @@ export function BookingsList({
 
                 <div className="ticket-body">
                   <div className="ticket-counterparty">
-                    <div className="ticket-counterparty-avatar">
-                      {otherInitial}
-                    </div>
+                    <UserAvatar
+                      src={otherAvatar}
+                      name={otherPartyName || (role === "guide" ? "Tourist" : "Guide")}
+                      size={40}
+                      role={role === "guide" ? "tourist" : "guide"}
+                    />
                     <div>
                       <span style={{ fontSize: "0.8rem", color: "var(--muted)", display: "block" }}>
                         {role === "guide" ? (m.touristLabel || (isAr ? "السائح:" : "Tourist:")) : (m.guideLabel || (isAr ? "المرشد السياحي:" : "Tour Guide:"))}

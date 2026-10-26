@@ -12,6 +12,7 @@ import {
   ShieldCheck, AlertCircle, ArrowLeft, ArrowRight, Loader2, Sparkles,
   Languages, MessageSquare, Compass, Check
 } from "lucide-react";
+import { UserAvatar } from "./user-avatar";
 
 export function BookingForm({ 
   guide,
@@ -149,13 +150,7 @@ export function BookingForm({
         <div style={{ background: "var(--background-alt)", border: "1px solid var(--border)", borderRadius: "16px", padding: "1.5rem", textAlign: isAr ? "right" : "left", marginBottom: "2rem" }}>
           {guide && (
             <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px", paddingBottom: "12px", borderBottom: "1px solid var(--border)" }}>
-              <div style={{ width: "36px", height: "36px", borderRadius: "50%", overflow: "hidden", background: "var(--color-primary)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "0.85rem" }}>
-                {guide.avatar_url ? (
-                  <Image src={guide.avatar_url} alt={guide.display_name} width={36} height={36} unoptimized style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                ) : (
-                  guide.display_name[0]
-                )}
-              </div>
+              <UserAvatar src={guide.avatar_url} name={guide.display_name} size={36} role="guide" />
               <div>
                 <strong style={{ fontSize: "0.95rem", display: "block" }}>{guide.display_name}</strong>
                 <span style={{ fontSize: "0.8rem", color: "var(--muted)" }}>{guide.city}</span>
@@ -216,13 +211,7 @@ export function BookingForm({
         <div style={{ padding: "1.25rem", marginBottom: "2rem", borderRadius: "16px", background: "var(--background-alt)", border: "1px solid var(--border)" }}>
           <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "1rem" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-              <div style={{ width: "56px", height: "56px", borderRadius: "16px", background: "var(--color-primary)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "1.2rem", overflow: "hidden", flexShrink: 0, position: "relative" }}>
-                {guide.avatar_url ? (
-                  <Image src={guide.avatar_url} alt={guide.display_name} width={56} height={56} unoptimized style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                ) : (
-                  guide.display_name[0]
-                )}
-              </div>
+              <UserAvatar src={guide.avatar_url} name={guide.display_name} size={56} rounded="2xl" role="guide" />
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
                   <h3 style={{ margin: 0, fontSize: "1.1rem", fontWeight: 700 }}>{guide.display_name}</h3>

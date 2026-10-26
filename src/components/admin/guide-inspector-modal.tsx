@@ -19,6 +19,7 @@ import {
   User
 } from "lucide-react";
 import Image from "next/image";
+import { UserAvatar } from "@/components/user-avatar";
 
 type ReviewedGuide = GuideProfile & { profiles: { display_name: string; avatar_url?: string | null } | null };
 
@@ -130,20 +131,7 @@ export function GuideInspectorModal({
         {/* Header */}
         <div className="inspector-modal-header">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-[var(--color-primary)] text-white font-bold flex items-center justify-center text-lg overflow-hidden border-2 border-[var(--nadeem-sand)] relative">
-              {avatarUrl ? (
-                <Image 
-                  src={avatarUrl} 
-                  alt={guide.profiles?.display_name || ""} 
-                  width={48}
-                  height={48}
-                  unoptimized
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                (guide.profiles?.display_name || "G")[0]
-              )}
-            </div>
+            <UserAvatar src={avatarUrl} name={guide.profiles?.display_name || "G"} size={48} role="guide" />
 
             <div>
               <div className="flex items-center gap-2">

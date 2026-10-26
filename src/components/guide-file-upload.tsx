@@ -11,6 +11,8 @@ import {
   Loader2,
   CheckCircle2
 } from "lucide-react";
+import { processAvatarFile } from "@/lib/image-process";
+import { UserAvatar } from "./user-avatar";
 
 interface GuideFileUploadProps {
   name: string;
@@ -49,9 +51,21 @@ export function GuideFileUpload({
     setError(null);
 
     try {
+      let fileToUpload = file;
+      if (name === "personal_photo_url" || (file.type.startsWith("image/") && !file.type.includes("pdf"))) {
+        try {
+          const processed = await processAvatarFile(file, { targetSize: 800, quality: 0.9 });
+          if (processed.file) {
+            fileToUpload = processed.file;
+          }
+        } catch {
+          // fallback to original file
+        }
+      }
+
       // 1. Primary: Secure server-side upload endpoint (automatically passes SSR cookies from Google Auth)
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", fileToUpload);
 
       const res = await fetch("/api/upload/guide-document", {
         method: "POST",
@@ -151,9 +165,13 @@ export function GuideFileUpload({
         /* File Uploaded State */
         <div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200 flex items-center justify-between gap-4 transition shadow-xs">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 shadow-xs">
-              {isImage ? <ImageIcon size={20} /> : <FileCheck2 size={20} />}
-            </div>
+            {isImage ? (
+              <UserAvatar src={fileUrl} name={fileName || label} size={40} rounded="xl" />
+            ) : (
+              <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 shadow-xs">
+                <FileCheck2 size={20} />
+              </div>
+            )}
             <div className="min-w-0">
               <div className="flex items-center gap-2">
                 <span className="font-bold text-sm text-emerald-950 truncate block">

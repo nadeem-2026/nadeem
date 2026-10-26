@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { UserAvatar } from "@/components/user-avatar";
 
 
 type ReviewedGuide = GuideProfile & { profiles: { display_name: string; avatar_url?: string | null } | null };
@@ -149,20 +150,7 @@ export function GuidesTable({ guides, locale }: GuidesTableProps) {
                   <tr key={guide.user_id} className="cursor-pointer" onClick={() => setSelectedGuide(guide)}>
                     <td>
                       <div className="flex items-center gap-3">
-                        <div className="w-11 h-11 rounded-full bg-[var(--color-primary)] text-white font-bold flex items-center justify-center overflow-hidden flex-shrink-0 border border-[var(--nadeem-sand)] relative">
-                          {avatar ? (
-                            <Image 
-                              src={avatar} 
-                              alt="" 
-                              width={44}
-                              height={44}
-                              unoptimized
-                              className="w-full h-full object-cover" 
-                            />
-                          ) : (
-                            (guide.profiles?.display_name || "G")[0]
-                          )}
-                        </div>
+                        <UserAvatar src={avatar} name={guide.profiles?.display_name || "G"} size={44} role="guide" />
 
                         <div>
                           <div className="font-bold text-[var(--color-text)]">

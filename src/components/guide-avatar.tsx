@@ -1,12 +1,6 @@
-import Image from "next/image";
+"use client";
 
-function getInitials(name: string) {
-  const parts = name.trim().split(" ");
-  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
-  if (parts.length === 1 && parts[0].length >= 2) return parts[0].slice(0, 2).toUpperCase();
-  if (parts.length === 1 && parts[0].length === 1) return parts[0].toUpperCase();
-  return "N";
-}
+import { UserAvatar } from "./user-avatar";
 
 export function GuideAvatar({ 
   src, 
@@ -19,13 +13,13 @@ export function GuideAvatar({
   className?: string;
   size?: number;
 }) {
-  if (src) {
-    return <Image src={src} alt={name} width={size} height={size} className={className} />;
-  }
-  
   return (
-    <div className={`guide-avatar-fallback ${className}`} aria-label={name}>
-      {getInitials(name)}
-    </div>
+    <UserAvatar
+      src={src}
+      name={name}
+      size={size}
+      className={className}
+      role="guide"
+    />
   );
 }

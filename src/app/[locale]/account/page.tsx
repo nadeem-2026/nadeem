@@ -274,7 +274,7 @@ export default async function Account({ params }: { params: Promise<{ locale: st
   );
 
   const guideContent = guide ? (
-    <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "32px", width: "100%", maxWidth: "100%", minWidth: 0 }}>
       <GuideForm locale={locale} name={profile.display_name} guide={guide} />
       <div className="dashboard-card">
         <h2>

@@ -904,7 +904,7 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-[var(--background-alt)] border border-[var(--border)] space-y-4">
+            <div className="p-4 sm:p-6 rounded-2xl bg-[var(--background-alt)] border border-[var(--border)] space-y-4 w-full max-w-full min-w-0 overflow-hidden">
               <GuideFileUpload 
                 name="personal_photo_url" 
                 label={isAr ? "الصورة الشخصية (مطلوبة للظهور في الدليل)" : "Profile Portrait"}
@@ -926,7 +926,7 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
           </div>
 
         {/* Step 3: Official Verification Documents */}
-        <div className={`space-y-6 animate-fadeIn ${step === 3 ? "block" : "hidden"}`}>
+        <div className={`space-y-6 animate-fadeIn ${step === 3 ? "block" : "hidden"} w-full max-w-full min-w-0`}>
             <div>
               <h3 className="text-xl font-bold text-[var(--color-text)] m-0">
                 {isAr ? "3. الوثائق والتراخيص الرسمية" : "3. Official Licensing & Identification"}
@@ -939,15 +939,15 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
             </div>
 
             {/* Privacy Guarantee Banner */}
-            <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs flex items-center gap-3">
-              <ShieldCheck size={20} className="text-emerald-700 flex-shrink-0" />
+            <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs flex items-start sm:items-center gap-3">
+              <ShieldCheck size={20} className="text-emerald-700 flex-shrink-0 mt-0.5 sm:mt-0" />
               <div>
                 <span className="font-bold block">{isAr ? "خصوصيتك وأمان وثائقك أولوية قصوى:" : "Your privacy is encrypted and secured:"}</span>
                 <span>{isAr ? "جميع الملفات المرفوعة مشفرة في مخزن سحابي خاص ولا تظهر في حسابك العام أو لأي سائح." : "All uploaded documents are encrypted in private storage and never shown publicly."}</span>
               </div>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-6 w-full max-w-full min-w-0">
               <GuideFileUpload 
                 name="official_license_url" 
                 label={isAr ? "رخصة الإرشاد السياحي (الصادرة عن وزارة السياحة)" : "Official Tour Guide License (Ministry of Tourism)"}
@@ -969,7 +969,7 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
           </div>
 
         {/* Step 4: Languages & Credentials */}
-        <div className={`space-y-6 animate-fadeIn ${step === 4 ? "block" : "hidden"}`}>
+        <div className={`space-y-6 animate-fadeIn ${step === 4 ? "block" : "hidden"} w-full max-w-full min-w-0`}>
             <div>
               <h3 className="text-xl font-bold text-[var(--color-text)] m-0">
                 {isAr ? "4. اللغات والشهادات المعتمدة" : "4. Languages & Certifications"}
@@ -1009,7 +1009,7 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
             </div>
 
             {/* Language Certificates Upload */}
-            <div className="pt-2">
+            <div className="pt-2 w-full max-w-full min-w-0">
               <GuideFileUpload 
                 name="language_certificates" 
                 label={isAr ? "شهادات إتقان اللغات (اختياري / يُوصى به)" : "Language Proficiency Certificates (Optional)"}
@@ -1142,7 +1142,7 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
           </div>
 
         {/* Form Action Controls & Stepper Navigation */}
-        <div className="pt-6 border-t border-[var(--border)] flex items-center justify-between gap-4">
+        <div className="pt-6 border-t border-[var(--border)] flex flex-wrap items-center justify-between gap-3 w-full max-w-full">
           {step > 1 ? (
             <button
               type="button"
@@ -1157,7 +1157,7 @@ export function GuideOnboardingWizard({ locale, name, guide }: GuideOnboardingWi
             <div />
           )}
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
             {/* Save Draft Option */}
             <button
               type="submit"

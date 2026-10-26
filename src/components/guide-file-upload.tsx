@@ -139,13 +139,13 @@ export function GuideFileUpload({
   };
 
   return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <label className="text-sm font-bold text-[var(--color-text)] flex items-center gap-1.5">
-          <span>{label}</span>
-          {required && <span className="text-red-500 font-bold">*</span>}
+    <div className="space-y-2 w-full max-w-full min-w-0">
+      <div className="flex flex-wrap items-center justify-between gap-1.5 w-full min-w-0">
+        <label className="text-sm font-bold text-[var(--color-text)] flex items-center gap-1.5 min-w-0">
+          <span className="truncate">{label}</span>
+          {required && <span className="text-red-500 font-bold flex-shrink-0">*</span>}
         </label>
-        {hint && <span className="text-xs text-[var(--muted)]">{hint}</span>}
+        {hint && <span className="text-xs text-[var(--muted)] flex-shrink-0">{hint}</span>}
       </div>
 
       <input 
@@ -162,44 +162,46 @@ export function GuideFileUpload({
       <input type="hidden" name={name} value={fileUrl || ""} />
 
       {fileUrl ? (
-        /* File Uploaded State */
-        <div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200 flex items-center justify-between gap-4 transition shadow-xs">
-          <div className="flex items-center gap-3 min-w-0">
+        /* File Uploaded State - Fully Responsive Mobile Card */
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 transition shadow-xs w-full max-w-full min-w-0 overflow-hidden box-border">
+          <div className="flex items-start sm:items-center gap-3 min-w-0 flex-1 w-full">
             {isImage ? (
-              <UserAvatar src={fileUrl} name={fileName || label} size={40} rounded="xl" />
+              <div className="flex-shrink-0">
+                <UserAvatar src={fileUrl} name={fileName || label} size={42} rounded="xl" />
+              </div>
             ) : (
               <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 shadow-xs">
                 <FileCheck2 size={20} />
               </div>
             )}
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="font-bold text-sm text-emerald-950 truncate block">
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 min-w-0">
+                <span className="font-bold text-sm text-emerald-950 truncate max-w-full block" title={fileName || label}>
                   {fileName || label}
                 </span>
-                <span className="text-[11px] bg-emerald-200 text-emerald-900 font-bold px-2 py-0.5 rounded-full whitespace-nowrap inline-flex items-center gap-1">
+                <span className="text-[11px] bg-emerald-200 text-emerald-900 font-bold px-2 py-0.5 rounded-full whitespace-nowrap inline-flex items-center gap-1 flex-shrink-0">
                   <CheckCircle2 size={12} />
                   <span>تم الرفع بنجاح</span>
                 </span>
               </div>
-              <p className="text-xs text-emerald-700 m-0 mt-0.5">
+              <p className="text-xs text-emerald-700 m-0 mt-0.5 truncate">
                 الملف محفوظ ومؤمن للاعتماد
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex items-center justify-end sm:justify-start gap-2 flex-shrink-0 w-full sm:w-auto pt-2.5 sm:pt-0 border-t sm:border-t-0 border-emerald-200/60">
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="py-1.5 px-3 rounded-lg text-xs font-semibold bg-white border border-emerald-300 text-emerald-800 hover:bg-emerald-100 transition"
+              className="flex-1 sm:flex-initial py-1.5 px-3 rounded-lg text-xs font-semibold bg-white border border-emerald-300 text-emerald-800 hover:bg-emerald-100 transition text-center"
             >
               استبدال
             </button>
             <button
               type="button"
               onClick={handleRemove}
-              className="p-1.5 rounded-lg text-red-600 hover:bg-red-50 transition"
+              className="p-1.5 rounded-lg text-red-600 hover:bg-red-50 transition border border-transparent hover:border-red-200"
               title="حذف الملف"
             >
               <Trash2 size={16} />
@@ -213,20 +215,20 @@ export function GuideFileUpload({
           onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
           onDragLeave={() => setIsDragging(false)}
           onDrop={handleDrop}
-          className={`file-dropzone-box ${isDragging ? 'border-[var(--color-primary)] bg-[var(--color-primary)]/5 scale-[1.01]' : ''}`}
+          className={`file-dropzone-box w-full max-w-full min-w-0 ${isDragging ? 'border-[var(--color-primary)] bg-[var(--color-primary)]/5 scale-[1.01]' : ''}`}
         >
           {uploading ? (
-            <div className="flex flex-col items-center justify-center py-4 gap-2">
+            <div className="flex flex-col items-center justify-center py-4 gap-2 text-center w-full">
               <Loader2 size={32} className="animate-spin text-[var(--color-primary)]" />
               <span className="text-sm font-semibold text-[var(--color-primary)]">جارٍ رفع وتشفير الملف...</span>
               <span className="text-xs text-[var(--muted)]">يرجى الانتظار بضع ثوانٍ</span>
             </div>
           ) : (
             <>
-              <div className="w-12 h-12 rounded-2xl bg-[var(--color-surface)] border border-[var(--border)] text-[var(--color-primary)] flex items-center justify-center shadow-xs">
+              <div className="w-12 h-12 rounded-2xl bg-[var(--color-surface)] border border-[var(--border)] text-[var(--color-primary)] flex items-center justify-center shadow-xs flex-shrink-0">
                 <UploadCloud size={24} />
               </div>
-              <div>
+              <div className="min-w-0 max-w-full text-center">
                 <p className="font-bold text-sm text-[var(--color-text)] m-0">
                   انقر لاختيار الملف أو اسحبه وأفلته هنا
                 </p>
@@ -240,9 +242,9 @@ export function GuideFileUpload({
       )}
 
       {error && (
-        <div className="flex items-center gap-2 text-xs text-red-600 bg-red-50 p-2.5 rounded-lg border border-red-200">
+        <div className="flex items-center gap-2 text-xs text-red-600 bg-red-50 p-2.5 rounded-lg border border-red-200 w-full max-w-full min-w-0">
           <AlertCircle size={14} className="flex-shrink-0" />
-          <span>{error}</span>
+          <span className="break-words">{error}</span>
         </div>
       )}
     </div>

@@ -2426,6 +2426,9 @@ html[data-theme="dark"] .admin-status-pill {
   padding: 40px;
   max-width: 860px;
   margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .wizard-stepper-header {
@@ -2529,6 +2532,9 @@ html[data-theme="dark"] .admin-status-pill {
   justify-content: center;
   gap: 12px;
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .file-dropzone-box:hover {
@@ -2671,7 +2677,13 @@ html[data-theme="dark"] .admin-status-pill {
 
 @media (max-width: 640px) {
   .wizard-card {
-    padding: 24px 16px;
+    padding: 20px 14px;
+    border-radius: 20px;
+  }
+  .file-dropzone-box {
+    padding: 20px 14px;
+    border-radius: 14px;
+    gap: 8px;
   }
   .wizard-node-label {
     display: none;

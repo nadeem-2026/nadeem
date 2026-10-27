@@ -31,7 +31,7 @@ export function SiteHeader({ locale, theme = "light" }: { locale: Locale; theme?
           <NotificationsBell locale={locale} />
           <ThemeSwitch locale={locale} initialTheme={theme} />
           <LanguageSwitch locale={locale} />
-          <MobileNav locale={locale} messages={m.nav} accountText={authMessages(locale).account} />
+          <MobileNav locale={locale} messages={m.nav} accountText={authMessages(locale).account} siteName={m.name} />
         </div>
       </div>
     </header>

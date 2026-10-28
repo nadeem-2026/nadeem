@@ -5,56 +5,159 @@ import { useEffect, useState, useRef } from "react";
 import { createBrowserClient } from "@/lib/auth/client";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
+import { 
+  Bell, 
+  BellOff, 
+  CheckCheck, 
+  Check, 
+  X, 
+  Calendar, 
+  CreditCard, 
+  User, 
+  Sparkles, 
+  Clock, 
+  ExternalLink 
+} from "lucide-react";
 
-type Notification = { id: string; is_read: boolean; title: string; body: string; link: string | null; created_at: string };
+type Notification = { 
+  id: string; 
+  is_read: boolean; 
+  title: string; 
+  body: string; 
+  link: string | null; 
+  created_at: string; 
+};
+
+function formatRelativeTime(dateStr: string, locale: Locale): string {
+  try {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffSec = Math.floor(diffMs / 1000);
+    const diffMin = Math.floor(diffSec / 60);
+    const diffHours = Math.floor(diffMin / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    const isAr = locale === "ar";
+
+    if (diffMin < 1) {
+      return isAr ? "الآن" : "Just now";
+    }
+    if (diffMin < 60) {
+      return isAr ? `منذ ${diffMin} د` : `${diffMin}m ago`;
+    }
+    if (diffHours < 24) {
+      return isAr ? `منذ ${diffHours} س` : `${diffHours}h ago`;
+    }
+    if (diffDays === 1) {
+      return isAr ? "أمس" : "Yesterday";
+    }
+    if (diffDays < 7) {
+      return isAr ? `منذ ${diffDays} أيام` : `${diffDays}d ago`;
+    }
+    return date.toLocaleDateString(locale, { month: "short", day: "numeric" });
+  } catch {
+    return dateStr;
+  }
+}
+
+function getNotificationCategory(title: string, body: string): "booking" | "payment" | "account" | "general" {
+  const text = `${title} ${body}`.toLowerCase();
+  if (text.includes("حجز") || text.includes("booking") || text.includes("tour") || text.includes("جولة")) {
+    return "booking";
+  }
+  if (text.includes("دفع") || text.includes("payment") || text.includes("فاتورة") || text.includes("paid") || text.includes("سداد")) {
+    return "payment";
+  }
+  if (text.includes("مرشد") || text.includes("guide") || text.includes("حساب") || text.includes("account") || text.includes("بروفايل") || text.includes("profile")) {
+    return "account";
+  }
+  return "general";
+}
 
 export function NotificationsBell({ locale }: { locale: Locale }) {
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  
+  const isAr = locale === "ar";
+
   useEffect(() => {
     const supabase = createBrowserClient();
     let channel: RealtimeChannel | undefined;
     let disposed = false;
-    async function fetchNotifications(supabase: SupabaseClient, userId: string) {
-      const { data } = await supabase.from("notifications").select("*").eq("user_id", userId).order("created_at", { ascending: false }).limit(10);
+
+    async function fetchNotifications(supabaseClient: SupabaseClient, userId: string) {
+      const { data } = await supabaseClient
+        .from("notifications")
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(15);
       if (data && !disposed) {
         setNotifications(data);
         setUnreadCount(data.filter((n: Notification) => !n.is_read).length);
       }
     }
-    
-    // Check session
+
+    // Check user session
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (user && !disposed) {
+        setIsLoggedIn(true);
         fetchNotifications(supabase, user.id);
-        
-        // Listen to changes
+
+        // Listen for new incoming realtime notifications
         channel = supabase.channel(`public:notifications:user_id=eq.${user.id}`)
           .on("postgres_changes", { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` }, (payload) => {
             const notification = payload.new as Notification;
             setNotifications(prev => prev.some(n => n.id === notification.id) ? prev : [notification, ...prev]);
             setUnreadCount(prev => prev + 1);
           })
+          .on("postgres_changes", { event: "UPDATE", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` }, (payload) => {
+            const updated = payload.new as Notification;
+            setNotifications(prev => prev.map(n => n.id === updated.id ? updated : n));
+            setNotifications(all => {
+              setUnreadCount(all.filter(n => !n.is_read).length);
+              return all;
+            });
+          })
           .subscribe();
+      } else {
+        setIsLoggedIn(false);
       }
     });
 
-    // close dropdown on click outside
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
     return () => {
       disposed = true;
-      document.removeEventListener("mousedown", handleClickOutside);
       if (channel) channel.unsubscribe();
     };
   }, []);
+
+  // Prevent background scroll on mobile devices when bottom sheet is open
+  useEffect(() => {
+    if (open) {
+      if (typeof window !== "undefined" && window.innerWidth <= 640) {
+        document.body.style.overflow = "hidden";
+      }
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  // Close on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && open) {
+        setOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
 
   const markAsRead = async (id: string) => {
     const supabase = createBrowserClient();
@@ -73,71 +176,207 @@ export function NotificationsBell({ locale }: { locale: Locale }) {
     }
   };
 
-  // We always render the bell if we are logged in, but we can't reliably know sync in layout if user is logged in
-  // So we render it if they have fetched notifications or unread counts, or just always render a grey bell until loaded.
-  // Actually, rendering it if we have unreadCount > 0 or if we've fetched notifications makes sense.
-  // We'll show a bell icon.
-
   return (
-    <div className="notifications-bell-wrap relative" ref={dropdownRef}>
-      <button onClick={() => setOpen(!open)} className="relative p-2" aria-label={locale === "ar" ? "الإشعارات" : "Notifications"} style={{ color: 'var(--foreground)' }}>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" style={{ width: '24px', height: '24px' }}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
-        </svg>
+    <div className="notifications-bell-wrap" ref={dropdownRef}>
+      <button 
+        type="button"
+        onClick={() => setOpen(!open)} 
+        className={`notifications-bell-btn ${open ? "is-active" : ""}`}
+        aria-label={isAr ? "الإشعارات" : "Notifications"}
+        aria-expanded={open}
+      >
+        <Bell size={19} className="notifications-bell-icon" aria-hidden="true" />
         {unreadCount > 0 && (
-          <span className="absolute" style={{ top: 0, right: 0, background: '#ef4444', color: 'white', fontSize: '10px', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
-            {unreadCount}
+          <span className="notifications-badge" aria-label={`${unreadCount} ${isAr ? "إشعارات جديدة" : "new notifications"}`}>
+            <span className="notifications-badge-pulse" aria-hidden="true" />
+            <span className="notifications-badge-count">{unreadCount > 9 ? "9+" : unreadCount}</span>
           </span>
         )}
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-80 bg-white border shadow-lg rounded-lg overflow-hidden z-50" style={{ right: locale === 'ar' ? 'auto' : 0, left: locale === 'ar' ? 0 : 'auto', color: 'var(--color-text)', background: 'var(--color-surface)' }}>
-          <div className="p-3 border-b flex justify-between items-center notification-muted">
-            <h3 className="font-semibold text-sm">{locale === "ar" ? "الإشعارات" : "Notifications"}</h3>
-            {unreadCount > 0 && (
-              <button onClick={markAllAsRead} className="text-xs notification-link hover:underline">
-                {locale === "ar" ? "تحديد الكل كمقروء" : "Mark all as read"}
-              </button>
-            )}
-          </div>
-          <div className="max-h-96 overflow-y-auto">
-            {notifications.length === 0 ? (
-              <div className="p-4 text-center notification-text text-sm">
-                {locale === "ar" ? "لا توجد إشعارات" : "No notifications"}
-              </div>
-            ) : (
-              notifications.map((n) => (
-                <div key={n.id} className={`p-4 border-b border-[var(--border)] hover:bg-[var(--background-alt)] transition-colors ${!n.is_read ? 'notification-muted' : ''}`}>
-                  <div className="flex justify-between gap-2 mb-1">
-                    <h4 className={`text-sm ${!n.is_read ? 'font-bold' : 'font-medium'}`}>{n.title}</h4>
-                    {!n.is_read && <span className="w-2 h-2 rounded-full bg-blue-600 mt-1 flex-shrink-0"></span>}
-                  </div>
-                  <p className="text-xs notification-text mb-2">{n.body}</p>
-                  <div className="flex justify-between items-center mt-2">
-                    <span className="text-[10px] notification-text">{new Date(n.created_at).toLocaleDateString(locale)}</span>
-                    <div className="flex gap-2">
-                      {n.link && (
-                        <Link 
-                          href={n.link}
-                          onClick={() => markAsRead(n.id)}
-                          className="text-xs notification-link hover:underline"
-                        >
-                          {locale === "ar" ? "عرض التفاصيل" : "View Details"}
-                        </Link>
-                      )}
-                      {!n.is_read && (
-                        <button onClick={() => markAsRead(n.id)} className="text-xs notification-text hover:text-[var(--color-primary)]">
-                          {locale === "ar" ? "مقروء" : "Mark read"}
-                        </button>
-                      )}
-                    </div>
-                  </div>
+        <>
+          {/* Backdrop overlay (dismisses popup on desktop & mobile) */}
+          <div 
+            className="notifications-overlay" 
+            onClick={() => setOpen(false)} 
+            aria-hidden="true" 
+          />
+
+          {/* Notifications Panel (Bottom sheet on mobile, sleek popover on desktop) */}
+          <div 
+            className="notifications-panel" 
+            role="dialog" 
+            aria-modal="true" 
+            aria-label={isAr ? "مركز الإشعارات" : "Notification Center"}
+          >
+            {/* Mobile Sheet Handle Bar */}
+            <div className="notifications-sheet-handle" aria-hidden="true" />
+
+            {/* Header */}
+            <div className="notifications-panel-header">
+              <div className="notifications-header-lead">
+                <div className="notifications-header-icon">
+                  <Bell size={18} aria-hidden="true" />
                 </div>
-              ))
+                <h3 className="notifications-header-title">
+                  {isAr ? "الإشعارات" : "Notifications"}
+                </h3>
+                {unreadCount > 0 && (
+                  <span className="notifications-header-pill">
+                    {unreadCount} {isAr ? "جديد" : "new"}
+                  </span>
+                )}
+              </div>
+
+              <div className="notifications-header-actions">
+                {unreadCount > 0 && (
+                  <button 
+                    type="button"
+                    onClick={markAllAsRead} 
+                    className="notifications-mark-all-btn"
+                    title={isAr ? "تحديد الكل كمقروء" : "Mark all as read"}
+                  >
+                    <CheckCheck size={15} aria-hidden="true" />
+                    <span>{isAr ? "تحديد كمقروء" : "Mark all read"}</span>
+                  </button>
+                )}
+                <button 
+                  type="button"
+                  onClick={() => setOpen(false)} 
+                  className="notifications-close-btn"
+                  aria-label={isAr ? "إغلاق" : "Close"}
+                >
+                  <X size={18} aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+
+            {/* Content Body */}
+            <div className="notifications-panel-body">
+              {!isLoggedIn ? (
+                /* Guest State */
+                <div className="notifications-empty-state">
+                  <div className="notifications-empty-icon">
+                    <Sparkles size={32} className="text-[var(--color-primary)]" aria-hidden="true" />
+                  </div>
+                  <h4>{isAr ? "سجّل دخولك لمتابعة الإشعارات" : "Sign in for notifications"}</h4>
+                  <p>
+                    {isAr 
+                      ? "تابع طلبات الحجز المباشرة مع المرشدين وتلقَّ التنبيهات الفورية لحسابك." 
+                      : "Stay updated on your booking requests and real-time alerts."}
+                  </p>
+                  <Link 
+                    href={`/${locale}/login`} 
+                    onClick={() => setOpen(false)} 
+                    className="notifications-cta-btn"
+                  >
+                    <User size={15} aria-hidden="true" />
+                    <span>{isAr ? "تسجيل الدخول" : "Sign In"}</span>
+                  </Link>
+                </div>
+              ) : notifications.length === 0 ? (
+                /* Logged In - Empty State */
+                <div className="notifications-empty-state">
+                  <div className="notifications-empty-icon">
+                    <BellOff size={32} aria-hidden="true" />
+                  </div>
+                  <h4>{isAr ? "لا توجد إشعارات حالياً" : "All caught up!"}</h4>
+                  <p>
+                    {isAr 
+                      ? "سنخبرك فور وصول أي تنبيه بشأن حجوزاتك أو رسائلك." 
+                      : "We'll notify you as soon as there are updates on your bookings or messages."}
+                  </p>
+                </div>
+              ) : (
+                /* Notifications List */
+                <div className="notifications-list">
+                  {notifications.map((n) => {
+                    const category = getNotificationCategory(n.title, n.body);
+                    return (
+                      <div 
+                        key={n.id} 
+                        className={`notification-item-card ${!n.is_read ? "is-unread" : ""}`}
+                      >
+                        <div className={`notification-cat-icon ${category}`}>
+                          {category === "booking" && <Calendar size={18} aria-hidden="true" />}
+                          {category === "payment" && <CreditCard size={18} aria-hidden="true" />}
+                          {category === "account" && <User size={18} aria-hidden="true" />}
+                          {category === "general" && <Bell size={18} aria-hidden="true" />}
+                        </div>
+
+                        <div className="notification-content">
+                          <div className="notification-title-row">
+                            <h4 className="notification-item-title">{n.title}</h4>
+                            {!n.is_read && (
+                              <span 
+                                className="notification-unread-dot" 
+                                title={isAr ? "غير مقروء" : "Unread"} 
+                              />
+                            )}
+                          </div>
+
+                          <p className="notification-item-body">{n.body}</p>
+
+                          <div className="notification-footer-row">
+                            <span className="notification-timestamp">
+                              <Clock size={12} aria-hidden="true" />
+                              <span>{formatRelativeTime(n.created_at, locale)}</span>
+                            </span>
+
+                            <div className="notification-actions">
+                              {n.link && (
+                                <Link 
+                                  href={n.link}
+                                  onClick={() => {
+                                    markAsRead(n.id);
+                                    setOpen(false);
+                                  }}
+                                  className="notifications-item-btn-details"
+                                >
+                                  <span>{isAr ? "عرض التفاصيل" : "View"}</span>
+                                  <ExternalLink size={12} aria-hidden="true" />
+                                </Link>
+                              )}
+                              {!n.is_read && (
+                                <button 
+                                  type="button"
+                                  onClick={() => markAsRead(n.id)} 
+                                  className="notifications-item-btn-read"
+                                  title={isAr ? "تحديد كمقروء" : "Mark as read"}
+                                >
+                                  <Check size={12} aria-hidden="true" />
+                                  <span>{isAr ? "تمت القراءة" : "Read"}</span>
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Panel Footer */}
+            {notifications.length > 0 && (
+              <div className="notifications-panel-footer">
+                <span>
+                  {notifications.length} {isAr ? "إشعار" : "notifications"}
+                </span>
+                {isLoggedIn && (
+                  <Link 
+                    href={`/${locale}/account`} 
+                    onClick={() => setOpen(false)}
+                  >
+                    <span>{isAr ? "إدارة الحساب" : "My Account"}</span>
+                  </Link>
+                )}
+              </div>
             )}
           </div>
-        </div>
+        </>
       )}
     </div>
   );

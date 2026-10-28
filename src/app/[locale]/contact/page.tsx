@@ -108,16 +108,16 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
           <div className="lg:col-span-5 space-y-6">
             
             {/* WhatsApp Card */}
-            <div className="p-6 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/20 border border-emerald-200/80 dark:border-emerald-800/40">
+            <div className="contact-whatsapp-card">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm">
-                  <MessageCircle size={24} />
+                <div className="contact-whatsapp-icon-box">
+                  <MessageCircle size={26} />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-base font-bold text-emerald-900 dark:text-emerald-100">
+                  <h3 className="contact-whatsapp-title">
                     {isAr ? "محادثة فورية عبر واتساب" : "Instant WhatsApp Support"}
                   </h3>
-                  <p className="text-xs sm:text-sm text-emerald-700/90 dark:text-emerald-300/80 mt-1 mb-4 leading-relaxed">
+                  <p className="contact-whatsapp-desc">
                     {isAr 
                       ? "هل تحتاج لمساعدة فورية أو حجز عاجل؟ تحدث مباشرة مع خدمة عملاء نديم على واتساب."
                       : "Need quick help or urgent booking assistance? Chat directly with Nadeem support on WhatsApp."}
@@ -126,7 +126,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
                     href="https://wa.me/966501234567"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-semibold transition shadow-sm"
+                    className="contact-whatsapp-btn"
                   >
                     <span>{isAr ? "تحدث معنا الآن" : "Start Chat Now"}</span>
                     <ArrowIcon size={16} />

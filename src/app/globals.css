@@ -857,13 +857,7 @@ html[data-theme="dark"] .site-header .brand-logo { filter: brightness(0) invert(
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   z-index: 1000;
-  display: flex;
-  justify-content: flex-start;
   animation: mobileOverlayFadeIn 0.25s ease-out forwards;
-}
-
-[dir="rtl"] .mobile-menu-overlay {
-  justify-content: flex-end;
 }
 
 @keyframes mobileOverlayFadeIn {
@@ -872,6 +866,11 @@ html[data-theme="dark"] .site-header .brand-logo { filter: brightness(0) invert(
 }
 
 .mobile-menu-drawer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: auto;
   width: 320px;
   max-width: 86vw;
   background: var(--color-surface);
@@ -880,20 +879,26 @@ html[data-theme="dark"] .site-header .brand-logo { filter: brightness(0) invert(
   flex-direction: column;
   box-shadow: 10px 0 35px -5px rgba(0, 0, 0, 0.2);
   animation: slideInDrawer 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  position: relative;
   border-top-right-radius: 24px;
   border-bottom-right-radius: 24px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-right: 1px solid var(--border);
+  border-left: none;
   overflow: hidden;
-  border-inline-end: 1px solid var(--border);
 }
 
 [dir="rtl"] .mobile-menu-drawer {
+  left: auto;
+  right: 0;
   box-shadow: -10px 0 35px -5px rgba(0, 0, 0, 0.2);
   animation: slideInDrawerRTL 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   border-top-left-radius: 24px;
   border-bottom-left-radius: 24px;
+  border-right: none;
+  border-left: 1px solid var(--border);
 }
 
 @keyframes slideInDrawer {

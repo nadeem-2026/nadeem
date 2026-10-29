@@ -1,9 +1,8 @@
 "use client";
 
 import type { BookingMessages } from "@/lib/bookings/types";
-
 import type { RealtimeChannel } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { createBrowserClient as createClient } from "@/lib/auth/client";
 
 const MapPinIcon = ({ className }: { className?: string }) => (
@@ -16,20 +15,29 @@ export function LiveLocationTracker({ bookingId, m }: { bookingId: string, m: Bo
   const [isBroadcasting, setIsBroadcasting] = useState(false);
   const [error, setError] = useState("");
   const [channel, setChannel] = useState<RealtimeChannel | null>(null);
+  const watchIdRef = useRef<number | null>(null);
+
+  const stopBroadcast = () => {
+    if (watchIdRef.current !== null) {
+      navigator.geolocation.clearWatch(watchIdRef.current);
+      watchIdRef.current = null;
+    }
+    if (channel) {
+      channel.unsubscribe();
+      setChannel(null);
+    }
+    setIsBroadcasting(false);
+  };
 
   useEffect(() => {
     return () => {
-      if (channel) {
-        channel.unsubscribe();
-      }
+      stopBroadcast();
     };
   }, [channel]);
 
   const toggleBroadcast = async () => {
     if (isBroadcasting) {
-      if (channel) await channel.unsubscribe();
-      setChannel(null);
-      setIsBroadcasting(false);
+      stopBroadcast();
       return;
     }
 
@@ -38,6 +46,7 @@ export function LiveLocationTracker({ bookingId, m }: { bookingId: string, m: Bo
       return;
     }
 
+    setError("");
     const supabase = createClient();
     const newChannel = supabase.channel(`location:${bookingId}`);
 
@@ -45,8 +54,7 @@ export function LiveLocationTracker({ bookingId, m }: { bookingId: string, m: Bo
       if (status === 'SUBSCRIBED') {
         setIsBroadcasting(true);
         
-        // Start watching position
-        const watchId = navigator.geolocation.watchPosition(
+        watchIdRef.current = navigator.geolocation.watchPosition(
           (position) => {
             newChannel.send({
               type: "broadcast",
@@ -56,18 +64,14 @@ export function LiveLocationTracker({ bookingId, m }: { bookingId: string, m: Bo
                 lng: position.coords.longitude,
                 timestamp: position.timestamp
               }
-            });
+            }).catch(err => console.error("Broadcast error:", err));
           },
           (err) => {
             setError(err.message);
-            setIsBroadcasting(false);
-            newChannel.unsubscribe();
+            stopBroadcast();
           },
           { enableHighAccuracy: true }
         );
-
-        // cleanup function for this specific subscribe
-        return () => navigator.geolocation.clearWatch(watchId);
       }
     });
 
@@ -75,19 +79,19 @@ export function LiveLocationTracker({ bookingId, m }: { bookingId: string, m: Bo
   };
 
   return (
-    <div className="bg-white border rounded-xl p-4 mt-4 flex items-center justify-between shadow-sm">
+    <div className="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl p-4 mt-4 flex items-center justify-between shadow-sm">
       <div className="flex items-center gap-3">
-        <div className={`p-2 rounded-full ${isBroadcasting ? 'bg-green-100 text-green-600 animate-pulse' : 'bg-gray-100 text-gray-500'}`}>
+        <div className={`p-2 rounded-full ${isBroadcasting ? 'bg-green-100 text-green-600 animate-pulse' : 'bg-gray-100 dark:bg-gray-700 text-gray-500'}`}>
           <MapPinIcon className="w-6 h-6" />
         </div>
         <div>
-          <h4 className="font-semibold text-sm">
+          <h4 className="font-semibold text-sm dark:text-white">
             {isBroadcasting ? (m.broadcasting_location || "Broadcasting Location...") : (m.share_live_location || "Share Live Location")}
           </h4>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
             {isBroadcasting ? (m.tourist_can_see_location || "The tourist can see your live location") : (m.share_location_desc || "Help the tourist find you easily")}
           </p>
-          {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
+          {error && <p className="text-xs text-red-500 mt-1 font-medium">{error}</p>}
         </div>
       </div>
       <button 
@@ -95,7 +99,7 @@ export function LiveLocationTracker({ bookingId, m }: { bookingId: string, m: Bo
         className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
           isBroadcasting 
             ? 'bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/60' 
-            : 'bg-[var(--color-primary)] text-[var(--color-on-primary)] hover:bg-[var(--btn-primary-hover-bg)]'
+            : 'bg-[var(--color-primary)] text-white hover:opacity-90'
         }`}
       >
         {isBroadcasting ? (m.stop || "Stop") : (m.start || "Start")}

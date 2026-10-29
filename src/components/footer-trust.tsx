@@ -17,7 +17,7 @@ export function FooterTrust({ locale }: { locale: Locale }) {
       {/* Payment Gateway Icons */}
       <div>
         <div className="text-[11px] font-semibold text-[var(--muted)] mb-2.5">
-          {isAr ? "وسائل الدفع المعتمدة" : "Accepted Payment Methods"}
+          {isAr ? "سيتم اضافة وسائل الدفع قريباً" : "Payment methods will be added soon."}
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           {/* Mada Logo */}

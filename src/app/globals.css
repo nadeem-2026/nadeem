@@ -357,6 +357,14 @@ h3 { font-size: 1.08rem; line-height: 1.6; margin-bottom: 10px; }
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 24px;
 }
+@media (max-width: 640px) {
+  .guides-grid {
+    grid-template-columns: 1fr;
+    max-width: 420px;
+    margin-inline: auto;
+    gap: 18px;
+  }
+}
 .guide-card {
   background: var(--color-surface);
   border: 1px solid var(--border);
@@ -372,13 +380,30 @@ h3 { font-size: 1.08rem; line-height: 1.6; margin-bottom: 10px; }
 }
 .guide-avatar-container {
   position: relative;
-  aspect-ratio: 1;
+  width: 100%;
+  height: 200px;
   overflow: hidden;
+  background: var(--background-alt, #f8f6f0);
+}
+@media (max-width: 640px) {
+  .guide-avatar-container {
+    height: 185px;
+  }
 }
 .guide-avatar {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+.guide-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 25%;
+  transition: transform 0.4s ease;
+}
+.guide-card:hover .guide-avatar img {
+  transform: scale(1.05);
 }
 .badge-verified {
   position: absolute;
@@ -514,26 +539,56 @@ h3 { font-size: 1.08rem; line-height: 1.6; margin-bottom: 10px; }
   font-size: 0.95rem;
   margin-bottom: 24px;
 }
-.booking-widget .button {
-  width: 100%;
+.mobile-booking-bar {
+  display: none;
 }
 
 @media (max-width: 900px) {
   .guide-details-grid {
     grid-template-columns: 1fr;
-    gap: 40px;
+    gap: 32px;
   }
   .guide-sidebar {
+    position: static;
+    top: auto;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    z-index: 1;
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    margin-top: 24px;
+    width: 100%;
+  }
+  .guide-sidebar .dashboard-card {
+    position: static !important;
+    top: auto !important;
+  }
+  .mobile-booking-bar {
+    display: flex;
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    top: auto;
-    z-index: 100;
-    padding: 16px;
-    background: var(--color-surface);
+    z-index: 99;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 20px calc(12px + env(safe-area-inset-bottom, 0px));
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-top: 1px solid var(--border);
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.09);
+  }
+  [data-theme="dark"] .mobile-booking-bar {
+    background: rgba(18, 24, 21, 0.95);
+    border-top-color: rgba(255, 255, 255, 0.1);
+  }
+  .guide-page-container {
+    padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
   }
   .booking-widget {
     padding: 0;

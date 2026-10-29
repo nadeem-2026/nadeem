@@ -81,7 +81,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             {topGuides.map((guide, i) => (
               <a href={`/${locale}/guides/${guide.id}`} className="guide-card hover-lift fade-in" style={{ animationDelay: `${i * 100}ms` }} key={guide.id}>
                 <div className="guide-avatar-container">
-                  <GuideAvatar src={guide.avatar_url} name={guide.display_name} size={200} className="guide-avatar" />
+                  <GuideAvatar src={guide.avatar_url} name={guide.display_name} size={200} rounded="none" className="guide-avatar" />
                   <span className="badge-verified">{m.verified}</span>
                 </div>
                 <div className="guide-info">

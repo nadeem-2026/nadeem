@@ -216,7 +216,7 @@ export default async function GuidesSearchPage({ params, searchParams }: { param
                 >
                   {/* Card Avatar / Banner */}
                   <div className="guide-avatar-container" style={{ position: "relative" }}>
-                    <GuideAvatar src={guide.avatar_url} name={guide.display_name} size={400} className="guide-avatar" />
+                    <GuideAvatar src={guide.avatar_url} name={guide.display_name} size={400} rounded="none" className="guide-avatar" />
                     <div 
                       style={{ 
                         position: "absolute", 

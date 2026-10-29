@@ -59,7 +59,7 @@ export default async function GuideDetailsPage({ params }: { params: Promise<{ l
   }
 
   return (
-    <main className="container section" id="main-content" tabIndex={-1}>
+    <main className="container section guide-page-container" id="main-content" tabIndex={-1}>
       {/* Breadcrumb Back Button */}
       <div style={{ marginBottom: "2rem" }}>
         <Link 
@@ -379,6 +379,37 @@ export default async function GuideDetailsPage({ params }: { params: Promise<{ l
             </div>
           </div>
         </aside>
+      </div>
+
+      {/* Floating Mobile Booking Bar (visible only on mobile/tablet <= 900px) */}
+      <div className="mobile-booking-bar">
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <span style={{ fontSize: "0.75rem", color: "var(--muted)", fontWeight: 500 }}>
+            {isAr ? "سعر الجولة" : "Tour Rate"}
+          </span>
+          <div style={{ display: "flex", alignItems: "baseline", gap: "4px" }}>
+            <span style={{ fontSize: "1.35rem", fontWeight: 800, color: "var(--color-primary)" }}>
+              {gp.hourly_rate}
+            </span>
+            <span style={{ fontSize: "0.8rem", color: "var(--muted)" }}>
+              {m.hourlyRate}
+            </span>
+          </div>
+        </div>
+        <Link 
+          href={`/${locale}/guides/${id}/book`} 
+          className="button button-primary" 
+          style={{ 
+            padding: "10px 22px",
+            fontSize: "0.95rem",
+            fontWeight: 700,
+            borderRadius: "12px",
+            boxShadow: "0 4px 14px rgba(14, 53, 38, 0.25)"
+          }}
+        >
+          <CalendarCheck size={16} />
+          <span>{m.bookNowBtn}</span>
+        </Link>
       </div>
     </main>
   );
